@@ -1,5 +1,8 @@
 import { Element } from '@angular/compiler';
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { BatalhaNavalService } from '../batalha-naval.service';
+import { finalize, tap } from 'rxjs';
 
 @Component({
   selector: 'app-tela-cadastro',
@@ -13,6 +16,8 @@ export class TelaCadastroComponent {
   larguraMedia = 0;
   larguraForte = 0; 
   pontos = 0; 
+  password: string | null = null;
+  resetForm = false;
   icon = `<svg xmlns="http://www.w3.org/2000/svg" style="width: 22px; fill: green;" viewBox="0 0 16 16"><path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z" /></svg>`
 
   @ViewChild('eig') oEig!: ElementRef;
@@ -21,8 +26,73 @@ export class TelaCadastroComponent {
   @ViewChild('mai') oMai!: ElementRef;
   @ViewChild('esp') oEsp!: ElementRef;
 
+  form: FormGroup = this.fb.group({
+    nome: ['', Validators.required],
+    email: ['', Validators.required],
+    senha: ['', Validators.required]
+  });
+
+  constructor(private fb: FormBuilder, private service: BatalhaNavalService) {}
+
   fnDica() {
     this.dica = !this.dica;
+  }
+
+  fnGetName(e: any) {
+    this.form.patchValue({
+      nome: e
+    })
+  }
+
+  fnGetEmail(e: any) {
+    this.form.patchValue({
+      email: e
+    })
+  }
+
+  fnGetPassword(e: any)  {
+    this.password = e;
+  }
+
+  sendFormData() {
+    // comentar essa linha para n dar erro ao fazer req
+
+    if(this.fnValidate()) {
+      //---------------------
+      alert('enviado')
+      this.resetForms();
+      //---------------------
+      
+     // this.service.postUser(this.form.value).pipe(
+      //  finalize(() => this.resetForms())
+      //).subscribe();
+    }
+  }
+
+  resetForms() {
+    this.form.reset();
+    this.password = null;
+    this.resetForm = true;
+    this.pontos = 0;
+  }
+
+  fnValidate() {
+    if (this.form.invalid || this.password === null) {
+      alert('Por favor, preencha todos os campos obrigatórios antes de prosseguir.');
+      return false;
+    }
+
+    if (this.pontos < 25) {
+      alert('Senha não é forte o suficiente!')
+      return false;
+    }
+
+    if (this.password !== this.form.get('senha')?.value) {
+      alert('Senhas não conferem.')
+      return false;
+    }
+
+    return true;
   }
 
   fnStatusPass(e: any) {
@@ -66,7 +136,6 @@ export class TelaCadastroComponent {
       this.oEsp.nativeElement.innerHTML += this.icon;
     }
 
-
     if (this.pontos == 0) {
       this.larguraFraca = 0;
       this.larguraMedia = 0;
@@ -102,6 +171,9 @@ export class TelaCadastroComponent {
       this.larguraMedia = 33;
       this.larguraForte = 34;
     }
-  }
 
+    this.form.patchValue({
+      senha: e.text
+    })    
+  }
 }

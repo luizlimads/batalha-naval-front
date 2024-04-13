@@ -5,10 +5,10 @@
             <img src="../../assets/images/logo.png" alt="">
         </div>
         <div class="form-inputs cad">
-            <app-input [inputText]="'Usuário:'" [inputId]="'txtUser'"></app-input>
-            <app-input [inputText]="'E-mail:'" [inputType]="'email'" [inputId]="'txtEmail'"></app-input>
-            <app-input [inputText]="'Senha:'" [inputType]="'password'" [inputId]="'txtPassword'" (pts)="fnStatusPass($event)"></app-input>
-            <app-input [inputText]="'Confirmar senha:'" [inputType]="'password'" [inputId]="'txtConfirmPass'"></app-input>
+            <app-input [inputText]="'Usuário:'" [resetForm]="resetForm" [inputId]="'txtUser'" (data)="fnGetName($event)"></app-input>
+            <app-input [inputText]="'E-mail:'" [resetForm]="resetForm" [inputType]="'email'" [inputId]="'txtEmail'" (data)="fnGetEmail($event)"></app-input>
+            <app-input [inputText]="'Senha:'" [resetForm]="resetForm" [inputType]="'password'" [inputId]="'txtPassword'" (pts)="fnStatusPass($event)"></app-input>
+            <app-input [inputText]="'Confirmar senha:'" [resetForm]="resetForm" [inputType]="'password'" [inputId]="'txtConfirmPass'" (data)="fnGetPassword($event)"></app-input>
             <div class="validate">
                 <div class="pass-status">
                     <div class="pass-dica">
@@ -56,7 +56,7 @@
         </div>
 
         <div class="form-btn">
-            <app-button id="btn" [btnText]="'Cadastrar'"></app-button>
+            <app-button id="btn" [btnText]="'Cadastrar'" (click)="sendFormData()"></app-button>
         </div>
         <div class="form-link-register">
             <p>Já é cadastrado? <a href=""> Entrar</a></p>
