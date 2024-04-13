@@ -1,4 +1,4 @@
 <div [formGroup]="form">
     <label>{{inputText}}</label>
-    <input [type]='inputType' [id]='inputId'  (input)="fnVerifyId()" formControlName="inputData">
+    <input [type]='inputType' [id]='inputId' (blur)="sendData()" (input)="fnVerifyId()" formControlName="inputData">
 </div>
