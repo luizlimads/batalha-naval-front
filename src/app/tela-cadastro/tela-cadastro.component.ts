@@ -1,5 +1,6 @@
 import { Element } from '@angular/compiler';
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-tela-cadastro',
@@ -20,6 +21,12 @@ export class TelaCadastroComponent {
   @ViewChild('min') oMin!: ElementRef;
   @ViewChild('mai') oMai!: ElementRef;
   @ViewChild('esp') oEsp!: ElementRef;
+
+  form: FormGroup = this.fb.group({
+    
+  });
+
+  constructor(private fb: FormBuilder) {}
 
   fnDica() {
     this.dica = !this.dica;
