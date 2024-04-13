@@ -1,0 +1,4 @@
+<div [formGroup]="form">
+    <label>{{inputText}}</label>
+    <input [type]='inputType' [id]='inputId'  (input)="fnVerifyId()" formControlName="inputData">
+</div>

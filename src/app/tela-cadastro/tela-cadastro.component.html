@@ -1,0 +1,75 @@
+<div class="bg-container">
+
+    <div class="form-cadastro">
+        <div class="logo">
+            <img src="../../assets/images/logo.png" alt="">
+        </div>
+        <div class="form-inputs cad">
+            <app-input [inputText]="'Usuário:'" [inputId]="'txtUser'"></app-input>
+            <app-input [inputText]="'E-mail:'" [inputType]="'email'" [inputId]="'txtEmail'"></app-input>
+            <app-input [inputText]="'Senha:'" [inputType]="'password'" [inputId]="'txtPassword'" (pts)="fnStatusPass($event)"></app-input>
+            <app-input [inputText]="'Confirmar senha:'" [inputType]="'password'" [inputId]="'txtConfirmPass'"></app-input>
+            <div class="validate">
+                <div class="pass-status">
+                    <div class="pass-dica">
+
+                        <div class="dica" (click)="fnDica()">
+                            ?
+                        </div>
+
+                        <div class="msg-dica" [ngClass]="dica ? 'open': ''">
+                            Uma senha forte deve conter, ao menos:
+                            <ul>
+                                <li>
+                                    <!-- <div id="eig" [innerHTML]="oEig"></div> -->
+                                    <div #eig>6 caracteres;</div>
+                                    <!-- <div id="eig">{{oEig}}</div> -->
+                                </li>
+                                <li>
+                                    <div #num>1 número;</div>
+                                </li>
+                                <li>
+                                    <div #min>1 letra minúscula;</div>
+                                </li>
+                                <li>
+                                    <div #mai>1 letra maiúscula;</div>
+                                </li>
+                                <li>
+                                    <div #esp>1 caracter especial.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+
+                    <div>
+                        <div id="fraca" class="fraca" [ngStyle]="{'width.%': larguraFraca}"></div>
+                        <div id="media" class="media" [ngStyle]="{'width.%': larguraMedia}"></div>
+                        <div id="forte" class="forte" [ngStyle]="{'width.%': larguraForte}"></div>
+                    </div>
+
+                </div>
+
+
+                <p id="aviso"></p>
+            </div>
+        </div>
+
+        <div class="form-btn">
+            <app-button id="btn" [btnText]="'Cadastrar'"></app-button>
+        </div>
+        <div class="form-link-register">
+            <p>Já é cadastrado? <a href=""> Entrar</a></p>
+        </div>
+    </div>
+
+
+    <div id="icon-correct">
+        <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-check" viewBox="0 0 16 16">
+            <path
+                d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z" />
+        </svg>
+
+    </div>
+
+</div>

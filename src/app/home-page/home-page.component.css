@@ -1,0 +1,846 @@
+@font-face {
+    font-family: 'clash';
+    src: url('../../assets/fonts/clash.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.bg-image {
+    background-image: url('./img/bgMadeira.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100vw;
+    height: 100vh;
+}
+
+h3,
+p {
+    font-size: clamp(0.5em, 0.01em + 2vw, .9em);
+
+    /* font-size: 13px; */
+    font-family: 'clash', Arial, Helvetica, sans-serif;
+}
+
+.container-buttons,
+.container {
+    width: 1200px;
+    max-width: 90%;
+    margin: auto;
+    /* background-color: aqua; */
+}
+
+.itens-player {
+    position: relative;
+    /* background-color: rgba(142, 106, 46, 0.521); */
+    background-image: url('../../assets/images/img-home-page/bgPerga.png');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: space-evenly;
+    padding: 20px;
+    border-radius: 10px;
+    z-index: 999;
+    /* drop-shadow: 1px 1px 5px 1px rgb(28, 27, 27); */
+
+    filter: drop-shadow(10px 1px 5px rgb(28, 27, 27));
+}
+
+.item-level,
+.item-coin,
+.item-diamond {
+    display: flex;
+    align-items: center;
+    max-width: 33%;
+    width: 250px;
+}
+
+.chapeu {
+    margin-right: -15px;
+    position: relative;
+    display: inline-block;
+    /* Garante que o contêiner do chapéu se ajuste ao tamanho da imagem */
+    z-index: 99;
+}
+
+.chapeu img {
+    display: block;
+    /* Impede que a imagem tenha espaços extras abaixo dela */
+    width: 100px;
+    max-width: 100%;
+    /* max-width: 100%; */
+    margin-bottom: -25px;
+}
+
+.chapeu p {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /* font-size: 10px; */
+    font-size: clamp(0.5em, 0.01em + 2vw, .8em);
+    font-weight: bold;
+    transform: translate(-50%, -50%);
+    /* Move o elemento para o centro do chapéu */
+    text-align: center;
+    /* Centraliza o texto horizontalmente */
+    color: white;
+    /* Ajusta a cor do texto para ser visível */
+}
+
+.trofeu-status,
+.item-coin-status,
+.item-diamond-status,
+.item-level-status {
+    background: linear-gradient(to top, #252525c7 60%, #2f2f2fca 40%) padding-box,
+        linear-gradient(to top, #343331, #1e1d1c) border-box;
+    border: 3px solid rgba(36, 36, 36, 0.782);
+    /* padding: 2px; */
+    width: 100%;
+    position: relative;
+    display: inline-block;
+    border-radius: 3px;
+    height: 30px;
+    margin-right: 10px;
+    box-shadow: 1px 1px 5px 1px rgb(28, 27, 27);
+
+}
+
+.trofeu-status,
+.item-coin-status,
+.item-diamond-status {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    color: white;
+    padding-right: 25px;
+}
+
+.icon-plus img {
+    max-width: 100%;
+    width: 45px;
+}
+
+.icon-coin img {
+    max-width: 100%;
+    width: 55px;
+}
+
+.icon-diamond img {
+    max-width: 100%;
+    width: 60px;
+}
+
+.icon-coin,
+.icon-diamond,
+.icon-plus {
+    position: relative;
+    display: inline-block;
+    /* Garante que o contêiner do chapéu se ajuste ao tamanho da imagem */
+    z-index: 99;
+}
+
+.icon-coin,
+.icon-diamond {
+    margin-left: -28px;
+
+}
+
+.icon-plus {
+    margin-right: -15px;
+    margin-top: 4px;
+}
+
+.item-level-status p {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-weight: bold;
+    transform: translate(-50%, -50%);
+    /* Move o elemento para o centro do chapéu */
+    text-align: center;
+    /* Centraliza o texto horizontalmente */
+    color: white;
+    /* Ajusta a cor do texto para ser visível */
+}
+
+.item-level-status div {
+    background-color: #1BACD3;
+    /* height: 25px; */
+    height: 100%;
+    width: 50%;
+}
+
+
+.infos-user {
+    /* background-color: #b46d26; */
+    display: flex;
+    justify-content: center;
+}
+
+.infos-user-bg {
+    margin-top: -10px;
+    width: 100%;
+    max-width: 60%;
+    /* background-image: url('../../assets/images/img-home-page/bgPergaMeio.png');
+    background-size: cover;
+    background-position: 50px center; */
+    padding: 10px;
+    border: 3px solid #847E66;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    overflow: hidden;
+
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #BFB28F;
+    box-shadow: 1px 1px 5px 1px rgb(28, 27, 27);
+
+
+}
+
+
+.user-icon {
+    display: flex;
+    align-items: center;
+
+}
+
+.user-avatar {
+    margin-right: 10px;
+    max-width: 100%;
+    width: 60px;
+    height: 50px;
+    border-radius: 10px;
+    background-color: #1BACD3;
+    overflow: hidden;
+
+}
+
+.user-avatar img {
+    margin-top: -10px;
+    width: 100%;
+}
+
+.user-name p {
+    font-size: clamp(0.5em, 1.5vw, .9em);
+
+}
+
+.user-trofeus {
+    display: flex;
+    align-items: center;
+    /* background-color: aquamarine; */
+    max-width: 50%;
+    width: 200px;
+}
+
+.trofeu-icon {
+    position: relative;
+    display: inline-block;
+    z-index: 99;
+    margin-right: -20px;
+    margin-top: 7px;
+}
+
+.trofeu-icon img {
+    max-width: 100%;
+    width: 60px;
+
+}
+
+/* .trofeu-status esta na linha 93*/
+.trofeu-status {
+    justify-content: center;
+    padding-right: 0px;
+}
+
+.navigations-buttons {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px;
+    /* background-color: #ffaa00; */
+    background: linear-gradient(to bottom, #1d1c1c04, #1d1c1c8b, #1d1c1ca6);
+}
+
+.container-buttons {
+    display: flex;
+    justify-content: space-between;
+    /* background-color: #1BACD3; */
+}
+
+.nav-btn-geral {
+    flex: 2;
+    max-width: 350px;
+    /* background-color: aquamarine; */
+    display: flex;
+    justify-content: left;
+    align-items: center;
+
+}
+
+.nav-bg {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+
+    padding: 10px;
+    /* border: 3px solid #847E66;
+    background-color: #BFB28F;
+    box-shadow: 1px 1px 5px 1px rgb(28, 27, 27); */
+
+    background-image: url("../../assets/images/img-home-page/pergaBgBtns.png");
+    background-position: center;
+    background-size: cover;
+    filter: drop-shadow(5px 1px 5px rgb(28, 27, 27));
+
+}
+
+.icon-conf,
+.icon-inventory,
+.icon-shop {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Centraliza os elementos verticalmente */
+    text-align: center;
+    /* Centraliza o texto horizontalmente */
+}
+
+
+.nav-btn-geral img {
+    max-width: 95%;
+    width: 80px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    filter: drop-shadow(5px 1px 5px rgb(28, 27, 27));
+    margin-top: -25px;
+}
+
+
+.icon-conf p,
+.icon-inventory p,
+.icon-shop p {
+    font-size: 11px;
+    font-size: clamp(0.5em, 1.5vw, .6em);
+
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    opacity: 0;
+    /* Inicia invisível */
+    transition: opacity 0.3s ease;
+    position: absolute;
+    top: -60px;
+    /* Ajuste conforme necessário */
+    /* Adiciona uma transição suave */
+}
+
+.nav-btn-geral img:hover {
+    transform: scale(1.2) translateY(-10px);
+}
+
+.icon-conf:hover p,
+.icon-inventory:hover p,
+.icon-shop:hover p {
+    opacity: 1;
+}
+
+
+
+.nav-btn-play {
+    flex: 1;
+    max-width: 250px;
+    /* background-color: #b46436; */
+}
+
+.nav-btn-play button {
+    padding: 0;
+    width: 100%;
+    border: 0;
+    border-radius: 10px;
+    border-bottom: 5px solid #b46436;
+    background-color: #FFB11D;
+    color: #f0f0f0;
+    cursor: pointer;
+    line-height: 1;
+    text-decoration: none;
+    /* margin: 10px; */
+    filter: drop-shadow(5px 1px 5px rgb(28, 27, 27));
+    font-size: clamp(0.7em, 1.5vw, 1em);
+    transition: 0.5s ease;
+
+
+}
+
+.nav-btn-play button:hover {
+    transform: scale(1.1) translateY(1px);
+
+}
+
+
+.nav-btn-play div {
+    padding: 15px;
+    background: linear-gradient(to top, #eda41b 50%, #FFB11D 50%) padding-box,
+        linear-gradient(to top, #dd991c, #eab450) border-box;
+    border-radius: 9px;
+    border: 4px solid transparent;
+    text-align: center;
+    font-family: 'clash', Arial, Helvetica, sans-serif;
+
+}
+
+.container-popup-ranking {
+    /* background-color: #BFB28F; */
+    display: flex;
+    padding: 20px;
+}
+
+.popup-ranking {
+    /* background-color: #b46436; */
+    background-image: url("../../assets/images/img-home-page/bgRaking.png");
+    background-position: top;
+    background-size: contain;
+    background-repeat: no-repeat;
+    filter: drop-shadow(5px 1px 5px rgb(28, 27, 27));
+
+    padding: 20px;
+    /* width: 250px; */
+    max-width: 80%;
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.rank-title {
+    text-align: center;
+    width: 100%;
+    padding: 10px;
+    /* background-color: #343331; */
+    margin-bottom: 10px;
+}
+
+.rank-classifications {
+    /* padding: 10px; */
+    /* background-color: #dd991c; */
+    width: 100%;
+    overflow: hidden;
+    overflow-y: scroll;
+    padding: 10px;
+}
+
+
+.rank-classifications::-webkit-scrollbar {
+    width: 12px;
+}
+
+.rank-classifications::-webkit-scrollbar-track {
+    border-radius: 8px;
+    background-color: #DBCCA4;
+    border: 1px solid #13131369;
+    box-shadow: inset 0 0 6px rgba(124, 103, 45, 0.668);
+}
+
+.rank-classifications::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    border: 1px solid #17171769;
+
+    background-color: #baa363;
+}
+
+
+.rank-item {
+    display: flex;
+    background-color: #91876a;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    /* background-color: #847E66; */
+    padding: 2px;
+    align-items: center;
+}
+
+/* .item-avatar, */
+.item-position,
+.item-name,
+.item-trofeus {
+    display: flex;
+    align-items: center;
+    -webkit-text-stroke-width: .8px;
+    -webkit-text-stroke-color: #262626;
+    color: white;
+}
+
+.item-position {
+    padding: 10px;
+    width: 40px;
+    /* background-color: aqua; */
+}
+
+.item-avatar {
+    /* padding: 5px; */
+    /* background-color: rgb(38, 0, 255); */
+    max-width: 100%;
+    width: 50px;
+    height: 40px;
+    /* border-radius: 10px; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #d3bd1b;
+    overflow: hidden;
+}
+
+.item-avatar img {
+    margin-top: 25px;
+    width: 100%;
+}
+
+
+.item-name {
+    font-size: 11px;
+    padding: 5px;
+    /* background-color: rgb(55, 255, 0); */
+}
+
+.item-trofeus {
+    padding: 5px;
+    /* background-color: rgb(191, 255, 0); */
+    -webkit-text-stroke-width: 0;
+    -webkit-text-stroke-color: #262626;
+}
+
+
+.item-trofeus .item-trofeu-status {
+    display: flex;
+    background: linear-gradient(to top, #252525c7 60%, #2f2f2fca 40%) padding-box,
+        linear-gradient(to top, #343331, #1e1d1c) border-box;
+    border: 3px solid rgba(36, 36, 36, 0.782);
+    padding: 5px;
+    /* width: 100%; */
+    width: 70px;
+    border-radius: 3px;
+    float: right;
+    /* height: 30px; */
+    /* margin-right: 10px; */
+    color: white;
+    box-shadow: inset 1px 1px 5px 1px rgb(28, 27, 27);
+    align-items: flex-end;
+    font-size: 11px;
+}
+
+.item-trofeus .item-trofeu-icon {
+    display: flex;
+    align-items: center;
+}
+
+
+.item-trofeu-icon img {
+    max-width: 50%;
+    width: 30px;
+
+}
+
+/* .trofeu-status esta na linha 93*/
+.trofeu-status {
+    justify-content: center;
+    padding-right: 0px;
+}
+
+
+/* POPUPS ***************************************************/
+
+.popups {
+    visibility: hidden;
+    transition: visibility 0ms linear .3s;
+}
+
+.bg-popups {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10000;
+    height: 100%;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.848);
+    opacity: 0;
+    transition: opacity .3s ease-in-out;
+    /* visibility: hidden; */
+}
+
+.popup--visible .bg-popups {
+    opacity: 1;
+}
+
+.popup--visible {
+    visibility: visible;
+    transition: visibility 0ms;
+
+}
+
+.popup-content {
+    /* margin: auto;
+    background-color: #91876a;
+    width: 1000px;
+    height: 600px; */
+
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 10001;
+    min-width: 400px;
+    /* padding: 25px 50px; */
+    background: #BFB28F;
+    background: linear-gradient(to right, #F1AE49, #BFB28F);
+    padding: 3px;
+    /* border: 4px solid #827B68; */
+    border-radius: 3px;
+    /* text-align: center; */
+    animation: hide-popup .3s forwards;
+}
+
+.popup--visible .popup-content {
+    /* visibility: visible; */
+    animation: show-popup .3s forwards;
+}
+
+@keyframes show-popup {
+    0% {
+        transform: translate(-50%, -50%) scale(.7);
+
+        opacity: 0;
+    }
+
+    45% {
+        transform: translate(-50%, -50%) scale(1.05);
+
+        opacity: 1;
+    }
+
+    80% {
+        transform: translate(-50%, -50%) scale(.95);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+@keyframes hide-popup {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(.5);
+
+        opacity: 0;
+    }
+}
+
+.popup-shop{
+    background-color: #cda15e; /*#BFB28F;/*#EDBD77;*/
+    padding: 10px;
+}
+
+.popup-shop-guias{
+    display: flex;
+    /* display: inline-block; */
+}
+
+.popup-shop-guias div{
+    border: 2px solid #BC8228;
+    padding: 5px;
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
+    background-color: #956b3d;
+    font-size: clamp(0.3em, 0.01em + 2vw, .9em);
+    color: white;
+
+}
+.popup-shop-screm1{
+    background-color: #1BACD3;
+}
+
+.popup-shop-guias div.selected{
+    background-color:  #C5781D;
+}
+
+@media (max-width: 600px) {
+
+    .container {
+        max-width: 100%;
+    }
+
+    .itens-player {
+        padding: 10px;
+
+    }
+
+    .chapeu img {
+        width: 80px;
+        margin-bottom: -25px;
+    }
+
+    .chapeu p {
+        font-size: clamp(0.3em, 0.01em + 2vw, .5em);
+    }
+
+    .trofeu-status,
+    .item-coin-status,
+    .item-diamond-status,
+    .item-level-status {
+        height: 25px;
+    }
+
+    .icon-plus img {
+        width: 40px;
+    }
+
+    .icon-coin img {
+        width: 50px;
+    }
+
+    .icon-diamond img {
+        width: 55px;
+    }
+
+    .infos-user-bg {
+        margin-top: -10px;
+        width: 100%;
+        max-width: 70%;
+        padding: 10px;
+        border: 2px solid #847E66;
+    }
+
+    .user-avatar {
+        margin-right: 10px;
+        width: 50px;
+        height: 40px;
+
+    }
+
+    .trofeu-icon img {
+        width: 50px;
+
+    }
+
+    .nav-btn-geral img {
+        width: 60px;
+    }
+
+    .navigations-buttons {
+        padding: 10px;
+    }
+
+    .container-buttons {
+        max-width: 100%;
+    }
+
+    .nav-bg {
+        padding: 15px;
+
+    }
+
+    .nav-btn-geral {
+        width: 250px;
+    }
+
+    .nav-btn-play {
+        max-width: 100%;
+        width: 200px;
+    }
+}
+
+@media (max-width: 425px) {
+
+    .chapeu img {
+        width: 70px;
+        margin-bottom: -20px;
+        margin-left: -5px;
+
+    }
+
+    .chapeu p {
+        font-size: clamp(0.3em, 0.01em + 2vw, .4em);
+        transform: translate(-55%, -55%);
+        top: 55%;
+        left: 40%;
+    }
+
+    .item-level-status p {
+        font-size: clamp(0.3em, 0.01em + 2vw, .6em);
+
+    }
+
+    .trofeu-status,
+    .item-coin-status,
+    .item-diamond-status,
+    .item-level-status {
+        height: 20px;
+    }
+
+    .trofeu-status,
+    .item-coin-status,
+    .item-diamond-status {
+        padding-right: 15px;
+    }
+
+    .icon-plus img {
+        width: 30px;
+    }
+
+    .icon-coin img {
+        width: 40px;
+    }
+
+    .icon-diamond img {
+        width: 45px;
+    }
+
+    .user-avatar {
+        margin-right: 5px;
+        width: 40px;
+        height: 30px;
+
+    }
+
+    .user-name p {
+        font-size: clamp(0.4em, 1.5vw, .8em);
+
+    }
+
+
+    .user-trofeus {
+        width: 150px;
+    }
+
+    .trofeu-status {
+        padding-right: 0px;
+    }
+
+    .trofeu-icon img {
+        width: 45px;
+
+    }
+
+
+    .nav-btn-geral img {
+        width: 50px;
+    }
+
+    .nav-btn-play {
+        max-width: 100%;
+        width: 150px;
+    }
+
+    .nav-btn-play button {
+        font-size: clamp(0.6em, 1.5vw, .8em);
+
+    }
+}

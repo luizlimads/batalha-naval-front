@@ -1,0 +1,42 @@
+@font-face {
+    font-family: 'clash';
+    src: url('../../assets/fonts/clash.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+:host-context(.nav-btn-play) button{
+    float: right;
+}
+
+button {
+    padding: 0;
+    max-width: 50%;
+    width: 200px;
+    border: 0;
+    border-radius: 10px;
+    border-bottom: 5px solid #b46436;
+    font-weight: bold;
+    background-color: #FFB11D;
+    color: #f0f0f0;
+    cursor: pointer;
+    line-height: 1;
+    text-decoration: none;
+    margin: 10px;
+    
+    filter: drop-shadow(5px 1px 5px rgb(28, 27, 27));
+
+}
+
+
+div {
+    padding: 15px;
+    background: linear-gradient(to top, #eda41b 50%, #FFB11D 50%) padding-box,
+        linear-gradient(to top, #dd991c, #eab450) border-box;
+    border-radius: 9px;
+    border: 4px solid transparent;
+    text-align: center;
+    font-family: 'clash', Arial, Helvetica, sans-serif;
+    font-size: clamp(0.9em, 0.01em + 3vw, 1em);
+    
+}
