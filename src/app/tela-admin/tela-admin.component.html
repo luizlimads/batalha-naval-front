@@ -128,7 +128,7 @@
                                     </svg>
 
                                     <svg class="btnApaga" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                                        (click)="fnApagaCatg(cat.idCatg)">
+                                        (click)="fnApagaCatg(cat.id)">
                                         <path
                                             d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z" />
                                     </svg>
@@ -198,17 +198,16 @@
         <h1>Vamos criar uma <br />Categoria?</h1>
 
         <!-- form coleção -->
-        <form action="" id="formCatg">
-            <input type="hidden" id="txtIdCatg">
-            <input type="text" name="txtTitulo" id="txtTituloCatg" placeholder="Titulo">
+        <form [formGroup]="formCategoria">
+            <input formControlName="titulo" type="text" name="txtTitulo" id="txtTituloCatg" placeholder="Titulo">
 
-            <select name="txtTipoCatg" id="txtTipoCatg">
+            <select formControlName="categoria" name="txtTipoCatg" id="txtTipoCatg">
                 <option style="color: #999999;" value="0" disabled selected>Tipo categoria</option>
-                <option style="color: #999999;" value="1">Vesturio</option>
-                <option style="color: #999999;" value="2">Monetaria</option>
+                <option style="color: #999999;" value="VESTUARIO">Vestuário</option>
+                <option style="color: #999999;" value="MONETARIA">Monetaria</option>
             </select>
 
-            <button class="btn" id="btnAddCatg">Criar</button>
+            <button (click)="postCategoria()" class="btn" id="btnAddCatg">Criar</button>
         </form>
         <!-- ------------------------------------- -->
     </div>
@@ -228,10 +227,7 @@
         <h1>Crie sua nova Item</h1>
 
         <!-- modal item -->
-        <form id="formItem">
-            <input type="hidden" id="txtItem">
-            <input type="hidden" id="txtCat">
-
+        <form [formGroup]="formItem" id="formItem">
             <div class="img-container">
                 <input type="file" id="file" (change)="fnChangeFile($event)" accept="image/*" hidden>
                 <div class="img-area" data-img="">
@@ -252,32 +248,32 @@
             <div class="inputs-container">
                 <div class="checkbox-wrapper-2">
                     <p>Ativo</p>
-                    <input type="checkbox" class="sc-gJwTLC ikxBAC">
+                    <input formControlName="ativo" type="checkbox" class="sc-gJwTLC ikxBAC">
                 </div>
 
-                <input type="text" name="txtTituloItem" id="txtTituloItem" placeholder="Titulo">
+                <input formControlName="nome" type="text" name="txtTituloItem" id="txtTituloItem" placeholder="Titulo">
                 <div class="selects-ctn">
                     <label for="txtCatg">
-                        <select name="txtCatg" id="txtCatg">
+                        <select formControlName="categoriaId" name="txtCatg" id="txtCatg">
                             <option style="color: #999999;" value="0" disabled selected>Categoria</option>
-                            <option *ngFor="let cat of dataCategorias" value="cat.idCatg">{{cat.titulo}}</option>
+                            <option *ngFor="let cat of dataCategorias" [value]="cat.id">{{cat.titulo}}</option>
                         </select>
                     </label>
                     <label for="txtCatg">
-                        <select name="txtCatg" id="txtCatg">
+                        <select formControlName="tipoPagamento" name="txtCatg" id="txtCatg">
                             <option style="color: #999999;" value="0" disabled selected>Tipo de pagamento</option>
-                            <option value="0">Moeda</option>
-                            <option value="1">Diamante</option>
-                            <option value="2">Dinheiro</option>
+                            <option value="MOEDA">Moeda</option>
+                            <option value="DIAMANTE">Diamante</option>
+                            <option value="DINHEIRO">Dinheiro</option>
                         </select>
                     </label>
                     <!-- <input type="date" name="txtData" id="txtData" placeholder="Pra quando?"> -->
                 </div>
-                <input currencyMask formControlName="value" [options]="{ align: 'left', prefix: 'R$ ', thousands: '.', decimal: ',' }"/>
+                <input formControlName="valor" currencyMask  [options]="{ align: 'left', prefix: 'R$ ', thousands: '.', decimal: ',' }"/>
                 
 
-                <textarea name="txtDesc" id="txtDesc" row="200" placeholder="Descrição"></textarea>
-                <button class="btn" id="btnAddItem">Criar</button>
+                <textarea formControlName="descricao" name="txtDesc" id="txtDesc" row="200" placeholder="Descrição"></textarea>
+                <button (click)="postItem()" class="btn" id="btnAddItem">Criar</button>
             </div>
         </form>
 

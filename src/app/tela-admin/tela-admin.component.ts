@@ -1,4 +1,7 @@
-import { Component, input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { BatalhaNavalService } from '../batalha-naval.service';
+import { tap } from 'rxjs';
 
 
 @Component({
@@ -6,49 +9,41 @@ import { Component, input } from '@angular/core';
   templateUrl: './tela-admin.component.html',
   styleUrl: './tela-admin.component.css',
 })
-export class TelaAdminComponent {
+export class TelaAdminComponent implements OnInit {
   open: boolean = true;
   categoriaSelected = false;
   itemSelected = false;
-  dataCategorias: any[];
-  dataItens: any[];
+  dataCategorias: any[] = [];
+  dataItens: any[] = [];
   imageUrl: string | ArrayBuffer | null = null;
 
+  formCategoria: FormGroup = this.fb.group({
+    titulo: [''],
+    categoria: ['']
+  });
 
+  formItem: FormGroup = this.fb.group({
+    //imageUrl: ['']
+    nome: [''],
+    descricao: [''],
+    valor: [''],
+    ativo: [false],
+    categoriaId: [],
+    tipoPagamento: ['']
+  });
 
-  constructor() {
+  constructor(private fb: FormBuilder, private service: BatalhaNavalService) {}
 
-    this.dataCategorias = [
-      { idCatg: 1, titulo: 'Camisas', seletor: 'shirt' },
-      { idCatg: 2, titulo: 'Calças', seletor: 'pants' },
-      { idCatg: 3, titulo: 'Chapeus', seletor: 'hat' },
-      { idCatg: 4, titulo: 'Sapatos', seletor: 'shoes' },
-      { idCatg: 5, titulo: 'Monetario', seletor: 'shoes' },
-    ];
-
-    this.dataItens = [
-      { titulo: 'Chapeu1', categoria: 'hat', imgUrl: "../../assets/imagesAvatar/pirataPrincipalHat.png", data: "2024-05-03" },
-      { titulo: 'Chapeu2', categoria: 'hat', imgUrl: "../../assets/imagesAvatar/pirataPrincipalHat2.png" },
-      { titulo: 'Camisa1', categoria: 'shirt', imgUrl: "../../assets/imagesAvatar/pirataPrincipalShirt.png" },
-      { titulo: 'Camisa2', categoria: 'shirt', imgUrl: "../../assets/imagesAvatar/pirataPrincipalShirt2.png" },
-      { titulo: 'Calça1', categoria: 'pants', imgUrl: "../../assets/imagesAvatar/pirataPrincipalPants.png" },
-      { titulo: 'Calça2', categoria: 'pants', imgUrl: "../../assets/imagesAvatar/pirataPrincipalPants2.png" },
-      { titulo: 'Sapatos1', categoria: 'shoes', imgUrl: "../../assets/imagesAvatar/pirataPrincipalShoes.png" },
-      { titulo: 'Sapatos2', categoria: 'shoes', imgUrl: "../../assets/imagesAvatar/pirataPrincipalShoes2.png" },
-    ];
-
+  ngOnInit(): void {
+    this.getAllCategorias();
+    this.getAllItems();
   }
-
-
 
   fnOpen() {
     this.open = !this.open;
   }
 
   fnShow(e: any) {
-    // this.activePopUp = namePopup
-    console.log(e)
-
     const main = document.getElementById("main") as HTMLElement;
     const titleMain = document.getElementById("nomeColecao") as HTMLElement;
     const p = document.getElementById("mainP") as HTMLElement;
@@ -88,7 +83,6 @@ export class TelaAdminComponent {
 
   fnApagaCatg(id: any) {
     // idCatg = e.currentTarget.id
-    console.log(id);
 
     (document.querySelector(".shadow-modal-confirm #txtQual") as HTMLInputElement).value = "Categoria";
 
@@ -96,7 +90,6 @@ export class TelaAdminComponent {
 
 
     this.fnModalConfirm();
-
   }
 
   fnModalConfirm() {
@@ -115,7 +108,6 @@ export class TelaAdminComponent {
     const file: File = event.target.files[0];
     let imgArea = document.querySelector(".img-area") as HTMLElement;
 
-
     if (file) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -124,8 +116,30 @@ export class TelaAdminComponent {
         imgArea.setAttribute("data-img", file.name);
         imgArea.classList.add("active")
       };
-
     }
   }
 
+  postCategoria() {
+    //this.service.postCategoria(this.formCategoria.value).subscribe();
+  }
+
+  getAllCategorias() {
+    //this.service.getAllCategorias().pipe(
+     // tap((res:any) => {
+   //     this.dataCategorias = res
+    //  })
+    //).subscribe();
+  }
+
+  postItem() {
+   // this.service.postItem(this.formItem.value).subscribe();
+  }
+
+  getAllItems() {
+    //this.service.getAllItems().pipe(
+    //  tap((res:any) => {
+    //    this.dataItens = res
+    //  })
+    //).subscribe();
+  }
 }

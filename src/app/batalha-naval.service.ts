@@ -14,4 +14,20 @@ export class BatalhaNavalService {
   postUser(formData: any) {
     return this.http.post(`${this.urlBase}/usuarios`, formData);
   }
+
+  postCategoria(formData: any) {
+    return this.http.post(`${this.urlBase}/itens-categoria`, formData);
+  }
+
+  getAllCategorias() {
+    return this.http.get(`${this.urlBase}/itens-categoria`);
+  }
+
+  postItem(formData: any) {
+    return this.http.post(`${this.urlBase}/itens`, formData);
+  }
+
+  getAllItems() {
+    return this.http.get(`${this.urlBase}/itens`);
+  }
 }
