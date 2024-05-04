@@ -39,7 +39,7 @@ p {
     justify-content: space-evenly;
     padding: 20px;
     border-radius: 10px;
-    z-index: 999;
+    z-index: 99;
     /* drop-shadow: 1px 1px 5px 1px rgb(28, 27, 27); */
 
     filter: drop-shadow(10px 1px 5px rgb(28, 27, 27));
@@ -147,6 +147,7 @@ p {
 .icon-plus {
     margin-right: -15px;
     margin-top: 4px;
+    cursor: pointer;
 }
 
 .item-level-status p {
@@ -560,16 +561,17 @@ p {
 
 .bg-popups {
     position: fixed;
+    z-index: 1100;
     top: 0;
     left: 0;
-    z-index: 10000;
-    height: 100%;
-    width: 100%;
+    height: 100vh;
+    width: 100vw;
     background: rgba(0, 0, 0, 0.848);
-    opacity: 0;
-    transition: opacity .3s ease-in-out;
-    /* visibility: hidden; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
 
 .popup--visible .bg-popups {
     opacity: 1;
@@ -578,28 +580,28 @@ p {
 .popup--visible {
     visibility: visible;
     transition: visibility 0ms;
-
 }
 
 .popup-content {
-    /* margin: auto;
-    background-color: #91876a;
-    width: 1000px;
-    height: 600px; */
-
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    z-index: 10001;
-    min-width: 400px;
-    /* padding: 25px 50px; */
-    background: #BFB28F;
-    background: linear-gradient(to right, #F1AE49, #BFB28F);
+    /* min-width: 60%; */
+    /* width: 900px; */
+    /* max-width: 90%; */
+    /* background: #BFB28F; */
+    background: linear-gradient(to right, #BC8228, #ab6c0f);
     padding: 3px;
-    /* border: 4px solid #827B68; */
     border-radius: 3px;
-    /* text-align: center; */
     animation: hide-popup .3s forwards;
+    /* Defina uma altura fixa para o popup */
+    /* height: 500px; */
+    /* ou qualquer valor desejado */
+    /* Use flexbox para fazer as divs internas preencherem o espaço */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    overflow-y: auto;
+
+    /* Adicionar uma barra de rolagem vertical se o conteúdo exceder a altura da tela */
+
 }
 
 .popup--visible .popup-content {
@@ -609,66 +611,448 @@ p {
 
 @keyframes show-popup {
     0% {
-        transform: translate(-50%, -50%) scale(.7);
+        transform: scale(.7);
 
         opacity: 0;
     }
 
     45% {
-        transform: translate(-50%, -50%) scale(1.05);
+        transform: scale(1.05);
 
         opacity: 1;
     }
 
     80% {
-        transform: translate(-50%, -50%) scale(.95);
+        transform: scale(.95);
     }
 
     100% {
-        transform: translate(-50%, -50%) scale(1);
+        transform: scale(1);
     }
 }
 
 @keyframes hide-popup {
     0% {
-        transform: translate(-50%, -50%) scale(1);
+        transform: scale(1);
 
         opacity: 1;
     }
 
     100% {
-        transform: translate(-50%, -50%) scale(.5);
+        transform: scale(.5);
 
         opacity: 0;
     }
 }
 
-.popup-shop{
-    background-color: #cda15e; /*#BFB28F;/*#EDBD77;*/
-    padding: 10px;
+.popup-content button {
+    /* display: block; */
+    position: absolute;
+    right: 0;
+    float: right;
+    /* width: 50px; */
+    padding: 0;
+    background-color: transparent;
+    border: 0;
+    padding: 5px 10px;
 }
 
-.popup-shop-guias{
+.popup-content button svg {
+    width: 20px;
+    fill: #7e4d0c;
+    cursor: pointer;
+}
+
+.popup-conf {
+    width: 500px;
+    max-width: 100%;
+    height: 500px;
+    background-color: #cda15e;
+    /*#BFB28F;/*#EDBD77;*/
+    padding: 10px;
+    color: rgb(219, 219, 219);
+    /* Use flex: 1 para preencher o espaço disponível */
+    /* flex: 1; */
+
+    /* Use flexbox para fazer a div pai um container flexível */
+    /* display: flex; */
+    display: none;
+    flex-direction: column;
+}
+
+.conf-sound-effects {
+    padding: 20px;
+}
+
+
+
+#slider {
+    -webkit-appearance: none;
+    width: calc(100% - 60px + 10px);
+    height: 2px;
+    border-radius: 5px;
+    background: rgb(254, 0, 0);
+    outline: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+}
+
+/* // Range Handle */
+#slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgb(255, 255, 255);
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+
+    /* &:hover {
+            background: $range-handle-color-hover;
+            transform: scale(1.2);
+        } */
+}
+
+#slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border: 0;
+    border-radius: 50%;
+    background: rgb(54, 21, 219);
+    cursor: pointer;
+    transition: 0.15s ease-in-out;
+
+    /* &:hover {
+            background: $range-handle-color-hover;
+        } */
+}
+
+
+
+
+
+
+/* ******************** */
+
+.popup-shop {
+    width: 900px;
+    max-width: 100%;
+    height: 500px;
+    background-color: #cda15e;
+    /*#BFB28F;/*#EDBD77;*/
+    padding: 10px;
+    color: rgb(219, 219, 219);
+    /* Use flex: 1 para preencher o espaço disponível */
+    /* flex: 1; */
+
+    /* Use flexbox para fazer a div pai um container flexível */
+    /* display: flex; */
+    display: none;
+    flex-direction: column;
+}
+
+.popup-inventory {
+    width: 1200px;
+    max-width: 100%;
+    height: 600px;
+    background-color: #cda15e;
+    /*#BFB28F;/*#EDBD77;*/
+    padding: 10px;
+    color: rgb(219, 219, 219);
+    /* Use flex: 1 para preencher o espaço disponível */
+    /* flex: 1; */
+
+    /* Use flexbox para fazer a div pai um container flexível */
+    /* display: flex; */
+    display: none;
+    /* flex-direction: column; */
+}
+
+.popup-conf.active,
+.popup-inventory.active,
+.popup-shop.active {
     display: flex;
+}
+
+
+.invent-itens {
+    flex: 2;
+    padding: 10px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.invent-avatar {
+    flex: 1;
+    background-color: #C5781D;
+    box-shadow: inset 1px 1px 5px 1px #402b11;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+/*  CSS DA PARTE DO AVATAR */
+
+#avatar {
+    background-image: url("../../assets/imagesAvatar/pirataPrincipalPelado.png");
+    background-repeat: no-repeat;
+    background-repeat: no-repeat;
+    position: absolute;
+    height: 353px;
+    width: 212px;
+    z-index: 1;
+    filter: drop-shadow(5px 1px 5px rgb(28, 27, 27));
+
+}
+
+.clothes {
+    background-repeat: no-repeat;
+    position: absolute;
+    height: 353px;
+    width: 212px;
+    z-index: 2;
+}
+
+#backdrop {
+    /* top: 2em;
+    margin: auto;
+    position: relative; */
+    background-color: rgba(246, 240, 255, 0.479);
+    border-radius: 20px;
+    height: 353px;
+    width: 212px;
+    /* text-align: center; */
+}
+
+/* ************************** */
+
+.popup-conf h1,
+.popup-shop h1 {
+    /* color: rgb(224, 224, 224); */
+    padding: 10px;
+    text-align: center;
+    font-size: clamp(1em, 0.05em + 2vw, 1.5em);
+
+    font-family: 'clash', Arial, Helvetica, sans-serif;
+
+}
+
+.popup-invent-guias,
+.popup-shop-guias {
+    display: flex;
+    cursor: pointer;
     /* display: inline-block; */
 }
 
-.popup-shop-guias div{
-    border: 2px solid #BC8228;
+.popup-invent-guias div,
+.popup-shop-guias div {
+    border-top: 2px solid #bc812800;
+    border-left: 2px solid #bc812800;
+    border-right: 2px solid #bc812800;
     padding: 5px;
     border-top-right-radius: 8px;
     border-top-left-radius: 8px;
     background-color: #956b3d;
     font-size: clamp(0.3em, 0.01em + 2vw, .9em);
     color: white;
-
-}
-.popup-shop-screm1{
-    background-color: #1BACD3;
 }
 
-.popup-shop-guias div.selected{
-    background-color:  #C5781D;
+.popup-invent-guias div.selected,
+.popup-shop-guias div.selected {
+    border-top: 2px solid #BC8228;
+    border-left: 2px solid #BC8228;
+    border-right: 2px solid #BC8228;
+    background-color: #C5781D;
+}
+
+.popup-invent-screm,
+.popup-shop-screm {
+    flex: 1;
+    background-color: #C5781D;
+    padding: 10px;
+    display: none;
+    /* Alterado para flex para controlar a altura dos elementos */
+    flex-wrap: wrap;
+    /* Permitir que os elementos quebrem para a próxima linha */
+    gap: 20px;
+    /* Espaçamento entre os elementos */
+    overflow-y: auto;
+    /* Adicionar uma barra de rolagem vertical se necessário */
+    align-content: flex-start;
+    /* justify-content: space-evenly; */
+}
+
+.popup-invent-screm {
+    background-color: #ffffff89;
+
+}
+
+.popup-invent-screm.selected,
+.popup-shop-screm.selected {
+    display: flex;
+}
+
+.invent-item,
+.shop-item {
+
+    background-color: #b46436;
+    border: 2px solid rgb(159, 95, 5);
+    margin-bottom: 20px;
+    /* Espaçamento inferior entre os elementos */
+    border-radius: 8px;
+    padding: 10px;
+    box-sizing: border-box;
+    /* Garantir que o padding não afete a largura */
+}
+
+.invent-item {
+    background-color: #00000077;
+    border: 2px solid #00000062;
+    box-shadow: inset 1px 1px 5px 1px rgba(28, 27, 27, 0.901);
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.invent-item.selected {
+    border: 2px solid red;
+}
+
+.invent-item:hover {
+    /* border: 2px solid rgba(159, 95, 5, 0.656); */
+    transform: scale(1.05);
+}
+
+
+.invent-item h3,
+.shop-item h3 {
+    padding: 5px;
+}
+
+.invent-item .item-img,
+.shop-item .item-img {
+    /* background-color: #1BACD3; */
+    display: flex;
+    align-items: center;
+
+    padding: 5px;
+    font-size: clamp(0.5em, 1.5vw, .7em);
+}
+
+.invent-item .item-img img,
+.shop-item .item-img img {
+    /* display: block; */
+    /* width: 60px;  */
+    width: 100%;
+
+}
+
+.invent-item .item-img img {
+    display: block;
+    margin: auto;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.shop-item .item-img div {
+    max-width: 100%;
+    width: 50px;
+    height: 50px;
+    background-color: #d3bd1b;
+    border-radius: 5px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 5px;
+}
+
+.invent-item .item-img div {
+    width: 100px;
+    height: 166px;
+    overflow: hidden;
+}
+
+.item-value {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    font-size: clamp(0.7em, 1.5vw, .9em);
+
+}
+
+.value-type {
+    position: relative;
+    display: inline-block;
+    /* Garante que o contêiner do chapéu se ajuste ao tamanho da imagem */
+    z-index: 99;
+    margin-right: -15px;
+    margin-top: 3px;
+}
+
+.value-type img {
+    /* max-width: 100%; */
+    width: 35px;
+}
+
+.value-price {
+    /* background-color: #847E66; */
+    background: linear-gradient(to top, #252525c7 60%, #2f2f2fca 40%) padding-box,
+        linear-gradient(to top, #343331, #1e1d1c) border-box;
+    border: 3px solid rgba(36, 36, 36, 0.782);
+    /* padding: 2px; */
+    width: 100%;
+    /* position: relative;
+    display: inline-block;   */
+    border-radius: 3px;
+    height: 30px;
+    /* margin-right: 10px; */
+    box-shadow: 1px 1px 5px 1px rgb(28, 27, 27);
+
+    font-size: 10px;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    color: white;
+    padding-right: 5px;
+}
+
+.item-value p {
+    /* background-color: #262626; */
+}
+
+.value-btn {
+    /* position: relative;
+    display: inline-block; */
+    /* Garante que o contêiner do chapéu se ajuste ao tamanho da imagem */
+    /* z-index: 99;
+    margin-left: -25px; */
+
+
+
+}
+
+.value-btn div {
+    padding: 5px 15px;
+    /* width: 100%; */
+    border: 0;
+    border-radius: 5px;
+    border-bottom: 5px solid #b46436;
+    background-color: #FFB11D;
+    color: #f0f0f0;
+    font-family: 'clash', Arial, Helvetica, sans-serif;
+
+    cursor: pointer;
+    line-height: 1;
+    text-decoration: none;
+    /* margin: 10px; */
+    filter: drop-shadow(5px 1px 5px rgb(28, 27, 27));
+    font-size: clamp(0.7em, 1.5vw, .9em);
+    transition: 0.5s ease;
 }
 
 @media (max-width: 600px) {

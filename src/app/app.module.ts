@@ -11,6 +11,10 @@ import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HomePageComponent } from './home-page/home-page.component';
 import { HttpClientModule } from '@angular/common/http';
+import { DressUpComponent } from './dress-up/dress-up.component';
+import { DressUpAvatarComponent } from './dress-up-avatar/dress-up-avatar.component';
+import { TelaAdminComponent } from './tela-admin/tela-admin.component';
+import { NgxCurrencyDirective } from "ngx-currency";
 
 @NgModule({
   declarations: [
@@ -19,14 +23,18 @@ import { HttpClientModule } from '@angular/common/http';
     InputComponent,
     TelaLoginComponent,
     TelaCadastroComponent,
-    HomePageComponent
+    HomePageComponent,
+    DressUpComponent,
+    DressUpAvatarComponent,
+    TelaAdminComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    NgxCurrencyDirective
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,0 +1,18 @@
+<h1 id="heading">The Lonely Moongirl Dressup</h1>
+<div id="box">
+    <div id="backdrop">
+        <div id="face" [ngClass]="classFace"></div>
+        <div id="hat" [ngClass]="classHat"></div>
+        <div id="hair" [ngClass]="classHair"></div>
+        <div id="girl"></div>
+        <div id="shoes" [ngClass]="classShoes"></div>
+        <div id="dress" [ngClass]="classDress"></div>
+    </div>
+    <div class="buttonBox">
+        <button id="nexthair" (click)="nexthair()">hair➡</button>
+        <button id="nextdress" (click)="nextdress()">dress➡</button>
+        <button id="nextshoes" (click)="nextshoes()">shoes➡</button>
+        <button id="nexthat" (click)="nexthat()">accessory➡</button>
+        <button id="nextface" (click)="nextface()">face➡</button>
+    </div>
+</div>

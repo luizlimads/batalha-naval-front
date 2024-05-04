@@ -24,7 +24,7 @@
 
             <div class="item-coin">
 
-                <div class="icon-plus">
+                <div class="icon-plus" (click)="openTab('moedas'); fnOpen('shop');">
                     <img src="../../assets/images/img-home-page/pluscoins.png" alt="">
                 </div>
                 <div class="item-coin-status">
@@ -35,7 +35,7 @@
                     <img src="../../assets/images/img-home-page/coin.png" alt="">
                 </div>
             </div>
-            <div class="item-diamond">
+            <div class="item-diamond" (click)="openTab('diamonds'); fnOpen('shop');">
 
                 <div class="icon-plus">
                     <img src="../../assets/images/img-home-page/pluscoins.png" alt="">
@@ -93,7 +93,7 @@
                         </div>
                         <div class="item-avatar">
                             <!-- <div class="user-avatar"> -->
-                                <img src="../../assets/images/img-home-page/pirata1.png" alt="">
+                            <img src="../../assets/images/img-home-page/pirata1.png" alt="">
                             <!-- </div> -->
                         </div>
                         <div class="item-name">
@@ -120,7 +120,7 @@
                         </div>
                         <div class="item-avatar">
                             <!-- <div class="user-avatar"> -->
-                                <img src="../../assets/images/img-home-page/pirata1.png" alt="">
+                            <img src="../../assets/images/img-home-page/pirata1.png" alt="">
                             <!-- </div> -->
                         </div>
                         <div class="item-name">
@@ -129,7 +129,7 @@
                         </div>
                         <div class="item-trofeus">
                             <div class="item-trofeu-status">
-                                
+
 
                                 <div class="item-trofeu-icon">
                                     <img src="../../assets/images/img-home-page/trofeu.png">
@@ -147,7 +147,7 @@
                         </div>
                         <div class="item-avatar">
                             <!-- <div class="user-avatar"> -->
-                                <img src="../../assets/images/img-home-page/pirata1.png" alt="">
+                            <img src="../../assets/images/img-home-page/pirata1.png" alt="">
                             <!-- </div> -->
                         </div>
                         <div class="item-name">
@@ -156,7 +156,7 @@
                         </div>
                         <div class="item-trofeus">
                             <div class="item-trofeu-status">
-                                
+
 
                                 <div class="item-trofeu-icon">
                                     <img src="../../assets/images/img-home-page/trofeu.png">
@@ -174,7 +174,7 @@
                         </div>
                         <div class="item-avatar">
                             <!-- <div class="user-avatar"> -->
-                                <img src="../../assets/images/img-home-page/pirata1.png" alt="">
+                            <img src="../../assets/images/img-home-page/pirata1.png" alt="">
                             <!-- </div> -->
                         </div>
                         <div class="item-name">
@@ -183,7 +183,7 @@
                         </div>
                         <div class="item-trofeus">
                             <div class="item-trofeu-status">
-                                
+
 
                                 <div class="item-trofeu-icon">
                                     <img src="../../assets/images/img-home-page/trofeu.png">
@@ -195,14 +195,14 @@
                         </div>
                     </div>
 
-                    
+
                     <div class="rank-item">
                         <div class="item-position">
                             <p>4</p>
                         </div>
                         <div class="item-avatar">
                             <!-- <div class="user-avatar"> -->
-                                <img src="../../assets/images/img-home-page/pirata1.png" alt="">
+                            <img src="../../assets/images/img-home-page/pirata1.png" alt="">
                             <!-- </div> -->
                         </div>
                         <div class="item-name">
@@ -211,7 +211,7 @@
                         </div>
                         <div class="item-trofeus">
                             <div class="item-trofeu-status">
-                                
+
 
                                 <div class="item-trofeu-icon">
                                     <img src="../../assets/images/img-home-page/trofeu.png">
@@ -223,14 +223,14 @@
                         </div>
                     </div>
 
-                    
+
                     <div class="rank-item">
                         <div class="item-position">
                             <p>4</p>
                         </div>
                         <div class="item-avatar">
                             <!-- <div class="user-avatar"> -->
-                                <img src="../../assets/images/img-home-page/pirata1.png" alt="">
+                            <img src="../../assets/images/img-home-page/pirata1.png" alt="">
                             <!-- </div> -->
                         </div>
                         <div class="item-name">
@@ -239,7 +239,7 @@
                         </div>
                         <div class="item-trofeus">
                             <div class="item-trofeu-status">
-                                
+
 
                                 <div class="item-trofeu-icon">
                                     <img src="../../assets/images/img-home-page/trofeu.png">
@@ -251,7 +251,7 @@
                         </div>
                     </div>
 
-                    
+
 
 
                 </div>
@@ -264,15 +264,15 @@
 
                 <div class="nav-btn-geral">
                     <div class="nav-bg">
-                        <div class="icon-conf" (mouseover)="playSoundSelecao()">
+                        <div class="icon-conf" (mouseover)="playSoundSelecao()" (click)="fnOpen('conf');">
                             <p>Configurar</p>
                             <img src="../../assets/images/img-home-page/conf.png" alt="">
                         </div>
-                        <div class="icon-inventory" (mouseover)="playSoundSelecao()">
+                        <div class="icon-inventory" (mouseover)="playSoundSelecao()" (click)="fnOpen('inventory');">
                             <p>Inventário</p>
                             <img src="../../assets/images/img-home-page/inventory.png" alt="">
                         </div>
-                        <div class="icon-shop" (mouseover)="playSoundSelecao()" (click)="fnOpen()">
+                        <div class="icon-shop" (mouseover)="playSoundSelecao()" (click)="fnOpen('shop');">
                             <p>Shop</p>
                             <img src="../../assets/images/img-home-page/shop.png" alt="">
                         </div>
@@ -294,29 +294,162 @@
 
 
 <div class="popups" [ngClass]="open? 'popup--visible': ''">
-    <div class="bg-popups" >
-        <div class="popup-content" >
-            <button (click)="this.open = false">sair</button>
+    <div class="bg-popups">
+        <div class="popup-content">
+            <button (click)="open = false; this.somHomePopup.play();">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                    <path
+                        d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+                </svg>
+            </button>
 
-            <div class="popup-shop">
-                ...
+            <!-- POPUP DA CONFIG ------------------------------------------------------- -->
 
-                <div class="popup-shop-guias">
-                    <!-- essas guias vai vir do banco de dados -->
-                    <div class="selected">
-                        <p>Coins</p>
-                    </div>
-                    <div class="guia2">
-                        <p>Diamonds</p>
-                    </div>
+            <div class="popup-conf" [class.active]="activePopUp === 'conf'">
+                <h1>Configurações</h1>
+                <div class="conf-sound-effects">
+                    <input id="slider" type="range" min="4" max="32" value="16" />
+                    <!-- <input type="range" min="1" max="100" value="50" class="slider" id="myRange"> -->
                 </div>
-                <div class="popup-shop-screm1">
+                <div class="conf-music">
                     ..
                 </div>
             </div>
 
+
+
+            <!-- POPUP DO INVENTARIO ------------------------------------------------------- -->
+
+
+            <div class="popup-inventory" [class.active]="activePopUp === 'inventory'">
+
+                <div class="invent-itens">
+                    <div class="popup-invent-guias">
+
+                        <!-- essas guias vai vir do banco de dados -->
+                        <div (click)="openTabInvent('todos')" [class.selected]="activeTabInvent === 'todos'">
+                            <p>Todos</p>
+                        </div>
+                        <!-- <div (click)="openTabInvent('pants')" [class.selected]="activeTabInvent === 'pants'">
+                            <p>Calças</p>
+                        </div> -->
+
+                        <div *ngFor="let guia of guiasInvent" (click)="openTabInvent(guia.seletor)"
+                            [class.selected]="activeTabInvent === guia.seletor">
+                            <p>{{guia.titulo}}</p>
+                        </div>
+
+                    </div>
+
+                    <!-- vai vir do banco -->
+                    <div class="popup-invent-screm" [class.selected]="activeTabInvent === 'todos'">
+                        <!-- vai vir do banco -->
+                        <div class="invent-item" *ngFor="let item of itensInvent"
+                            [class.selected]="oAvatar[item.categoria] === item.titulo">
+                            <!-- <h3>100 diamantes</h3> -->
+                            <div class="item-img" (click)="fnSelectedClothe(item)">
+                                <div>
+                                    <img [src]="item.imgUrl" alt="">
+                                </div>
+                                <!-- <p>Descrição</p> -->
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div *ngFor="let guia of guiasInvent" class="popup-invent-screm"
+                        [class.selected]="activeTabInvent === guia.seletor">
+                        <!-- vai vir do banco -->
+
+                        <ng-container *ngFor="let item of itensInvent">
+
+                            <div class="invent-item" *ngIf="guia.seletor === item.categoria"
+                                [class.selected]="oAvatar[item.categoria] === item.titulo">
+                                <!-- <h3>100 diamantes</h3> -->
+                                <div class="item-img" (click)="fnSelectedClothe(item)">
+                                    <div>
+                                        <img [src]="item.imgUrl" alt="">
+                                    </div>
+                                    <!-- <p>Descrição</p> -->
+                                </div>
+                            </div>
+                        </ng-container>
+
+
+                    </div>
+
+
+                </div>
+                <div class="invent-avatar">
+                    <!-- avatar -->
+                    <!-- <app-dress-up-avatar></app-dress-up-avatar> -->
+
+                    <!-- <div> -->
+                        <!-- <div id="backdrop"> -->
+                            <div *ngFor="let guia of guiasInvent" class="clothes" [id]="guia.seletor"></div>
+                            <div id="avatar"></div>
+                        <!-- </div> -->
+                    <!-- </div> -->
+                </div>
+            </div>
+
+
+            <!-- POPUP DO SHOP ------------------------------------------------------- -->
+
+            <div class="popup-shop" [class.active]="activePopUp === 'shop'">
+                <h1>Shopping</h1>
+                <div class="popup-shop-guias">
+                    <!-- essas guias vai vir do banco de dados -->
+                    <div (click)="openTab('moedas')" [class.selected]="activeTab === 'moedas'">
+                        <p>Coins</p>
+                    </div>
+                    <div (click)="openTab('diamonds')" [class.selected]="activeTab === 'diamonds'">
+                        <p>Diamonds</p>
+                    </div>
+
+
+
+                </div>
+
+                <!-- Vai vir do banco -->
+                <div class="popup-shop-screm" [class.selected]="activeTab === 'moedas'">
+                    <div class="shop-item">
+                        <h3>100 diamantes</h3>
+                        <div class="item-img">
+                            <div>
+                                <img src="../../assets/images/img-home-page/pirata1.png" alt="">
+                            </div>
+                            <p>Descrição</p>
+                        </div>
+                        <div class="item-value">
+                            <div class="value-type">
+                                <img src="../../assets/images/img-home-page/coin.png" alt="">
+                            </div>
+                            <div class="value-price">
+                                <p>750,00</p>
+                            </div>
+                            <div class="value-btn">
+                                <div>
+                                    Buy
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <!-- Vai vir do banco -->
+
+
+                <!-- Vai vir do banco -->
+                <div class="popup-shop-screm" [class.selected]="activeTab === 'diamonds'">
+                    <!-- Vai vir do banco -->
+
+
+
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
-
