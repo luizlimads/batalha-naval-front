@@ -30,4 +30,16 @@ export class BatalhaNavalService {
   getAllItems() {
     return this.http.get(`${this.urlBase}/itens`);
   }
+
+  deleteCategoria(categoriaId: number) {
+    return this.http.delete(`${this.urlBase}/itens-categoria/${categoriaId}`);
+  }
+
+  getCategoria(categoriaId: number) {
+    return this.http.get(`${this.urlBase}/itens-categoria/${categoriaId}`);
+  }
+
+  updateCategoria(formData: any) {
+    return this.http.put(`${this.urlBase}/itens-categoria`, formData);
+  }
 }

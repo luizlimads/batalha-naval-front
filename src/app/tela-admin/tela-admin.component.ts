@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { BatalhaNavalService } from '../batalha-naval.service';
-import { tap } from 'rxjs';
+import { finalize, tap } from 'rxjs';
 
 
 @Component({
@@ -16,8 +16,10 @@ export class TelaAdminComponent implements OnInit {
   dataCategorias: any[] = [];
   dataItens: any[] = [];
   imageUrl: string | ArrayBuffer | null = null;
+  categoriaDeleteId!: number;
 
   formCategoria: FormGroup = this.fb.group({
+    id: [],
     titulo: [''],
     categoria: ['0']
   });
@@ -67,6 +69,10 @@ export class TelaAdminComponent implements OnInit {
     }
   }
 
+  fnCloseModalCatg() {
+    this.resetFormCatg();
+    this.fnOpenModal();
+  }
 
   fnOpenModal() {
     if (this.categoriaSelected) {
@@ -82,7 +88,7 @@ export class TelaAdminComponent implements OnInit {
 
 
   fnApagaCatg(id: any) {
-    // idCatg = e.currentTarget.id
+    this.categoriaDeleteId = id;
 
     (document.querySelector(".shadow-modal-confirm #txtQual") as HTMLInputElement).value = "Categoria";
 
@@ -122,7 +128,19 @@ export class TelaAdminComponent implements OnInit {
     if (!this.formCategoria.dirty || this.formCategoria.value.categoria === '0') {
       this.fnMsg("Por favor, preencha todos os campos obrigatórios antes de prosseguir.")
     } else {
-      //this.service.postCategoria(this.formCategoria.value).subscribe();
+
+      var id = this.formCategoria.get('id')?.value;
+      console.log(id)
+      if (id !== null && id !== undefined && id !== '') {
+        this.service.updateCategoria(this.formCategoria.value).pipe(
+          finalize(() => this.getAllCategorias())
+        ).subscribe();
+      } else {
+        this.service.postCategoria(this.formCategoria.value).pipe(
+          finalize(() => this.getAllCategorias())
+        ).subscribe();  
+      }
+      
       let result = true;
 
       if (result) {
@@ -139,11 +157,11 @@ export class TelaAdminComponent implements OnInit {
   }
 
   getAllCategorias() {
-    //this.service.getAllCategorias().pipe(
-    // tap((res:any) => {
-    //     this.dataCategorias = res
-    //  })
-    //).subscribe();
+    this.service.getAllCategorias().pipe(
+    tap((res:any) => {
+        this.dataCategorias = res
+     })
+    ).subscribe();
   }
 
   postItem() {
@@ -151,7 +169,8 @@ export class TelaAdminComponent implements OnInit {
     if (!this.formItem.dirty || this.formItem.value.categoriaId === '0' || this.formItem.value.tipoPagamento === '0') {
       this.fnMsg("Por favor, preencha todos os campos obrigatórios antes de prosseguir.")
     } else {
-      // this.service.postItem(this.formItem.value).subscribe();
+      this.service.postItem(this.formItem.value).subscribe();
+      
       let result = true;
 
       if (result) {
@@ -167,11 +186,11 @@ export class TelaAdminComponent implements OnInit {
   }
 
   getAllItems() {
-    //this.service.getAllItems().pipe(
-    //  tap((res:any) => {
-    //    this.dataItens = res
-    //  })
-    //).subscribe();
+    this.service.getAllItems().pipe(
+     tap((res:any) => {
+       this.dataItens = res
+     })
+    ).subscribe();
   }
 
 
@@ -210,5 +229,25 @@ export class TelaAdminComponent implements OnInit {
     this.formCategoria.reset({
       categoria: '0'
     });
+  }
+
+  deleteCategoria() {
+    this.service.deleteCategoria(this.categoriaDeleteId).subscribe();
+  }
+
+  openUpdateCategoria(categoriaId: number) {
+    this.service.getCategoria(categoriaId).pipe(
+      tap((res:any) => {
+        
+        if (res) {
+          this.formCategoria.patchValue({
+            titulo: res.titulo,
+            categoria: res.categoria,
+            id: res.id
+          })
+          this.fnOpenModal();
+        }
+      })
+    ).subscribe();
   }
 }
