@@ -19,7 +19,7 @@ export class TelaAdminComponent implements OnInit {
 
   formCategoria: FormGroup = this.fb.group({
     titulo: [''],
-    categoria: ['']
+    categoria: ['0']
   });
 
   formItem: FormGroup = this.fb.group({
@@ -28,11 +28,11 @@ export class TelaAdminComponent implements OnInit {
     descricao: [''],
     valor: [''],
     ativo: [false],
-    categoriaId: [],
-    tipoPagamento: ['']
+    categoriaId: ['0'],
+    tipoPagamento: ['0']
   });
 
-  constructor(private fb: FormBuilder, private service: BatalhaNavalService) {}
+  constructor(private fb: FormBuilder, private service: BatalhaNavalService) { }
 
   ngOnInit(): void {
     this.getAllCategorias();
@@ -93,8 +93,7 @@ export class TelaAdminComponent implements OnInit {
   }
 
   fnModalConfirm() {
-    (document.querySelector(".shadow-modal-confirm") as HTMLElement).classList.toggle("active");
-
+    (document.querySelector(".shadow-modal-confirm") as HTMLElement).classList.toggle("active");  
   }
 
 
@@ -120,19 +119,51 @@ export class TelaAdminComponent implements OnInit {
   }
 
   postCategoria() {
-    //this.service.postCategoria(this.formCategoria.value).subscribe();
+    if (!this.formCategoria.dirty || this.formCategoria.value.categoria === '0') {
+      this.fnMsg("Por favor, preencha todos os campos obrigatórios antes de prosseguir.")
+    } else {
+      //this.service.postCategoria(this.formCategoria.value).subscribe();
+      let result = true;
+
+      if (result) {
+        this.fnMsg("Categoria inserida com sucesso", "success"); //mostrando msg para o user
+        this.resetFormCatg(); //limpando os campos
+        (document.querySelector(".shadow-modal-catg") as HTMLElement).classList.remove("active"); //fechando o mdodal
+
+        this.getAllCategorias(); //atualizando na tela a nova categoria inserida
+      } else {
+        this.fnMsg("Erro ao tentar inserir a categoria");
+
+      }
+    }
   }
 
   getAllCategorias() {
     //this.service.getAllCategorias().pipe(
-     // tap((res:any) => {
-   //     this.dataCategorias = res
+    // tap((res:any) => {
+    //     this.dataCategorias = res
     //  })
     //).subscribe();
   }
 
   postItem() {
-   // this.service.postItem(this.formItem.value).subscribe();
+
+    if (!this.formItem.dirty || this.formItem.value.categoriaId === '0' || this.formItem.value.tipoPagamento === '0') {
+      this.fnMsg("Por favor, preencha todos os campos obrigatórios antes de prosseguir.")
+    } else {
+      // this.service.postItem(this.formItem.value).subscribe();
+      let result = true;
+
+      if (result) {
+        this.fnMsg("Item inserido com sucesso", "success"); //mostra msg para o user
+        this.resetFormItem(); //limpa os campos
+        (document.querySelector(".shadow-modal-item") as HTMLElement).classList.remove("active"); //fecha o modal 
+
+      } else {
+        this.fnMsg("Erro ao tentar inserir o item");
+      }
+    }
+
   }
 
   getAllItems() {
@@ -141,5 +172,43 @@ export class TelaAdminComponent implements OnInit {
     //    this.dataItens = res
     //  })
     //).subscribe();
+  }
+
+
+  fnMsg(msg: any, tipoMsg = "error") {
+    let msgAviso = document.getElementById("msgAviso") as HTMLElement;
+
+    msgAviso.innerHTML = msg;
+
+    if (tipoMsg == "success") {
+      msgAviso.classList.remove("error");
+      msgAviso.classList.add("success");
+
+      setTimeout(function () {
+        msgAviso.classList.remove("success");
+      }, 5000); // A mensagem de erro desaparecerá após 5 segundos (5000 milissegundos)
+
+    } else {
+      msgAviso.classList.remove("success");
+      msgAviso.classList.add("error");
+
+      setTimeout(function () {
+        msgAviso.classList.remove("error");
+      }, 5000); // A mensagem de erro desaparecerá após 5 segundos (5000 milissegundos)
+
+    }
+  }
+
+  resetFormItem() {
+    this.formItem.reset({
+      categoriaId: '0',
+      tipoPagamento: '0'
+    });
+  }
+
+  resetFormCatg() {
+    this.formCategoria.reset({
+      categoria: '0'
+    });
   }
 }

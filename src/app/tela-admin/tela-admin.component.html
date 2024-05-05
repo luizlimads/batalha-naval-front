@@ -1,36 +1,54 @@
+<h2 id="msgAviso"></h2>
 <div class="body-main">
 
     <aside class="sidebar" [class.active]="open === true">
-        <div class="collections-title">
-            <h1>Coleções</h1>
+        <div class="collections-title" >
+            <!-- <h1>Tela admin</h1> -->
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-person-fill" viewBox="0 0 16 16">
+                    <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                  </svg>
+            </div>
+
+            <p>Super User</p>
         </div>
 
         <div class="collections-itens">
 
-            <div class="collections-item" (click)="fnShow('Categorias')">
+            <div class="collections-item" (click)="fnShow('Categorias')" [class.selected]="categoriaSelected === true">
 
                 <div class="item-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                    <!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
                         <path
                             d="M2 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 2 6.586zm3.5 4a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3" />
                         <path
                             d="M1.293 7.793A1 1 0 0 1 1 7.086V2a1 1 0 0 0-1 1v4.586a1 1 0 0 0 .293.707l7 7a1 1 0 0 0 1.414 0l.043-.043z" />
-                    </svg>
+                    </svg> -->
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-tags" viewBox="0 0 16 16">
+                        <path d="M3 2v4.586l7 7L14.586 9l-7-7zM2 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 2 6.586z"/>
+                        <path d="M5.5 5a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1m0 1a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3M1 7.086a1 1 0 0 0 .293.707L8.75 15.25l-.043.043a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 0 7.586V3a1 1 0 0 1 1-1z"/>
+                      </svg>
                 </div>
 
                 <p>Categorias</p>
 
             </div>
 
-            <div class="collections-item" (click)="fnShow('Itens')">
+            <div class="collections-item" (click)="fnShow('Itens')" [class.selected]="itemSelected === true">
 
                 <div class="item-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                    <!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
                         <path
                             d="m14.12 10.163 1.715.858c.22.11.22.424 0 .534L8.267 15.34a.6.6 0 0 1-.534 0L.165 11.555a.299.299 0 0 1 0-.534l1.716-.858 5.317 2.659c.505.252 1.1.252 1.604 0l5.317-2.66zM7.733.063a.6.6 0 0 1 .534 0l7.568 3.784a.3.3 0 0 1 0 .535L8.267 8.165a.6.6 0 0 1-.534 0L.165 4.382a.299.299 0 0 1 0-.535z" />
                         <path
                             d="m14.12 6.576 1.715.858c.22.11.22.424 0 .534l-7.568 3.784a.6.6 0 0 1-.534 0L.165 7.968a.299.299 0 0 1 0-.534l1.716-.858 5.317 2.659c.505.252 1.1.252 1.604 0z" />
-                    </svg>
+                    </svg> -->
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-subtract" viewBox="0 0 16 16">
+                        <path d="M0 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2h2a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1z"/>
+                      </svg>
+                   
                 </div>
 
                 <p>Itens</p>
@@ -174,14 +192,14 @@
 
                 </div>
 
-                <div class="msgIncialTarefa">
+                <div class="msgIncialTarefa" >
                     <h1>Você não tem nenhuma Tarefa</h1>
                 </div> -->
 
             </div>
 
             <!-- -------  -->
-            <h1 id="msgInicial">Bem <strong style="color: rgb(141, 141, 141)">Vindo(a)</strong></h1>
+            <h1 id="msgInicial" *ngIf="!categoriaSelected && !itemSelected">Bem <strong style="color: rgb(141, 141, 141)">Vindo(a)</strong></h1>
         </div>
     </main>
 </div>
@@ -224,7 +242,7 @@
                     d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
             </svg>
         </div>
-        <h1>Crie sua nova Item</h1>
+        <h1>Crie o seu novo Item</h1>
 
         <!-- modal item -->
         <form [formGroup]="formItem" id="formItem">
