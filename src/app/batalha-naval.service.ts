@@ -24,6 +24,8 @@ export class BatalhaNavalService {
   }
 
   postItem(formData: any) {
+   // const command = { ...formData, image: file }
+    //console.log(command)
     return this.http.post(`${this.urlBase}/itens`, formData);
   }
 
@@ -41,5 +43,13 @@ export class BatalhaNavalService {
 
   updateCategoria(formData: any) {
     return this.http.put(`${this.urlBase}/itens-categoria`, formData);
+  }
+
+  getItem(itemId: number) {
+    return this.http.get(`${this.urlBase}/itens/${itemId}`);
+  }
+
+  updateItem(formData: any) {
+    return this.http.put(`${this.urlBase}/itens`, formData);
   }
 }

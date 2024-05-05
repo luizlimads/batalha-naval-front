@@ -17,6 +17,7 @@ export class TelaAdminComponent implements OnInit {
   dataItens: any[] = [];
   imageUrl: string | ArrayBuffer | null = null;
   categoriaDeleteId!: number;
+  file: any;
 
   formCategoria: FormGroup = this.fb.group({
     id: [],
@@ -25,7 +26,7 @@ export class TelaAdminComponent implements OnInit {
   });
 
   formItem: FormGroup = this.fb.group({
-    //imageUrl: ['']
+    id: [],
     nome: [''],
     descricao: [''],
     valor: [''],
@@ -111,15 +112,16 @@ export class TelaAdminComponent implements OnInit {
 
   fnChangeFile(event: any) {
     const file: File = event.target.files[0];
-    let imgArea = document.querySelector(".img-area") as HTMLElement;
+    this.file = file;
 
+    let imgArea = document.querySelector(".img-area") as HTMLElement;
     if (file) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => {
         this.imageUrl = reader.result;
         imgArea.setAttribute("data-img", file.name);
-        imgArea.classList.add("active")
+        imgArea.classList.add("active")      
       };
     }
   }
@@ -130,7 +132,7 @@ export class TelaAdminComponent implements OnInit {
     } else {
 
       var id = this.formCategoria.get('id')?.value;
-      console.log(id)
+
       if (id !== null && id !== undefined && id !== '') {
         this.service.updateCategoria(this.formCategoria.value).pipe(
           finalize(() => this.getAllCategorias())
@@ -165,11 +167,32 @@ export class TelaAdminComponent implements OnInit {
   }
 
   postItem() {
-
     if (!this.formItem.dirty || this.formItem.value.categoriaId === '0' || this.formItem.value.tipoPagamento === '0') {
       this.fnMsg("Por favor, preencha todos os campos obrigatórios antes de prosseguir.")
     } else {
-      this.service.postItem(this.formItem.value).subscribe();
+      const formData = new FormData();
+
+      formData.append('image', this.file);
+      formData.append('descricao', this.formItem.get('descricao')!.value);
+      formData.append('valor', this.formItem.get('valor')!.value);
+      formData.append('nome', this.formItem.get('nome')!.value);
+      formData.append('ativo', this.formItem.get('ativo')!.value);
+      formData.append('categoriaId', this.formItem.get('categoriaId')!.value);
+      formData.append('tipoPagamento', this.formItem.get('tipoPagamento')!.value);
+      
+      var id = this.formItem.get('id')?.value;
+
+      if (id !== null && id !== undefined && id !== '') {
+        formData.append('id', this.formItem.get('id')! .value)
+
+        this.service.updateItem(formData).pipe(
+          finalize(() => this.getAllItems())
+        ).subscribe();
+      } else {
+        this.service.postItem(formData).pipe(
+          finalize(() => this.getAllItems())
+        ).subscribe();
+      }
       
       let result = true;
 
@@ -238,7 +261,6 @@ export class TelaAdminComponent implements OnInit {
   openUpdateCategoria(categoriaId: number) {
     this.service.getCategoria(categoriaId).pipe(
       tap((res:any) => {
-        
         if (res) {
           this.formCategoria.patchValue({
             titulo: res.titulo,
@@ -250,4 +272,37 @@ export class TelaAdminComponent implements OnInit {
       })
     ).subscribe();
   }
+
+  openUpdateItem(itemId: number) {
+    this.service.getItem(itemId).pipe(
+      tap((res:any) => {
+        this.formItem.patchValue({
+          id: res.id,
+          nome: res.nome,
+          descricao: res.descricao,
+          valor: res.valor,
+          ativo: res.ativo,
+          categoriaId: res.categoriaId,
+          tipoPagamento: res.tipoPagamento
+        });
+        this.imageUrl = 'data:image/jpg;base64,' + res.imageData;
+        const imageBlob = this.dataURItoBlob(res.imageData);
+
+        this.file = new File([imageBlob], 'img.png', { type: 'image/png' });
+
+        this.fnOpenModal();
+      })
+    ).subscribe();
+  }
+
+  dataURItoBlob(dataURI: any) {
+    const byteString = window.atob(dataURI);
+    const arrayBuffer = new ArrayBuffer(byteString.length);
+    const int8Array = new Uint8Array(arrayBuffer);
+    for (let i = 0; i < byteString.length; i++) {
+      int8Array[i] = byteString.charCodeAt(i);
+    }
+    const blob = new Blob([int8Array], { type: 'image/png' });    
+    return blob;
+ }
 }
