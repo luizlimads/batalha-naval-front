@@ -42,4 +42,9 @@ export class BatalhaNavalService {
   updateCategoria(formData: any) {
     return this.http.put(`${this.urlBase}/itens-categoria`, formData);
   }
+
+  deleteItem(itemId: number) {
+    return this.http.delete(`${this.urlBase}/itens/${itemId}`);
+  }
+  
 }

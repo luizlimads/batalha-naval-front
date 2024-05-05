@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { BatalhaNavalService } from '../batalha-naval.service';
-import { finalize, tap } from 'rxjs';
+import { finalize, pipe, tap } from 'rxjs';
 
 
 @Component({
@@ -16,7 +16,9 @@ export class TelaAdminComponent implements OnInit {
   dataCategorias: any[] = [];
   dataItens: any[] = [];
   imageUrl: string | ArrayBuffer | null = null;
-  categoriaDeleteId!: number;
+  categoriaDeleteId: any;
+  itemDeleteId: any;
+  deletedType: any = '';
 
   formCategoria: FormGroup = this.fb.group({
     id: [],
@@ -88,6 +90,11 @@ export class TelaAdminComponent implements OnInit {
 
 
   fnApagaCatg(id: any) {
+
+    console.log(id)
+
+    this.deletedType = "catg";
+
     this.categoriaDeleteId = id;
 
     (document.querySelector(".shadow-modal-confirm #txtQual") as HTMLInputElement).value = "Categoria";
@@ -98,8 +105,21 @@ export class TelaAdminComponent implements OnInit {
     this.fnModalConfirm();
   }
 
+  fnApagaItem(id: any) {
+    this.deletedType = "item";
+
+    this.itemDeleteId = id;
+
+    (document.querySelector(".shadow-modal-confirm #txtQual") as HTMLInputElement).value = "Item";
+
+    (document.querySelector(".shadow-modal-confirm p") as HTMLInputElement).innerHTML = "Deseja realmente excluir esse item?";
+
+
+    this.fnModalConfirm();
+  }
+
   fnModalConfirm() {
-    (document.querySelector(".shadow-modal-confirm") as HTMLElement).classList.toggle("active");  
+    (document.querySelector(".shadow-modal-confirm") as HTMLElement).classList.toggle("active");
   }
 
 
@@ -138,9 +158,9 @@ export class TelaAdminComponent implements OnInit {
       } else {
         this.service.postCategoria(this.formCategoria.value).pipe(
           finalize(() => this.getAllCategorias())
-        ).subscribe();  
+        ).subscribe();
       }
-      
+
       let result = true;
 
       if (result) {
@@ -158,10 +178,16 @@ export class TelaAdminComponent implements OnInit {
 
   getAllCategorias() {
     this.service.getAllCategorias().pipe(
-    tap((res:any) => {
+      tap((res: any) => {
         this.dataCategorias = res
-     })
+      }),
+      finalize(() => {
+        (document.getElementById("mainH") as HTMLElement).innerHTML = "Categorias - " + this.dataCategorias.length;
+
+      })
     ).subscribe();
+
+
   }
 
   postItem() {
@@ -169,28 +195,41 @@ export class TelaAdminComponent implements OnInit {
     if (!this.formItem.dirty || this.formItem.value.categoriaId === '0' || this.formItem.value.tipoPagamento === '0') {
       this.fnMsg("Por favor, preencha todos os campos obrigatórios antes de prosseguir.")
     } else {
-      this.service.postItem(this.formItem.value).subscribe();
-      
-      let result = true;
+      this.service.postItem(this.formItem.value).pipe(
+        finalize(() => {
+          this.getAllItems();
+          this.fnResultItem(true);
+        })
+      ).subscribe();
 
-      if (result) {
-        this.fnMsg("Item inserido com sucesso", "success"); //mostra msg para o user
-        this.resetFormItem(); //limpa os campos
-        (document.querySelector(".shadow-modal-item") as HTMLElement).classList.remove("active"); //fecha o modal 
-
-      } else {
-        this.fnMsg("Erro ao tentar inserir o item");
-      }
     }
 
   }
 
+  fnResultItem(result: boolean) {
+    if (result) {
+      this.fnMsg("Item inserido com sucesso", "success"); //mostra msg para o user
+      this.resetFormItem(); //limpa os campos
+      (document.querySelector(".shadow-modal-item") as HTMLElement).classList.remove("active"); //fecha o modal 
+    } else {
+      this.fnMsg("Erro ao tentar inserir o item");
+    }
+  }
+
   getAllItems() {
+
     this.service.getAllItems().pipe(
-     tap((res:any) => {
-       this.dataItens = res
-     })
+      tap((res: any) => {
+        this.dataItens = res
+
+      }),
+      finalize(() => {
+        (document.getElementById("mainH") as HTMLElement).innerHTML = "Itens - " + this.dataItens.length;
+
+      })
     ).subscribe();
+
+
   }
 
 
@@ -231,14 +270,38 @@ export class TelaAdminComponent implements OnInit {
     });
   }
 
-  deleteCategoria() {
-    this.service.deleteCategoria(this.categoriaDeleteId).subscribe();
+  delete() {
+
+    console.log("entrei1", this.deletedType)
+    if (this.deletedType === "item") {
+      console.log("entrei2")
+
+      this.service.deleteItem(this.itemDeleteId).pipe(
+        finalize(() => {
+          this.getAllItems();
+          this.fnModalConfirm();
+        })
+      ).subscribe();
+
+    }
+
+    if (this.deletedType === "catg") {
+      console.log("entrei3")
+
+      this.service.deleteCategoria(this.categoriaDeleteId).pipe(
+        finalize(() => {
+          this.getAllCategorias();
+          this.fnModalConfirm();
+        })
+      ).subscribe();
+    }
+
   }
 
   openUpdateCategoria(categoriaId: number) {
     this.service.getCategoria(categoriaId).pipe(
-      tap((res:any) => {
-        
+      tap((res: any) => {
+
         if (res) {
           this.formCategoria.patchValue({
             titulo: res.titulo,
