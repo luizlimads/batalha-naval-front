@@ -31,18 +31,18 @@ export class TelaAdminComponent implements OnInit {
     id: [],
     nome: [''],
     descricao: [''],
-    valor: [''],
-    ativo: [false],
+    valor: ['0'],
+    ativo: [true],
     categoriaId: ['0'],
     tipoPagamento: ['0']
   });
 
   constructor(private fb: FormBuilder, private service: BatalhaNavalService) { }
 
-  ngOnInit(): void {
-    this.getAllCategorias();
-    this.getAllItems();
-  }
+    ngOnInit(): void {
+      this.getAllCategorias();
+      this.getAllItems();
+    }
 
   fnOpen() {
     this.open = !this.open;
@@ -77,15 +77,32 @@ export class TelaAdminComponent implements OnInit {
     this.fnOpenModal();
   }
 
-  fnOpenModal() {
+  fnCloseModalItem() {
+    this.resetFormItem();
+    this.fnOpenModal();
+  }
+
+  fnOpenModal(trocaTexto = true) {
     if (this.categoriaSelected) {
       let modalCategoria = document.querySelector(".shadow-modal-catg") as HTMLElement;
 
       modalCategoria.classList.toggle("active")
+
+
+      if (trocaTexto) {
+        (document.querySelector(".modal-catg-form h1") as HTMLElement).innerHTML = "Vamos criar uma <br />Categoria?";
+        (document.getElementById("btnAddCatg") as HTMLElement).innerHTML = "Criar";
+
+      }
     } else if (this.itemSelected) {
       let modalItem = document.querySelector(".shadow-modal-item") as HTMLElement;
 
       modalItem.classList.toggle("active")
+
+      if (trocaTexto) {
+        (document.querySelector(".modal-item-form h1") as HTMLElement).innerHTML = "Crie o seu novo Item";
+        (document.getElementById("btnAddItem") as HTMLElement).innerHTML = "Criar";
+      }
     }
   }
 
@@ -141,7 +158,7 @@ export class TelaAdminComponent implements OnInit {
       reader.onload = () => {
         this.imageUrl = reader.result;
         imgArea.setAttribute("data-img", file.name);
-        imgArea.classList.add("active")      
+        imgArea.classList.add("active")
       };
     }
   }
@@ -193,16 +210,17 @@ export class TelaAdminComponent implements OnInit {
   }
 
   postItem() {
-    if (!this.formItem.dirty || this.formItem.value.categoriaId === '0' || this.formItem.value.tipoPagamento === '0') {
+    console.log(this.formItem.value, !this.formItem.dirty);
+    console.log(this.formItem.value.categoriaId, this.formItem.value.tipoPagamento)
+    console.log("image", this.file)
+
+    if (this?.file === undefined || !this.formItem.dirty || this.formItem.value.categoriaId === '0' || this.formItem.value.tipoPagamento === '0') {
       this.fnMsg("Por favor, preencha todos os campos obrigatórios antes de prosseguir.")
     } else {
-      this.service.postItem(this.formItem.value).pipe(
-        finalize(() => {
-          this.getAllItems();
-        })
-      ).subscribe();
+
       const formData = new FormData();
 
+      console.log(this.file)
       formData.append('image', this.file);
       formData.append('descricao', this.formItem.get('descricao')!.value);
       formData.append('valor', this.formItem.get('valor')!.value);
@@ -210,29 +228,33 @@ export class TelaAdminComponent implements OnInit {
       formData.append('ativo', this.formItem.get('ativo')!.value);
       formData.append('categoriaId', this.formItem.get('categoriaId')!.value);
       formData.append('tipoPagamento', this.formItem.get('tipoPagamento')!.value);
-      
+
       var id = this.formItem.get('id')?.value;
 
-      if (id !== null && id !== undefined && id !== '') {
-        formData.append('id', this.formItem.get('id')! .value)
 
+      if (id !== null && id !== undefined && id !== '') {
+        formData.append('id', this.formItem.get('id')!.value)
         this.service.updateItem(formData).pipe(
-          finalize(() => this.getAllItems())
+          finalize(() => { this.getAllItems(); this.fnResultItem(true, true); })
         ).subscribe();
       } else {
         this.service.postItem(formData).pipe(
-          finalize(() => { this.getAllItems(); this.fnResultItem(true) })
+          finalize(() => { this.getAllItems(); this.fnResultItem(true); })
         ).subscribe();
       }
-      
-      let result = true;
+
     }
 
   }
 
-  fnResultItem(result: boolean) {
+  fnResultItem(result: boolean, update = false) {
     if (result) {
-      this.fnMsg("Item inserido com sucesso", "success"); //mostra msg para o user
+
+      if (update)
+        this.fnMsg("Item atualizado com sucesso", "success"); //mostra msg para o user
+      else
+        this.fnMsg("Item inserido com sucesso", "success"); //mostra msg para o user
+
       this.resetFormItem(); //limpa os campos
       (document.querySelector(".shadow-modal-item") as HTMLElement).classList.remove("active"); //fecha o modal 
     } else {
@@ -249,7 +271,7 @@ export class TelaAdminComponent implements OnInit {
       }),
       finalize(() => {
         (document.getElementById("mainH") as HTMLElement).innerHTML = "Itens - " + this.dataItens.length;
-
+        console.log(this.dataItens)
       })
     ).subscribe();
 
@@ -284,8 +306,14 @@ export class TelaAdminComponent implements OnInit {
   resetFormItem() {
     this.formItem.reset({
       categoriaId: '0',
-      tipoPagamento: '0'
+      tipoPagamento: '0',
+      ativo: true
     });
+
+    this.imageUrl = "";
+    (document.querySelector(".img-area") as HTMLElement).setAttribute("data-img", "");
+    (document.querySelector(".img-area") as HTMLElement).classList.remove("active");
+
   }
 
   resetFormCatg() {
@@ -296,9 +324,7 @@ export class TelaAdminComponent implements OnInit {
 
   delete() {
 
-    console.log("entrei1", this.deletedType)
     if (this.deletedType === "item") {
-      console.log("entrei2")
 
       this.service.deleteItem(this.itemDeleteId).pipe(
         finalize(() => {
@@ -310,7 +336,6 @@ export class TelaAdminComponent implements OnInit {
     }
 
     if (this.deletedType === "catg") {
-      console.log("entrei3")
 
       this.service.deleteCategoria(this.categoriaDeleteId).pipe(
         finalize(() => {
@@ -324,22 +349,30 @@ export class TelaAdminComponent implements OnInit {
 
   openUpdateCategoria(categoriaId: number) {
     this.service.getCategoria(categoriaId).pipe(
-      tap((res:any) => {
+      tap((res: any) => {
         if (res) {
           this.formCategoria.patchValue({
             titulo: res.titulo,
             categoria: res.categoria,
             id: res.id
-          })
-          this.fnOpenModal();
+          });
+
+
+
         }
+      }),
+      finalize(() => {
+        (document.querySelector(".modal-catg-form h1") as HTMLElement).innerHTML = "Alterar categoria";
+        (document.getElementById("btnAddCatg") as HTMLElement).innerHTML = "Alterar";
+
+        this.fnOpenModal(false);
       })
     ).subscribe();
   }
 
   openUpdateItem(itemId: number) {
     this.service.getItem(itemId).pipe(
-      tap((res:any) => {
+      tap((res: any) => {
         this.formItem.patchValue({
           id: res.id,
           nome: res.nome,
@@ -354,7 +387,17 @@ export class TelaAdminComponent implements OnInit {
 
         this.file = new File([imageBlob], 'img.png', { type: 'image/png' });
 
-        this.fnOpenModal();
+
+      }),
+      finalize(() => {
+
+        (document.querySelector(".img-area") as HTMLElement).setAttribute("data-img", "img.png");
+        (document.querySelector(".img-area") as HTMLElement).classList.add("active");
+
+        (document.querySelector(".modal-item-form h1") as HTMLElement).innerHTML = "Alterar item";
+        (document.getElementById("btnAddItem") as HTMLElement).innerHTML = "Alterar";
+
+        this.fnOpenModal(false);
       })
     ).subscribe();
   }
@@ -366,7 +409,29 @@ export class TelaAdminComponent implements OnInit {
     for (let i = 0; i < byteString.length; i++) {
       int8Array[i] = byteString.charCodeAt(i);
     }
-    const blob = new Blob([int8Array], { type: 'image/png' });    
+    const blob = new Blob([int8Array], { type: 'image/png' });
     return blob;
- }
+  }
+
+
+  fnOpenDescItem(e: any) {
+    (document.querySelector(".task-body-descricao") as HTMLElement).classList.toggle("open")
+    console.log(e.currentTarget.parentNode.parentNode)
+
+    let divBodyContent = e.currentTarget.parentNode.parentNode.parentNode;
+
+
+    console.log(divBodyContent.querySelector(".task-body-descricao"))
+
+    
+    let desc = divBodyContent.querySelector(".task-body-descricao").classList.toggle("open")
+
+
+  }
+
+  formatarValor(valor: number): string {
+    return valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+    // return valor.toFixed(2).replace('.', ','); // Formata para duas casas decimais e substitui ponto por vírgula
+  }
+
 }

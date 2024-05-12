@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { BatalhaNavalService } from '../batalha-naval.service';
+import { finalize, pipe, tap } from 'rxjs';
+
 
 @Component({
   selector: 'app-home-page',
@@ -6,6 +9,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrl: './home-page.component.css'
 })
 export class HomePageComponent implements OnInit {
+  dataCategorias: any[] = [];
+  dataItens: any[] = [];
+
+
   open: boolean = false;
   // popupShop: boolean = false;
   // selectGuia: boolean = 
@@ -29,7 +36,7 @@ export class HomePageComponent implements OnInit {
 
 
 
-  constructor() {
+  constructor(private service: BatalhaNavalService) {
     this.somBtn.src = "../../assets/audios/sombtnbatalhar.wav";
     this.somHomePage.src = "../../assets/audios/SomHomePage.mp3";
     this.somHomePopup.src = "../../assets/audios/openpopup.mp3";
@@ -67,6 +74,51 @@ export class HomePageComponent implements OnInit {
   }
 
 
+  ngOnInit(): void {
+    this.activeTab = 'moedas';
+    this.activeTabInvent = 'todos';
+    // this.somHomePage.play()
+    // this.somHomePage.volume = 0.2;
+
+
+    this.getAllCategorias();
+    this.getAllItems();
+
+    
+  }
+
+  getAllCategorias() {
+    this.service.getAllCategorias().pipe(
+      tap((res: any) => {
+        this.dataCategorias = res
+      }),
+      finalize(() => {
+        // (document.getElementById("mainH") as HTMLElement).innerHTML = "Categorias - " + this.dataCategorias.length;
+        console.log(this.dataCategorias)
+
+      })
+    ).subscribe();
+
+
+  }
+
+  getAllItems() {
+
+    this.service.getAllItems().pipe(
+      tap((res: any) => {
+        this.dataItens = res
+
+      }),
+      finalize(() => {
+        // (document.getElementById("mainH") as HTMLElement).innerHTML = "Itens - " + this.dataItens.length;
+        console.log(this.dataItens)
+      })
+    ).subscribe();
+
+
+  }
+
+
   fnSelectedClothe(item: any){
     console.log(item);
 
@@ -89,13 +141,7 @@ export class HomePageComponent implements OnInit {
   
   }
 
-  ngOnInit() {
-    this.activeTab = 'moedas';
-    this.activeTabInvent = 'todos';
-    // this.somHomePage.play()
-    // this.somHomePage.volume = 0.2;
-
-  }
+  
 
   
   openTabInvent(tabName: string) {
@@ -126,5 +172,10 @@ export class HomePageComponent implements OnInit {
 
   playSoundBtnBatalha() {
     this.somBtn.play();
+  }
+
+  formatarValor(valor: number): string {
+    return valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+    // return valor.toFixed(2).replace('.', ','); // Formata para duas casas decimais e substitui ponto por vírgula
   }
 }

@@ -450,14 +450,39 @@ main {
     transition: .3s linear;
     margin-bottom: 20px;
     display: flex;
-    align-items: center;
+    align-items: center; 
+    
+    /* descomente isso quando quiser*/
 }
+/* .task-body.t{
+    background-color: #e3e3e3;
+    border-radius: 15px;
+    padding: 12px 20px;
+    transition: .3s linear;
+    margin-bottom: 20px;
+} */
 
 .task-body .task-body-content {
     display: flex;
     align-items: center;
+
+    /* width: 100%; */
+    /* background-color: #03ffc4; */
 }
 
+.task-body-content .status{
+    width: 12px;
+    height: 11px; 
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+    fill: #09b360;
+}
+
+
+.task-body-content .status.inativo {
+    fill: rgb(186, 56, 9);
+}
 
 .task-body .task-body-descricao p {
     margin-top: 15px;
@@ -479,13 +504,20 @@ main {
 
 
 .task-body-descricao.open {
-    max-height: 1000px;
+    max-height: 1000px !important; 
     /* opacity: 1; */
     /* transition: max-height 0.3s ease; */
 }
 
-.task-body:has(.open) .btnOpenDesc {
+.icon-expand .btnOpenDesc {
+    fill: #0e0e0e;
+    width: 22px;
+    transition: transform 0.3s ease;
     transform: rotate(180deg);
+}
+
+.task-body:has(.open) .btnOpenDesc {
+    transform: rotate(0deg);
 }
 
 .icon-expand {
@@ -495,11 +527,7 @@ main {
     cursor: pointer;
 }
 
-.icon-expand .btnOpenDesc {
-    fill: #0e0e0e;
-    width: 22px;
-    transition: transform 0.3s ease;
-}
+
 
 /* .task-body:hover{
     background-color: #d2d2d2;
@@ -545,6 +573,7 @@ main {
 
 .task-body:has(.checked) .task-infos h3 {
     text-decoration: line-through;
+   
 }
 
 .task-body:has(.checked) .task-infos svg {
@@ -563,6 +592,7 @@ main {
 
 .task-infos h3 {
     margin: 0;
+    margin-right: 10px;
     font-weight: 500;
     color: #020202;
     font-size: clamp(.7em, .7em + 3vw, 1em);

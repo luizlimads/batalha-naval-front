@@ -15,6 +15,7 @@ import { DressUpComponent } from './dress-up/dress-up.component';
 import { DressUpAvatarComponent } from './dress-up-avatar/dress-up-avatar.component';
 import { TelaAdminComponent } from './tela-admin/tela-admin.component';
 import { NgxCurrencyDirective } from "ngx-currency";
+import { TelaAdminiComponent } from './tela-admini/tela-admini.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { NgxCurrencyDirective } from "ngx-currency";
     HomePageComponent,
     DressUpComponent,
     DressUpAvatarComponent,
-    TelaAdminComponent
+    TelaAdminComponent,
+    TelaAdminiComponent
   ],
   imports: [
     BrowserModule,

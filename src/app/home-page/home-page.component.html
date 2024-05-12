@@ -386,10 +386,10 @@
                     <!-- <app-dress-up-avatar></app-dress-up-avatar> -->
 
                     <!-- <div> -->
-                        <!-- <div id="backdrop"> -->
-                            <div *ngFor="let guia of guiasInvent" class="clothes" [id]="guia.seletor"></div>
-                            <div id="avatar"></div>
-                        <!-- </div> -->
+                    <!-- <div id="backdrop"> -->
+                    <div *ngFor="let guia of guiasInvent" class="clothes" [id]="guia.seletor"></div>
+                    <div id="avatar"></div>
+                    <!-- </div> -->
                     <!-- </div> -->
                 </div>
             </div>
@@ -406,6 +406,11 @@
                     </div>
                     <div (click)="openTab('diamonds')" [class.selected]="activeTab === 'diamonds'">
                         <p>Diamonds</p>
+                    </div>
+
+                    <div *ngFor="let cat of dataCategorias" (click)="openTab(cat.titulo)"
+                        [class.selected]="activeTab === cat.titulo">
+                        <p>{{cat.titulo}}</p>
                     </div>
 
 
@@ -446,8 +451,43 @@
                 <div class="popup-shop-screm" [class.selected]="activeTab === 'diamonds'">
                     <!-- Vai vir do banco -->
 
+                </div>
 
+                <div *ngFor="let cat of dataCategorias" class="popup-shop-screm"
+                    [class.selected]="activeTab === cat.titulo">
+                    <ng-container *ngFor="let item of dataItens">
+                        <!-- Vai vir do banco falar pro flavio colocar o idda categoria no item -->
+                        <div *ngIf="item.categoria === cat.titulo && item.ativo === true"  class="shop-item">
+                            <h3>{{item.titulo}}</h3>
+                            <div class="item-img">
+                                <div>
+                                    <!-- colocarr a imagemmm! -->
+                                    <img src="{{'data:image/jpg;base64,' + item.imageData}}" alt=""> 
+                                </div>
+                                <p>{{item.descricao}}</p>
+                            </div>
+                            <div class="item-value">
 
+                                <div class="value-type" *ngIf="item.tipoPagamento === 'MOEDA'">
+                                    <img src="../../assets/images/img-home-page/coin.png" alt="">
+                                </div>
+
+                                <div class="value-type dd" *ngIf="item.tipoPagamento === 'DIAMANTE'">
+                                    <img src="../../assets/images/img-home-page/diamond.png" alt="">
+                                </div>
+                                <div class="value-price">
+
+                                    <!-- formatar o valor -->
+                                    <p>{{ formatarValor(item.valor) }}</p>
+                                </div>
+                                <div class="value-btn">
+                                    <div>
+                                        Buy
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
                 </div>
             </div>
         </div>

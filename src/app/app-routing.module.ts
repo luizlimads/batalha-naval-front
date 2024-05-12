@@ -6,12 +6,14 @@ import { HomePageComponent } from './home-page/home-page.component';
 import { DressUpComponent } from './dress-up/dress-up.component';
 import { DressUpAvatarComponent } from './dress-up-avatar/dress-up-avatar.component';
 import { TelaAdminComponent } from './tela-admin/tela-admin.component';
+import { TelaAdminiComponent } from './tela-admini/tela-admini.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },
   { path: 'login', component: TelaLoginComponent },
   { path: 'cadastro', component: TelaCadastroComponent },
   { path: 'admin', component: TelaAdminComponent},
+  { path: 'adm', component: TelaAdminiComponent},
   { path: 'dress', component: DressUpComponent},
   { path: 'dres', component: DressUpAvatarComponent}
 ];

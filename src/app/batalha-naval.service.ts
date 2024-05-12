@@ -11,6 +11,10 @@ export class BatalhaNavalService {
 
   constructor(private http: HttpClient) { }
 
+  postTeste(formData: any) {
+    return this.http.post(`${this.urlBase}/teste`, formData);
+  }
+
   postUser(formData: any) {
     return this.http.post(`${this.urlBase}/usuarios`, formData);
   }

@@ -896,6 +896,8 @@ p {
     display: flex;
 }
 
+/* itens do shop e inventario *****************************/
+
 .invent-item,
 .shop-item {
 
@@ -907,6 +909,10 @@ p {
     padding: 10px;
     box-sizing: border-box;
     /* Garantir que o padding não afete a largura */
+}
+
+.shop-item{
+    width: 210px;
 }
 
 .invent-item {
@@ -937,10 +943,10 @@ p {
     /* background-color: #1BACD3; */
     display: flex;
     align-items: center;
-
     padding: 5px;
     font-size: clamp(0.5em, 1.5vw, .7em);
 }
+
 
 .invent-item .item-img img,
 .shop-item .item-img img {
@@ -959,8 +965,8 @@ p {
 
 .shop-item .item-img div {
     max-width: 100%;
-    width: 50px;
-    height: 50px;
+    width: 80px;
+    height: 120px;
     background-color: #d3bd1b;
     border-radius: 5px;
     overflow: hidden;
@@ -968,6 +974,14 @@ p {
     align-items: center;
     justify-content: center;
     margin-right: 5px;
+
+    flex: 1;
+}
+
+.shop-item .item-img p{
+    text-wrap: wrap;
+    font-size: 10px;
+    flex: 1;
 }
 
 .invent-item .item-img div {
@@ -999,6 +1013,14 @@ p {
     width: 35px;
 }
 
+.value-type.dd {
+    margin-right: -18px;
+    /* margin-top: 3px; */
+}
+
+.value-type.dd img{
+    width: 40px;
+}
 .value-price {
     /* background-color: #847E66; */
     background: linear-gradient(to top, #252525c7 60%, #2f2f2fca 40%) padding-box,

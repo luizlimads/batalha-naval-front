@@ -1,7 +1,8 @@
 <h2 id="msgAviso"></h2>
+
 <div class="body-main">
 
-    <aside class="sidebar" [class.active]="open === true">
+    <aside class="sidebar" [class.active]="openAside === true">
         <div class="collections-title">
             <!-- <h1>Tela admin</h1> -->
             <div>
@@ -15,16 +16,22 @@
 
         <div class="collections-itens">
 
-            <div class="collections-item" (click)="fnShow('Categorias')" [class.selected]="categoriaSelected === true">
+            <div class="collections-item" (click)="fnShowScreem('Pacotes')" [class.selected]="optionSelected === 'Pacotes'">
 
                 <div class="item-icon">
-                    <!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
-                        <path
-                            d="M2 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 2 6.586zm3.5 4a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3" />
-                        <path
-                            d="M1.293 7.793A1 1 0 0 1 1 7.086V2a1 1 0 0 0-1 1v4.586a1 1 0 0 0 .293.707l7 7a1 1 0 0 0 1.414 0l.043-.043z" />
-                    </svg> -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-box-seam" viewBox="0 0 16 16">
+                        <path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5l2.404.961L10.404 2zm3.564 1.426L5.596 5 8 5.961 14.154 3.5zm3.25 1.7-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464z"/>
+                      </svg>
+                </div>
 
+                <p>Pacotes</p>
+
+            </div>
+
+
+            <div class="collections-item" (click)="fnShowScreem('Temas')" [class.selected]="optionSelected === 'Temas'">
+
+                <div class="item-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-tags" viewBox="0 0 16 16">
                         <path
                             d="M3 2v4.586l7 7L14.586 9l-7-7zM2 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 2 6.586z" />
@@ -33,49 +40,42 @@
                     </svg>
                 </div>
 
-                <p>Categorias</p>
+                <p>Temas</p>
 
             </div>
 
-            <div class="collections-item" (click)="fnShow('Itens')" [class.selected]="itemSelected === true">
+            
+
+            <div class="collections-item" (click)="fnShowScreem('Barcos')" [class.selected]="optionSelected === 'Barcos'">
 
                 <div class="item-icon">
-                    <!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
-                        <path
-                            d="m14.12 10.163 1.715.858c.22.11.22.424 0 .534L8.267 15.34a.6.6 0 0 1-.534 0L.165 11.555a.299.299 0 0 1 0-.534l1.716-.858 5.317 2.659c.505.252 1.1.252 1.604 0l5.317-2.66zM7.733.063a.6.6 0 0 1 .534 0l7.568 3.784a.3.3 0 0 1 0 .535L8.267 8.165a.6.6 0 0 1-.534 0L.165 4.382a.299.299 0 0 1 0-.535z" />
-                        <path
-                            d="m14.12 6.576 1.715.858c.22.11.22.424 0 .534l-7.568 3.784a.6.6 0 0 1-.534 0L.165 7.968a.299.299 0 0 1 0-.534l1.716-.858 5.317 2.659c.505.252 1.1.252 1.604 0z" />
-                    </svg> -->
-
-                    <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-subtract" viewBox="0 0 16 16">
-                        <path
-                            d="M0 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2h2a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1z" />
-                    </svg>
-
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                        <path d="M416 473.14a6.83 6.83 0 0 0-3.57-6c-27.07-14.55-51.76-36.82-62.62-48a10.05 10.05 0 0 0-12.72-1.51c-50.33 32.42-111.61 32.44-161.95.05a10.09 10.09 0 0 0-12.82 1.56c-10.77 11.28-35.19 33.3-62.43 47.75a7.11 7.11 0 0 0-3.89 5.73a6.73 6.73 0 0 0 7.92 7.15c20.85-4.18 41-13.68 60.2-23.83a8.71 8.71 0 0 1 8-.06a185.14 185.14 0 0 0 167.81 0a8.82 8.82 0 0 1 8.09.06c19.1 10 39.22 19.59 60 23.8a6.73 6.73 0 0 0 8-6.71Zm60.71-226.23c-3.49-8.39-10.9-14.89-20.9-18.35L432 219.08V136a64 64 0 0 0-64-64h-32v-8a40 40 0 0 0-40-40h-80a40 40 0 0 0-40 40v8h-32a64 64 0 0 0-64 64v83.15l-23.58 9.39c-9.94 3.3-17.63 10-21.15 18.44c-2.45 5.89-5.25 15-1.3 26.46l.1.3l46.66 119.44A23.33 23.33 0 0 0 102.58 408c.5 0 1 0 1.53-.05c31.32-2 56-17.27 72.6-31.61C200.42 396.81 228.31 408 256 408s55.43-11.2 79.14-31.7c16.59 14.36 41.3 29.67 72.61 31.65a23.36 23.36 0 0 0 23.37-14.74l46.65-119c3.28-8.09 2.9-17.76-1.06-27.3M269 154.21l-1.14-.4a39.53 39.53 0 0 0-23.73 0l-.58.18l-126.07 50.23a4 4 0 0 1-5.48-3.72V136a32 32 0 0 1 32-32h224a32 32 0 0 1 32 32v64.44a4 4 0 0 1-5.48 3.72Z"/></svg>
                 </div>
 
-                <p>Itens</p>
+                <p>Barcos</p>
+
+            </div>
+
+            <div class="collections-item" (click)="fnShowScreem('Avatares')" [class.selected]="optionSelected === 'Avatares'">
+
+                <div class="item-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-incognito" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="m4.736 1.968-.892 3.269-.014.058C2.113 5.568 1 6.006 1 6.5 1 7.328 4.134 8 8 8s7-.672 7-1.5c0-.494-1.113-.932-2.83-1.205l-.014-.058-.892-3.27c-.146-.533-.698-.849-1.239-.734C9.411 1.363 8.62 1.5 8 1.5s-1.411-.136-2.025-.267c-.541-.115-1.093.2-1.239.735m.015 3.867a.25.25 0 0 1 .274-.224c.9.092 1.91.143 2.975.143a30 30 0 0 0 2.975-.143.25.25 0 0 1 .05.498c-.918.093-1.944.145-3.025.145s-2.107-.052-3.025-.145a.25.25 0 0 1-.224-.274M3.5 10h2a.5.5 0 0 1 .5.5v1a1.5 1.5 0 0 1-3 0v-1a.5.5 0 0 1 .5-.5m-1.5.5q.001-.264.085-.5H2a.5.5 0 0 1 0-1h3.5a1.5 1.5 0 0 1 1.488 1.312 3.5 3.5 0 0 1 2.024 0A1.5 1.5 0 0 1 10.5 9H14a.5.5 0 0 1 0 1h-.085q.084.236.085.5v1a2.5 2.5 0 0 1-5 0v-.14l-.21-.07a2.5 2.5 0 0 0-1.58 0l-.21.07v.14a2.5 2.5 0 0 1-5 0zm8.5-.5h2a.5.5 0 0 1 .5.5v1a1.5 1.5 0 0 1-3 0v-1a.5.5 0 0 1 .5-.5"/>
+                      </svg>
+                </div>
+
+                <p>Avatares</p>
 
             </div>
 
         </div>
 
-        <!-- <div class="collections-add">
-            <p>Adicionar coleção</p>
-            <div id="btnModalColl">
-                <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-plus" viewBox="0 0 16 16">
-                    <path
-                        d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
-                </svg>
-            </div>
-        </div> -->
-
 
     </aside>
 
-
     <main class="main">
-        <div class="coll-icon" id="toggleBtn" (click)="fnOpen()" [class.close]="open === true">
+        <div class="coll-icon" id="toggleBtn" (click)="fnOpenAside()" [class.close]="openAside === true">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
                 <path fill-rule="evenodd"
                     d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708" />
@@ -98,9 +98,9 @@
 
                     </div>
 
-
+<!-- (click)="fnOpenModal()" -->
                     <div class="new-itens">
-                        <div id="btnModalTask" (click)="fnOpenModal()">
+                        <div id="btnModalTask" > 
                             <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-plus" viewBox="0 0 16 16">
                                 <path
                                     d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
@@ -136,7 +136,7 @@
                     <div class="list-itens">
 
 
-                        <ng-container *ngIf="categoriaSelected === true">
+                        <ng-container *ngIf="optionSelected === true">
                             <!-- vem do banco *-->
                             <div class="task-body" *ngFor="let cat of dataCategorias">
                                 <div class="task-infos">
@@ -144,13 +144,13 @@
                                 </div>
                                 <div class="icons-alter">
                                     <svg class="btnAlter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                                        (click)="openUpdateCategoria(cat.id)">
+                                        (click)="fnOpenUpdateCategoria(cat.id)">
                                         <path
                                             d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
                                     </svg>
 
                                     <svg class="btnApaga" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                                        (click)="fnApagaCatg(cat.id)">
+                                        (click)="fnDeleteCatg(cat.id)">
                                         <path
                                             d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z" />
                                     </svg>
@@ -159,7 +159,7 @@
 
                         </ng-container>
 
-                        <ng-container *ngIf="itemSelected === true">
+                        <ng-container *ngIf="optionSelected === true">
 
                             <!-- <div class="task-body" *ngFor="let item of dataItens">
 
@@ -240,13 +240,13 @@
                                 </div>
                                 <div class="icons-alter">
                                     <svg class="btnAlter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                                        (click)="openUpdateItem(item.id)">
+                                        (click)="fnUpdateItem(item.id)">
                                         <path
                                             d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
                                     </svg>
 
                                     <svg class="btnApaga" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                                        (click)="fnApagaItem(item.id)">
+                                        (click)="fnDeleteItem(item.id)">
                                         <path
                                             d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z" />
                                     </svg>
@@ -276,121 +276,8 @@
             </div>
 
             <!-- -------  -->
-            <h1 id="msgInicial" *ngIf="!categoriaSelected && !itemSelected">Bem <strong
+            <h1 id="msgInicial" *ngIf="optionSelected === ''">Bem <strong
                     style="color: rgb(141, 141, 141)">Vindo(a)</strong></h1>
         </div>
     </main>
-</div>
-
-
-<div class="shadow-modal-catg">
-    <div class="modal-catg-form">
-        <div class="close-modal-catg">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" (click)="fnCloseModalCatg()">
-                <path
-                    d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
-            </svg>
-        </div>
-        <h1>Vamos criar uma <br />Categoria?</h1>
-
-        <!-- form coleção -->
-        <form [formGroup]="formCategoria">
-            <input formControlName="titulo" type="text" name="txtTitulo" id="txtTituloCatg" placeholder="Titulo">
-
-            <select formControlName="categoria" name="txtTipoCatg" id="txtTipoCatg">
-                <option style="color: #999999;" value="0" disabled selected>Tipo categoria</option>
-                <option style="color: #999999;" value="VESTUARIO">Vestuário</option>
-                <option style="color: #999999;" value="MONETARIA">Monetaria</option>
-            </select>
-
-            <button (click)="postCategoria()" class="btn" id="btnAddCatg">Criar</button>
-        </form>
-        <!-- ------------------------------------- -->
-    </div>
-</div>
-
-
-
-
-<div class="shadow-modal-item">
-    <div class="modal-item-form">
-        <div class="close-modal-item" (click)="fnCloseModalItem()">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
-                <path
-                    d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
-            </svg>
-        </div>
-        <h1>Crie o seu novo Item</h1>
-
-        <!-- modal item -->
-        <form [formGroup]="formItem" id="formItem">
-            <div class="img-container">
-                <input type="file" id="file" (change)="fnChangeFile($event)" accept="image/*" hidden>
-                <div class="img-area" data-img="">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-cloud-arrow-up-fill" viewBox="0 0 16 16">
-                        <path
-                            d="M8 2a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 6.095 0 7.555 0 9.318 0 11.366 1.708 13 3.781 13h8.906C14.502 13 16 11.57 16 9.773c0-1.636-1.242-2.969-2.834-3.194C12.923 3.999 10.69 2 8 2m2.354 5.146a.5.5 0 0 1-.708.708L8.5 6.707V10.5a.5.5 0 0 1-1 0V6.707L6.354 7.854a.5.5 0 1 1-.708-.708l2-2a.5.5 0 0 1 .708 0z" />
-                    </svg>
-                    <h3>Upload Image</h3>
-                    <!-- <input type="file" (change)="onFileSelected($event)" accept="image/*"> -->
-                    <img *ngIf="imageUrl" [src]="imageUrl" alt="Preview">
-                    <!-- <img src="" alt=""> -->
-                </div>
-                <button class="btn select-image" (click)="fnSelectImage()">
-                    Select Image
-                </button>
-            </div>
-
-            <div class="inputs-container">
-                <div class="checkbox-wrapper-2">
-                    <p>Ativo</p>
-                    <input formControlName="ativo" type="checkbox" class="sc-gJwTLC ikxBAC" checked>
-                </div>
-
-                <input formControlName="nome" type="text" name="txtTituloItem" id="txtTituloItem" placeholder="Titulo">
-                <div class="selects-ctn">
-                    <label for="txtCatg">
-                        <select formControlName="categoriaId" name="txtCatg" id="txtCatg">
-                            <option style="color: #999999;" value="0" disabled selected>Categoria</option>
-                            <option *ngFor="let cat of dataCategorias" [value]="cat.id">{{cat.titulo}}</option>
-                        </select>
-                    </label>
-                    <label for="txtCatg">
-                        <select formControlName="tipoPagamento" name="txtCatg" id="txtCatg">
-                            <option style="color: #999999;" value="0" disabled selected>Tipo de pagamento</option>
-                            <option value="MOEDA">Moeda</option>
-                            <option value="DIAMANTE">Diamante</option>
-                            <option value="DINHEIRO">Dinheiro</option>
-                        </select>
-                    </label>
-                    <!-- <input type="date" name="txtData" id="txtData" placeholder="Pra quando?"> -->
-                </div>
-                <input formControlName="valor" currencyMask
-                    [options]="{ align: 'left', prefix: ' ', thousands: '.', decimal: ',' }" />
-
-
-                <textarea formControlName="descricao" name="txtDesc" id="txtDesc" row="200"
-                    placeholder="Descrição"></textarea>
-                <button (click)="postItem()" class="btn" id="btnAddItem">Criar</button>
-            </div>
-        </form>
-
-        <!-- ----------- -->
-    </div>
-</div>
-
-<div class="shadow-modal-confirm">
-    <div class="modal-confirm">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
-            <path
-                d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
-        </svg>
-        <h1>Tem certeza?</h1>
-        <p>Deseja realmente excluir esse item?</p>
-        <div>
-            <input type="hidden" id="txtQual">
-            <button class="btn no" id="btnCloseModalCofirm" (click)="fnModalConfirm()">Não</button>
-            <button class="btn" id="btnApagaObj" (click)="delete()">Sim, quero excluir</button>
-        </div>
-    </div>
 </div>
