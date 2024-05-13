@@ -88,32 +88,32 @@ export class HomePageComponent implements OnInit {
   }
 
   getAllCategorias() {
-    this.service.getAllCategorias().pipe(
-      tap((res: any) => {
-        this.dataCategorias = res
-      }),
-      finalize(() => {
-        // (document.getElementById("mainH") as HTMLElement).innerHTML = "Categorias - " + this.dataCategorias.length;
-        console.log(this.dataCategorias)
+    // this.service.getAllCategorias().pipe(
+    //   tap((res: any) => {
+    //     this.dataCategorias = res
+    //   }),
+    //   finalize(() => {
+    //     // (document.getElementById("mainH") as HTMLElement).innerHTML = "Categorias - " + this.dataCategorias.length;
+    //     console.log(this.dataCategorias)
 
-      })
-    ).subscribe();
+    //   })
+    // ).subscribe();
 
 
   }
 
   getAllItems() {
 
-    this.service.getAllItems().pipe(
-      tap((res: any) => {
-        this.dataItens = res
+    // this.service.getAllItems().pipe(
+    //   tap((res: any) => {
+    //     this.dataItens = res
 
-      }),
-      finalize(() => {
-        // (document.getElementById("mainH") as HTMLElement).innerHTML = "Itens - " + this.dataItens.length;
-        console.log(this.dataItens)
-      })
-    ).subscribe();
+    //   }),
+    //   finalize(() => {
+    //     // (document.getElementById("mainH") as HTMLElement).innerHTML = "Itens - " + this.dataItens.length;
+    //     console.log(this.dataItens)
+    //   })
+    // ).subscribe();
 
 
   }

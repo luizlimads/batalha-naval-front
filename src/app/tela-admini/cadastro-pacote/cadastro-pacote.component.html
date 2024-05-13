@@ -1,0 +1,175 @@
+<mat-card>
+    <mat-stepper [linear]="true" #stepper>
+
+        <mat-step [stepControl]="tema">
+            <form [formGroup]="tema">
+                <ng-template matStepLabel>Tema</ng-template>
+                <mat-form-field>
+                    <mat-label>Nome</mat-label>
+                    <input matInput formControlName="nome" required>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Tipo Pagamento</mat-label>
+                    <mat-select required formControlName="tipoPagamento">
+                      <mat-option value="Dinheiro">Dinheiro</mat-option>
+                      <mat-option value="Diamante">Diamante</mat-option>
+                      <mat-option value="Moeda">Moeda</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Valor</mat-label>
+                    <input matInput formControlName="valor" currencyMask
+                    [options]="{ align: 'left', prefix: ' ', thousands: '.', decimal: ',' }" required>
+                </mat-form-field>
+
+                <div class="img-container">
+                    <input type="file" id="fundoFile" (change)="fnChangeFile($event, 'fundo')" accept="image/*" hidden>
+                    <div class="img-area" data-img="">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-cloud-arrow-up-fill" viewBox="0 0 16 16">
+                            <path
+                                d="M8 2a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 6.095 0 7.555 0 9.318 0 11.366 1.708 13 3.781 13h8.906C14.502 13 16 11.57 16 9.773c0-1.636-1.242-2.969-2.834-3.194C12.923 3.999 10.69 2 8 2m2.354 5.146a.5.5 0 0 1-.708.708L8.5 6.707V10.5a.5.5 0 0 1-1 0V6.707L6.354 7.854a.5.5 0 1 1-.708-.708l2-2a.5.5 0 0 1 .708 0z" />
+                        </svg>
+                        <h3>Upload Image</h3>
+                        <img *ngIf="imageUrl" [src]="imageUrl" alt="Preview">
+                    </div>
+                    <button mat-stroked-button color="primary" (click)="fnSelectImage('fundo')">
+                        Selecionar imagem
+                    </button>
+                </div>
+                <div>
+                    <button mat-button mat-stroked-button color="primary" [disabled]="tema.invalid" (click)="goForward('tema')">Próximo</button>
+                </div>
+            </form>
+        </mat-step>
+
+        <mat-step [stepControl]="avatar" label="Fill out your address">
+            <form [formGroup]="avatar">
+            <ng-template matStepLabel>Avatar</ng-template>
+            <mat-form-field>
+                <mat-label>Nome</mat-label>
+                <input matInput formControlName="nome"required>
+            </mat-form-field>
+
+            <div class="img-container">
+                <input type="file" id="avatarFile" (change)="fnChangeFile($event, 'avatar')" accept="image/*" hidden>
+                <div class="img-area" data-img="">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-cloud-arrow-up-fill" viewBox="0 0 16 16">
+                        <path
+                            d="M8 2a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 6.095 0 7.555 0 9.318 0 11.366 1.708 13 3.781 13h8.906C14.502 13 16 11.57 16 9.773c0-1.636-1.242-2.969-2.834-3.194C12.923 3.999 10.69 2 8 2m2.354 5.146a.5.5 0 0 1-.708.708L8.5 6.707V10.5a.5.5 0 0 1-1 0V6.707L6.354 7.854a.5.5 0 1 1-.708-.708l2-2a.5.5 0 0 1 .708 0z" />
+                    </svg>
+                    <h3>Upload Image</h3>
+                    <img *ngIf="imageAvatarUrl" [src]="imageAvatarUrl" alt="Preview">
+                </div>
+                <button mat-stroked-button color="primary" (click)="fnSelectImage('avatar')">
+                    Selecionar imagem
+                </button>
+            </div>
+
+            <div>
+                <button mat-button mat-stroked-button color="primary" (click)="goBack('avatar')">Voltar</button>
+                <button mat-button mat-stroked-button color="primary" [disabled]="avatar.invalid" (click)="goForward('avatar')">Próximo</button>
+            </div>
+            </form>
+        </mat-step>
+
+        <mat-step [stepControl]="embarcacoes">
+            <form [formGroup]="embarcacoes">
+                <ng-template matStepLabel>Embarcações</ng-template>
+
+                <mat-form-field>
+                    <mat-label>Nome</mat-label>
+                    <input matInput formControlName="nome"required>
+                </mat-form-field>
+
+                <div class="barcos">
+                    <div class="img-container">
+                        <p>Todos os barcos</p>
+                        <input type="file" id="barcosFile" (change)="fnChangeFile($event, 'barcosFile')" accept="image/*" hidden>
+                        <div class="img-area" data-img="">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-cloud-arrow-up-fill" viewBox="0 0 16 16">
+                                <path
+                                    d="M8 2a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 6.095 0 7.555 0 9.318 0 11.366 1.708 13 3.781 13h8.906C14.502 13 16 11.57 16 9.773c0-1.636-1.242-2.969-2.834-3.194C12.923 3.999 10.69 2 8 2m2.354 5.146a.5.5 0 0 1-.708.708L8.5 6.707V10.5a.5.5 0 0 1-1 0V6.707L6.354 7.854a.5.5 0 1 1-.708-.708l2-2a.5.5 0 0 1 .708 0z" />
+                            </svg>
+                            <h3>Upload Image</h3>
+                            <img *ngIf="barcosFileUrl" [src]="barcosFileUrl" alt="Preview">
+                        </div>
+                        <button mat-stroked-button color="primary" (click)="fnSelectImage('barcosFile')">
+                            Selecionar imagem
+                        </button>
+                    </div>
+
+                    <div class="img-container">
+                        <p>Barco com 4 posições</p>
+                        <input type="file" id="barco4" (change)="fnChangeFile($event, 'barco4')" accept="image/*" hidden>
+                        <div class="img-area" data-img="">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-cloud-arrow-up-fill" viewBox="0 0 16 16">
+                                <path
+                                    d="M8 2a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 6.095 0 7.555 0 9.318 0 11.366 1.708 13 3.781 13h8.906C14.502 13 16 11.57 16 9.773c0-1.636-1.242-2.969-2.834-3.194C12.923 3.999 10.69 2 8 2m2.354 5.146a.5.5 0 0 1-.708.708L8.5 6.707V10.5a.5.5 0 0 1-1 0V6.707L6.354 7.854a.5.5 0 1 1-.708-.708l2-2a.5.5 0 0 1 .708 0z" />
+                            </svg>
+                            <h3>Upload Image</h3>
+                            <img *ngIf="imageUrlBarco4" [src]="imageUrlBarco4" alt="Preview">
+                        </div>
+                        <button mat-stroked-button color="primary" (click)="fnSelectImage('barco4')">
+                            Selecionar imagem
+                        </button>
+                    </div>
+    
+                    <div class="img-container">
+                        <p>Barco com 3 posições</p>
+                        <input type="file" id="barco3" (change)="fnChangeFile($event, 'barco3')" accept="image/*" hidden>
+                        <div class="img-area" data-img="">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-cloud-arrow-up-fill" viewBox="0 0 16 16">
+                                <path
+                                    d="M8 2a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 6.095 0 7.555 0 9.318 0 11.366 1.708 13 3.781 13h8.906C14.502 13 16 11.57 16 9.773c0-1.636-1.242-2.969-2.834-3.194C12.923 3.999 10.69 2 8 2m2.354 5.146a.5.5 0 0 1-.708.708L8.5 6.707V10.5a.5.5 0 0 1-1 0V6.707L6.354 7.854a.5.5 0 1 1-.708-.708l2-2a.5.5 0 0 1 .708 0z" />
+                            </svg>
+                            <h3>Upload Image</h3>
+                            <img *ngIf="imageUrlBarco3" [src]="imageUrlBarco3" alt="Preview">
+                        </div>
+                        <button mat-stroked-button color="primary" (click)="fnSelectImage('barco3')">
+                            Selecionar imagem
+                        </button>
+                    </div>
+    
+                    <div class="img-container">
+                        <p>Barco com 2 posições</p>
+                        <input type="file" id="barco2" (change)="fnChangeFile($event, 'barco2')" accept="image/*" hidden>
+                        <div class="img-area" data-img="">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-cloud-arrow-up-fill" viewBox="0 0 16 16">
+                                <path
+                                    d="M8 2a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 6.095 0 7.555 0 9.318 0 11.366 1.708 13 3.781 13h8.906C14.502 13 16 11.57 16 9.773c0-1.636-1.242-2.969-2.834-3.194C12.923 3.999 10.69 2 8 2m2.354 5.146a.5.5 0 0 1-.708.708L8.5 6.707V10.5a.5.5 0 0 1-1 0V6.707L6.354 7.854a.5.5 0 1 1-.708-.708l2-2a.5.5 0 0 1 .708 0z" />
+                            </svg>
+                            <h3>Upload Image</h3>
+                            <img *ngIf="imageUrlBarco2" [src]="imageUrlBarco2" alt="Preview">
+                        </div>
+                        <button mat-stroked-button color="primary" (click)="fnSelectImage('barco2')">
+                            Selecionar imagem
+                        </button>
+                    </div>
+    
+                    <div class="img-container">
+                        <p>Barco com 1 posição</p>
+                        <input type="file" id="barco1" (change)="fnChangeFile($event, 'barco1')" accept="image/*" hidden>
+                        <div class="img-area" data-img="">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-cloud-arrow-up-fill" viewBox="0 0 16 16">
+                                <path
+                                    d="M8 2a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 6.095 0 7.555 0 9.318 0 11.366 1.708 13 3.781 13h8.906C14.502 13 16 11.57 16 9.773c0-1.636-1.242-2.969-2.834-3.194C12.923 3.999 10.69 2 8 2m2.354 5.146a.5.5 0 0 1-.708.708L8.5 6.707V10.5a.5.5 0 0 1-1 0V6.707L6.354 7.854a.5.5 0 1 1-.708-.708l2-2a.5.5 0 0 1 .708 0z" />
+                            </svg>
+                            <h3>Upload Image</h3>
+                            <img *ngIf="imageUrlBarco1" [src]="imageUrlBarco1" alt="Preview">
+                        </div>
+                        <button mat-stroked-button color="primary" (click)="fnSelectImage('barco1')">
+                            Selecionar imagem
+                        </button>
+                    </div>
+                </div>
+                
+                <div>
+                    <button mat-button mat-stroked-button color="primary" (click)="goBack('embarcacoes')"> Voltar</button>
+                    <button mat-button mat-stroked-button color="primary" (click)="stepper.reset()">Cancelar</button>
+
+                    <button mat-button mat-stroked-button color="primary" [disabled]="embarcacoes.invalid" (click)="post()">Salvar</button>
+                </div>
+                </form>
+        </mat-step>
+    </mat-stepper>
+</mat-card>

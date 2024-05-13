@@ -223,7 +223,7 @@ main {
     /* text-align: center; */
 
     overflow-y: scroll;
-
+    display: none;
 }
 
 .main-content h1 {
@@ -260,6 +260,7 @@ main {
     margin-top: 20px;
     margin-left: -15px;
     cursor: pointer;
+    z-index: 999;
 }
 
 .coll-icon svg {
@@ -508,4 +509,8 @@ main {
 
 .icons-alter svg:hover {
     fill: #9d9d9d;
+}
+
+p {
+    margin: 0;
 }

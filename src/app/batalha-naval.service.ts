@@ -19,45 +19,15 @@ export class BatalhaNavalService {
     return this.http.post(`${this.urlBase}/usuarios`, formData);
   }
 
-  postCategoria(formData: any) {
-    return this.http.post(`${this.urlBase}/itens-categoria`, formData);
+  postPacote(formData: any) {
+    return this.http.post(`${this.urlBase}/pacotes`, formData);
   }
 
-  getAllCategorias() {
-    return this.http.get(`${this.urlBase}/itens-categoria`);
+  getPacotes() {
+    return this.http.get(`${this.urlBase}/pacotes`);
   }
 
-  postItem(formData: any) {
-   // const command = { ...formData, image: file }
-    //console.log(command)
-    return this.http.post(`${this.urlBase}/itens`, formData);
-  }
-
-  getAllItems() {
-    return this.http.get(`${this.urlBase}/itens`);
-  }
-
-  deleteCategoria(categoriaId: number) {
-    return this.http.delete(`${this.urlBase}/itens-categoria/${categoriaId}`);
-  }
-
-  getCategoria(categoriaId: number) {
-    return this.http.get(`${this.urlBase}/itens-categoria/${categoriaId}`);
-  }
-
-  updateCategoria(formData: any) {
-    return this.http.put(`${this.urlBase}/itens-categoria`, formData);
-  }
-
-  deleteItem(itemId: number) {
-    return this.http.delete(`${this.urlBase}/itens/${itemId}`);
-  }
-  
-  getItem(itemId: number) {
-    return this.http.get(`${this.urlBase}/itens/${itemId}`);
-  }
-
-  updateItem(formData: any) {
-    return this.http.put(`${this.urlBase}/itens`, formData);
+  deleteTema(temaId: number) {
+    return this.http.delete(`${this.urlBase}/pacotes/${temaId}`);
   }
 }

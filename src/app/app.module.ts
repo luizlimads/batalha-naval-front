@@ -16,6 +16,18 @@ import { DressUpAvatarComponent } from './dress-up-avatar/dress-up-avatar.compon
 import { TelaAdminComponent } from './tela-admin/tela-admin.component';
 import { NgxCurrencyDirective } from "ngx-currency";
 import { TelaAdminiComponent } from './tela-admini/tela-admini.component';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { CadastroPacoteComponent } from './tela-admini/cadastro-pacote/cadastro-pacote.component';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatStepperModule} from '@angular/material/stepper';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCardModule} from '@angular/material/card';
+import {MatIconModule} from '@angular/material/icon';
+import {MatDividerModule} from '@angular/material/divider';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import {MatSelectModule} from '@angular/material/select';
+
 
 @NgModule({
   declarations: [
@@ -28,7 +40,8 @@ import { TelaAdminiComponent } from './tela-admini/tela-admini.component';
     DressUpComponent,
     DressUpAvatarComponent,
     TelaAdminComponent,
-    TelaAdminiComponent
+    TelaAdminiComponent,
+    CadastroPacoteComponent,
   ],
   imports: [
     BrowserModule,
@@ -36,9 +49,20 @@ import { TelaAdminiComponent } from './tela-admini/tela-admini.component';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    NgxCurrencyDirective
+    NgxCurrencyDirective,
+    MatInputModule,
+    MatFormFieldModule,
+    MatStepperModule,
+    MatButtonModule,
+    MatCardModule,
+    MatIconModule,
+    MatDividerModule,
+    MatSnackBarModule,
+    MatSelectModule
   ],
-  providers: [],
+  providers: [
+    provideAnimationsAsync()
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

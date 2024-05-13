@@ -29,7 +29,7 @@
             </div>
 
 
-            <div class="collections-item" (click)="fnShowScreem('Temas')" [class.selected]="optionSelected === 'Temas'">
+            <div class="collections-item" (click)="fnShowScreem('Cadastro')" [class.selected]="optionSelected === 'Cadastro'">
 
                 <div class="item-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-tags" viewBox="0 0 16 16">
@@ -40,35 +40,9 @@
                     </svg>
                 </div>
 
-                <p>Temas</p>
+                <p>Cadastro</p>
 
             </div>
-
-            
-
-            <div class="collections-item" (click)="fnShowScreem('Barcos')" [class.selected]="optionSelected === 'Barcos'">
-
-                <div class="item-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                        <path d="M416 473.14a6.83 6.83 0 0 0-3.57-6c-27.07-14.55-51.76-36.82-62.62-48a10.05 10.05 0 0 0-12.72-1.51c-50.33 32.42-111.61 32.44-161.95.05a10.09 10.09 0 0 0-12.82 1.56c-10.77 11.28-35.19 33.3-62.43 47.75a7.11 7.11 0 0 0-3.89 5.73a6.73 6.73 0 0 0 7.92 7.15c20.85-4.18 41-13.68 60.2-23.83a8.71 8.71 0 0 1 8-.06a185.14 185.14 0 0 0 167.81 0a8.82 8.82 0 0 1 8.09.06c19.1 10 39.22 19.59 60 23.8a6.73 6.73 0 0 0 8-6.71Zm60.71-226.23c-3.49-8.39-10.9-14.89-20.9-18.35L432 219.08V136a64 64 0 0 0-64-64h-32v-8a40 40 0 0 0-40-40h-80a40 40 0 0 0-40 40v8h-32a64 64 0 0 0-64 64v83.15l-23.58 9.39c-9.94 3.3-17.63 10-21.15 18.44c-2.45 5.89-5.25 15-1.3 26.46l.1.3l46.66 119.44A23.33 23.33 0 0 0 102.58 408c.5 0 1 0 1.53-.05c31.32-2 56-17.27 72.6-31.61C200.42 396.81 228.31 408 256 408s55.43-11.2 79.14-31.7c16.59 14.36 41.3 29.67 72.61 31.65a23.36 23.36 0 0 0 23.37-14.74l46.65-119c3.28-8.09 2.9-17.76-1.06-27.3M269 154.21l-1.14-.4a39.53 39.53 0 0 0-23.73 0l-.58.18l-126.07 50.23a4 4 0 0 1-5.48-3.72V136a32 32 0 0 1 32-32h224a32 32 0 0 1 32 32v64.44a4 4 0 0 1-5.48 3.72Z"/></svg>
-                </div>
-
-                <p>Barcos</p>
-
-            </div>
-
-            <div class="collections-item" (click)="fnShowScreem('Avatares')" [class.selected]="optionSelected === 'Avatares'">
-
-                <div class="item-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-incognito" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="m4.736 1.968-.892 3.269-.014.058C2.113 5.568 1 6.006 1 6.5 1 7.328 4.134 8 8 8s7-.672 7-1.5c0-.494-1.113-.932-2.83-1.205l-.014-.058-.892-3.27c-.146-.533-.698-.849-1.239-.734C9.411 1.363 8.62 1.5 8 1.5s-1.411-.136-2.025-.267c-.541-.115-1.093.2-1.239.735m.015 3.867a.25.25 0 0 1 .274-.224c.9.092 1.91.143 2.975.143a30 30 0 0 0 2.975-.143.25.25 0 0 1 .05.498c-.918.093-1.944.145-3.025.145s-2.107-.052-3.025-.145a.25.25 0 0 1-.224-.274M3.5 10h2a.5.5 0 0 1 .5.5v1a1.5 1.5 0 0 1-3 0v-1a.5.5 0 0 1 .5-.5m-1.5.5q.001-.264.085-.5H2a.5.5 0 0 1 0-1h3.5a1.5 1.5 0 0 1 1.488 1.312 3.5 3.5 0 0 1 2.024 0A1.5 1.5 0 0 1 10.5 9H14a.5.5 0 0 1 0 1h-.085q.084.236.085.5v1a2.5 2.5 0 0 1-5 0v-.14l-.21-.07a2.5 2.5 0 0 0-1.58 0l-.21.07v.14a2.5 2.5 0 0 1-5 0zm8.5-.5h2a.5.5 0 0 1 .5.5v1a1.5 1.5 0 0 1-3 0v-1a.5.5 0 0 1 .5-.5"/>
-                      </svg>
-                </div>
-
-                <p>Avatares</p>
-
-            </div>
-
         </div>
 
 
@@ -82,11 +56,13 @@
             </svg>
         </div>
 
-
+        <div class="cadastro">
+            <app-cadastro-pacote></app-cadastro-pacote>
+        </div>
+        
         <div class="main-content">
 
             <!-- tarefas -->
-
 
             <div class="main-itens" id="main">
 
@@ -98,40 +74,13 @@
 
                     </div>
 
-<!-- (click)="fnOpenModal()" -->
-                    <div class="new-itens">
-                        <div id="btnModalTask" > 
-                            <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-plus" viewBox="0 0 16 16">
-                                <path
-                                    d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
-                            </svg>
-                        </div>
-                        <p id="mainP">Adicionar categoria</p>
-                    </div>
-
-
                 </div>
 
 
                 <div class="coll-itens">
                     <div class="coll-order">
                         <h3 id="mainH">Categorias - 0</h3>
-
-                        <div class="order">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd"
-                                    d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z" />
-                            </svg>
-                            <div>
-                                <h5>Ordernar - </h5>
-                                <button id="btnOrdenaData" class="clicked">Data</button>
-                                <button id="btnOrdenaPriori">Prioridade</button>
-                            </div>
-                        </div>
-
                     </div>
-
-
 
                     <div class="list-itens">
 
@@ -159,94 +108,25 @@
 
                         </ng-container>
 
-                        <ng-container *ngIf="optionSelected === true">
+                        <ng-container>
 
-                            <!-- <div class="task-body" *ngFor="let item of dataItens">
-
-                                <div class="task-body-content">
-                                    <div class="status" *ngIf="item.ativo === true">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
-                                            <circle cx="8" cy="8" r="8" />
-                                        </svg>
-                                    </div>
-
-                                    <div class="status inativo" *ngIf="item.ativo === false">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
-                                            <circle cx="8" cy="8" r="8" />
-                                        </svg>
-                                    </div>
-
-                                    <div class="task-infos">
-                                        <h3>{{item.titulo}}</h3>
-                                    </div>
-
-                                    <div class="icons-alter">
-                                        <svg class="btnAlter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                                            (click)="openUpdateItem(item.id)">
-                                            <path
-                                                d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
-                                        </svg>
-
-                                        <svg class="btnApaga" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                                            (click)="fnApagaItem(item.id)">
-                                            <path
-                                                d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z" />
-                                        </svg>
-                                    </div>
-
-                                    <div class="icon-expand">
-                                        <svg class="btnOpenDesc" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                                            (click)="fnOpenDescItem($event)">
-                                            <path fill-rule="evenodd"
-                                                d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
-                                        </svg>
-
-                                    </div>
-
-                                </div>
-
-
-                                <div class="task-body-descricao">
-
-                                    <div class="desc-item">
-                                        <p><strong>Descrição</strong></p>
-                                        <p>{{item.descricao}}</p>
-                                    </div>
-                                    <div class="catg-item">
-                                        <p><strong>Categoria</strong></p>
-                                        <p>{{item.categoria}}</p>
-                                    </div>
-                                    <div class="valor-item">
-                                        <p><strong>Valor</strong></p>
-                                        <p>{{ formatarValor(item.valor) }}</p>
-                                    </div>
-                                    <div class="tipopay-item">
-                                        <p><strong>Tipo de pagamento</strong></p>
-                                        <p>{{ formatarValor(item.tipoPagamento) }}</p>
-                                    </div>
-                                </div>
-                            </div> -->
-
-                            <!-- vem do banco *-->
-
-                            <!-- old -->
                             <div class="task-body" *ngFor="let item of dataItens">
                                 <div class="task-infos">
-                                    <h3>{{item.titulo}}</h3>
+                                    <h3>{{item.nomeTema}}</h3>
                                 </div>
 
                                 <div class="task-infos">
-                                    <h3>{{item.categoria}}</h3>
+                                    <h3>{{formatarValor(item.valor)}}</h3>
                                 </div>
                                 <div class="icons-alter">
                                     <svg class="btnAlter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                                        (click)="fnUpdateItem(item.id)">
+                                        (click)="fnUpdateItem(item.temaId)">
                                         <path
                                             d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
                                     </svg>
 
                                     <svg class="btnApaga" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                                        (click)="fnDeleteItem(item.id)">
+                                        (click)="fnDeleteItem(item.temaId)">
                                         <path
                                             d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z" />
                                     </svg>

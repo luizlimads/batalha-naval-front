@@ -170,15 +170,15 @@ export class TelaAdminComponent implements OnInit {
 
       var id = this.formCategoria.get('id')?.value;
 
-      if (id !== null && id !== undefined && id !== '') {
-        this.service.updateCategoria(this.formCategoria.value).pipe(
-          finalize(() => this.getAllCategorias())
-        ).subscribe();
-      } else {
-        this.service.postCategoria(this.formCategoria.value).pipe(
-          finalize(() => this.getAllCategorias())
-        ).subscribe();
-      }
+      // if (id !== null && id !== undefined && id !== '') {
+      //   this.service.updateCategoria(this.formCategoria.value).pipe(
+      //     finalize(() => this.getAllCategorias())
+      //   ).subscribe();
+      // } else {
+      //   this.service.postCategoria(this.formCategoria.value).pipe(
+      //     finalize(() => this.getAllCategorias())
+      //   ).subscribe();
+      // }
 
       let result = true;
 
@@ -196,15 +196,15 @@ export class TelaAdminComponent implements OnInit {
   }
 
   getAllCategorias() {
-    this.service.getAllCategorias().pipe(
-      tap((res: any) => {
-        this.dataCategorias = res
-      }),
-      finalize(() => {
-        (document.getElementById("mainH") as HTMLElement).innerHTML = "Categorias - " + this.dataCategorias.length;
+    // this.service.getAllCategorias().pipe(
+    //   tap((res: any) => {
+    //     this.dataCategorias = res
+    //   }),
+    //   finalize(() => {
+    //     (document.getElementById("mainH") as HTMLElement).innerHTML = "Categorias - " + this.dataCategorias.length;
 
-      })
-    ).subscribe();
+    //   })
+    // ).subscribe();
 
 
   }
@@ -232,16 +232,16 @@ export class TelaAdminComponent implements OnInit {
       var id = this.formItem.get('id')?.value;
 
 
-      if (id !== null && id !== undefined && id !== '') {
-        formData.append('id', this.formItem.get('id')!.value)
-        this.service.updateItem(formData).pipe(
-          finalize(() => { this.getAllItems(); this.fnResultItem(true, true); })
-        ).subscribe();
-      } else {
-        this.service.postItem(formData).pipe(
-          finalize(() => { this.getAllItems(); this.fnResultItem(true); })
-        ).subscribe();
-      }
+      // if (id !== null && id !== undefined && id !== '') {
+      //   formData.append('id', this.formItem.get('id')!.value)
+      //   this.service.updateItem(formData).pipe(
+      //     finalize(() => { this.getAllItems(); this.fnResultItem(true, true); })
+      //   ).subscribe();
+      // } else {
+      //   this.service.postItem(formData).pipe(
+      //     finalize(() => { this.getAllItems(); this.fnResultItem(true); })
+      //   ).subscribe();
+      // }
 
     }
 
@@ -264,16 +264,16 @@ export class TelaAdminComponent implements OnInit {
 
   getAllItems() {
 
-    this.service.getAllItems().pipe(
-      tap((res: any) => {
-        this.dataItens = res
+    // this.service.getAllItems().pipe(
+    //   tap((res: any) => {
+    //     this.dataItens = res
 
-      }),
-      finalize(() => {
-        (document.getElementById("mainH") as HTMLElement).innerHTML = "Itens - " + this.dataItens.length;
-        console.log(this.dataItens)
-      })
-    ).subscribe();
+    //   }),
+    //   finalize(() => {
+    //     (document.getElementById("mainH") as HTMLElement).innerHTML = "Itens - " + this.dataItens.length;
+    //     console.log(this.dataItens)
+    //   })
+    // ).subscribe();
 
 
   }
@@ -324,82 +324,82 @@ export class TelaAdminComponent implements OnInit {
 
   delete() {
 
-    if (this.deletedType === "item") {
+    // if (this.deletedType === "item") {
 
-      this.service.deleteItem(this.itemDeleteId).pipe(
-        finalize(() => {
-          this.getAllItems();
-          this.fnModalConfirm();
-        })
-      ).subscribe();
+    //   this.service.deleteItem(this.itemDeleteId).pipe(
+    //     finalize(() => {
+    //       this.getAllItems();
+    //       this.fnModalConfirm();
+    //     })
+    //   ).subscribe();
 
-    }
+    // }
 
-    if (this.deletedType === "catg") {
+    // if (this.deletedType === "catg") {
 
-      this.service.deleteCategoria(this.categoriaDeleteId).pipe(
-        finalize(() => {
-          this.getAllCategorias();
-          this.fnModalConfirm();
-        })
-      ).subscribe();
-    }
+    //   this.service.deleteCategoria(this.categoriaDeleteId).pipe(
+    //     finalize(() => {
+    //       this.getAllCategorias();
+    //       this.fnModalConfirm();
+    //     })
+    //   ).subscribe();
+    // }
 
   }
 
   openUpdateCategoria(categoriaId: number) {
-    this.service.getCategoria(categoriaId).pipe(
-      tap((res: any) => {
-        if (res) {
-          this.formCategoria.patchValue({
-            titulo: res.titulo,
-            categoria: res.categoria,
-            id: res.id
-          });
+    // this.service.getCategoria(categoriaId).pipe(
+    //   tap((res: any) => {
+    //     if (res) {
+    //       this.formCategoria.patchValue({
+    //         titulo: res.titulo,
+    //         categoria: res.categoria,
+    //         id: res.id
+    //       });
 
 
 
-        }
-      }),
-      finalize(() => {
-        (document.querySelector(".modal-catg-form h1") as HTMLElement).innerHTML = "Alterar categoria";
-        (document.getElementById("btnAddCatg") as HTMLElement).innerHTML = "Alterar";
+    //     }
+    //   }),
+    //   finalize(() => {
+    //     (document.querySelector(".modal-catg-form h1") as HTMLElement).innerHTML = "Alterar categoria";
+    //     (document.getElementById("btnAddCatg") as HTMLElement).innerHTML = "Alterar";
 
-        this.fnOpenModal(false);
-      })
-    ).subscribe();
+    //     this.fnOpenModal(false);
+    //   })
+    // ).subscribe();
   }
 
   openUpdateItem(itemId: number) {
-    this.service.getItem(itemId).pipe(
-      tap((res: any) => {
-        this.formItem.patchValue({
-          id: res.id,
-          nome: res.nome,
-          descricao: res.descricao,
-          valor: res.valor,
-          ativo: res.ativo,
-          categoriaId: res.categoriaId,
-          tipoPagamento: res.tipoPagamento
-        });
-        this.imageUrl = 'data:image/jpg;base64,' + res.imageData;
-        const imageBlob = this.dataURItoBlob(res.imageData);
+    // this.service.getItem(itemId).pipe(
+    //   tap((res: any) => {
+    //     this.formItem.patchValue({
+    //       id: res.id,
+    //       nome: res.nome,
+    //       descricao: res.descricao,
+    //       valor: res.valor,
+    //       ativo: res.ativo,
+    //       categoriaId: res.categoriaId,
+    //       tipoPagamento: res.tipoPagamento
+    //     });
+    //     this.imageUrl = 'data:image/jpg;base64,' + res.imageData;
+    //     const imageBlob = this.dataURItoBlob(res.imageData);
 
-        this.file = new File([imageBlob], 'img.png', { type: 'image/png' });
+    //     this.file = new File([imageBlob], 'img.png', { type: 'image/png' });
 
 
-      }),
-      finalize(() => {
+    //   }),
+    //   finalize(() => {
 
-        (document.querySelector(".img-area") as HTMLElement).setAttribute("data-img", "img.png");
-        (document.querySelector(".img-area") as HTMLElement).classList.add("active");
+    //     (document.querySelector(".img-area") as HTMLElement).setAttribute("data-img", "img.png");
+    //     (document.querySelector(".img-area") as HTMLElement).classList.add("active");
 
-        (document.querySelector(".modal-item-form h1") as HTMLElement).innerHTML = "Alterar item";
-        (document.getElementById("btnAddItem") as HTMLElement).innerHTML = "Alterar";
+    //     (document.querySelector(".modal-item-form h1") as HTMLElement).innerHTML = "Alterar item";
+    //     (document.getElementById("btnAddItem") as HTMLElement).innerHTML = "Alterar";
 
-        this.fnOpenModal(false);
-      })
-    ).subscribe();
+    //     this.fnOpenModal(false);
+    //   })
+    // ).subscribe();
   }
 
   dataURItoBlob(dataURI: any) {

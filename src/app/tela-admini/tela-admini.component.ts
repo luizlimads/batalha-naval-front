@@ -16,11 +16,19 @@ export class TelaAdminiComponent implements OnInit {
   dataItens: any[] = [];
   res: any = '';
 
+  constructor(private fb: FormBuilder, private service: BatalhaNavalService) { }
+
   ngOnInit(): void {
-    this.fnGetTeste();
+    this.getPacotes();
   }
 
-  constructor(private fb: FormBuilder, private service: BatalhaNavalService) { }
+  getPacotes() {
+    this.service.getPacotes().pipe(
+      tap((res:any) => {
+        this.dataItens = res
+      })
+    ).subscribe();
+  }
 
   fnOpenAside() {
     this.openAside = !this.openAside;
@@ -31,31 +39,36 @@ export class TelaAdminiComponent implements OnInit {
     this.optionSelected = e;
 
     const main = document.getElementById("main") as HTMLElement;
+    const mainContent = document.querySelector(".main-content") as HTMLElement;
+    const cadastroContent = document.querySelector(".cadastro") as HTMLElement;
+
     const titleMain = document.getElementById("nomeColecao") as HTMLElement;
-    const p = document.getElementById("mainP") as HTMLElement;
     const h = document.getElementById("mainH") as HTMLElement;
 
     main.style.display = "block";
     titleMain.innerHTML = e;
-    p.innerHTML = "Adicionar " + e;
 
     h.innerHTML = e;
-
-
-    if (e.toLowerCase() === "") {
-      h.innerHTML = e + " - " + this.dataCategorias.length;
+    console.log(e.toLowerCase())
+    if (e.toLowerCase() === "pacotes") {
+      mainContent.style.display = "flex";
+      cadastroContent.style.display = "none";
+      h.innerHTML = e + " - " + this.dataItens.length;
     } else {
+      mainContent.style.display = "none";
+      cadastroContent.style.display = "block";
       h.innerHTML = e + " - " + this.dataItens.length;
     }
   }
-
 
   fnUpdateItem(id: any){
 
   }
   
   fnDeleteItem(id: any){
-    
+    this.service.deleteTema(id).pipe(
+      finalize(() => this.getPacotes())
+    ).subscribe();
   }
 
   fnOpenUpdateCategoria(id: any){
@@ -96,17 +109,11 @@ export class TelaAdminiComponent implements OnInit {
       formData.append('ativo', this.form.get('ativo')!.value);
       // formData.append('categoriaId', this.formItem.get('categoriaId')!.value);
       formData.append('tipoPagamento', this.form.get('tipoPagamento')!.value);
-
-
-    this.service.postTeste(formData).pipe(
-      finalize(() => {
-        console.log('sfoi')
-      })
-    ).subscribe();
-
-
     // this.service.getTeste()  
 
   }
   
+  formatarValor(valor: number): string {
+    return valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+  }
 }
