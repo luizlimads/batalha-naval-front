@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BatalhaNavalService } from '../../batalha-naval.service';
 import { tap } from 'rxjs';
@@ -17,8 +17,10 @@ import { MatStepper } from '@angular/material/stepper';
 export class CadastroPacoteComponent {
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
+  @Input() updateData: any;
 
   tema: FormGroup = this._formBuilder.group({
+    id: [],
     nome: ['', Validators.required],
     tipoPagamento: ['', Validators.required],
     valor: ['', Validators.required],
@@ -77,17 +79,101 @@ export class CadastroPacoteComponent {
     formData.append('barcosFile', this.barcosFile);
     formData.append('nomeEmbarcacoes', this.embarcacoes.get('nome')!.value);
 
-    this.service.postPacote(formData).pipe(
-      tap((res:any) => {
-        if (res) {
-          this.openSnackBar(res.message);
+    var id = this.tema.get('id')?.value;
 
-          if (res.created === true) {
-            this.limparCampos();
+    if (id !== null && id !== undefined && id !== '') {
+      this.service.updatePacote(id, formData).pipe(
+        tap((res:any) => {
+          if (res) {
+            this.openSnackBar(res.message);
+  
+            if (res.created === true) {
+              this.limparCampos();
+            }
           }
-        }
+        })
+      ).subscribe();
+    } else {
+      this.service.postPacote(formData).pipe(
+        tap((res:any) => {
+          if (res) {
+            this.openSnackBar(res.message);
+  
+            if (res.created === true) {
+              this.limparCampos();
+            }
+          }
+        })
+      ).subscribe();
+    }
+  }
+
+  ngOnChanges() {
+    if (this.updateData != null && this.updateData != undefined) {
+      this.tema.patchValue({
+        id: this.updateData.temaId,
+        nome: this.updateData.nomeTema,
+        tipoPagamento: this.updateData.tipoPagamento,
+        valor: this.updateData.valor
       })
-    ).subscribe();
+
+      this.avatar.patchValue({
+        nome: this.updateData.nomeAvatar,
+      })
+
+      this.embarcacoes.patchValue({
+        nome: this.updateData.nomeEmbarcacoes,
+      })
+
+      this.imageUrl = 'data:image/jpg;base64,' + this.updateData.imageFundo;
+      let imageBlob = this.dataURItoBlob(this.updateData.imageFundo);
+      this.fundoFile = new File([imageBlob], 'img.png', { type: 'image/png' });
+
+      this.imageAvatarUrl = 'data:image/jpg;base64,' + this.updateData.imageAvatar;
+      imageBlob = this.dataURItoBlob(this.updateData.imageAvatar);
+      this.avatarFile = new File([imageBlob], 'img.png', { type: 'image/png' });
+
+      this.imageUrlBarco1 = 'data:image/jpg;base64,' + this.updateData.barco1File;
+      imageBlob = this.dataURItoBlob(this.updateData.barco1File);
+      this.barco1File = new File([imageBlob], 'img.png', { type: 'image/png' });
+
+      this.imageUrlBarco2 = 'data:image/jpg;base64,' + this.updateData.barco2File;
+      imageBlob = this.dataURItoBlob(this.updateData.barco2File);
+      this.barco2File = new File([imageBlob], 'img.png', { type: 'image/png' });
+
+      this.imageUrlBarco3 = 'data:image/jpg;base64,' + this.updateData.barco3File;
+      imageBlob = this.dataURItoBlob(this.updateData.barco3File);
+      this.barco3File = new File([imageBlob], 'img.png', { type: 'image/png' });
+
+      this.imageUrlBarco4 = 'data:image/jpg;base64,' + this.updateData.barco4File;
+      imageBlob = this.dataURItoBlob(this.updateData.barco4File);
+      this.barco4File = new File([imageBlob], 'img.png', { type: 'image/png' });
+
+      this.barcosFileUrl = 'data:image/jpg;base64,' + this.updateData.barcosFile;
+      imageBlob = this.dataURItoBlob(this.updateData.barcosFile);
+      this.barcosFile = new File([imageBlob], 'img.png', { type: 'image/png' });
+
+      this.tema.get('bloqWithoutImage')?.clearValidators();
+      this.tema.get('bloqWithoutImage')?.updateValueAndValidity();
+
+      this.avatar.get('bloqWithoutImage')?.clearValidators();
+      this.avatar.get('bloqWithoutImage')?.updateValueAndValidity();
+
+      this.embarcacoes.get('bloqWithoutImage')?.clearValidators();
+      this.embarcacoes.get('bloqWithoutImage')?.updateValueAndValidity();
+
+      this.embarcacoes.get('bloqWithoutImage2')?.clearValidators();
+      this.embarcacoes.get('bloqWithoutImage2')?.updateValueAndValidity();
+    
+      this.embarcacoes.get('bloqWithoutImage3')?.clearValidators();
+      this.embarcacoes.get('bloqWithoutImage3')?.updateValueAndValidity();
+    
+      this.embarcacoes.get('bloqWithoutImage4')?.clearValidators();
+      this.embarcacoes.get('bloqWithoutImage4')?.updateValueAndValidity();
+
+      this.embarcacoes.get('bloqWithoutImage5')?.clearValidators();
+      this.embarcacoes.get('bloqWithoutImage5')?.updateValueAndValidity();
+    }
   }
 
   fnChangeFile(event: any, tipo: any) {
@@ -298,5 +384,16 @@ export class CadastroPacoteComponent {
     this.barcosFile = '';
 
     this.myStepper.reset();
+  }
+
+  dataURItoBlob(dataURI: any) {
+    const byteString = window.atob(dataURI);
+    const arrayBuffer = new ArrayBuffer(byteString.length);
+    const int8Array = new Uint8Array(arrayBuffer);
+    for (let i = 0; i < byteString.length; i++) {
+      int8Array[i] = byteString.charCodeAt(i);
+    }
+    const blob = new Blob([int8Array], { type: 'image/png' });
+    return blob;
   }
 }

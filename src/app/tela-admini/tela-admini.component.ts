@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BatalhaNavalService } from '../batalha-naval.service';
-import { finalize, pipe, tap } from 'rxjs';
+import { finalize, tap } from 'rxjs';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 
@@ -15,6 +15,7 @@ export class TelaAdminiComponent implements OnInit {
   dataCategorias: any[] = [];
   dataItens: any[] = [];
   res: any = '';
+  updateData: any;
 
   constructor(private fb: FormBuilder, private service: BatalhaNavalService) { }
 
@@ -26,6 +27,10 @@ export class TelaAdminiComponent implements OnInit {
     this.service.getPacotes().pipe(
       tap((res:any) => {
         this.dataItens = res
+      }),
+      finalize(() => {
+        const h = document.getElementById("mainH") as HTMLElement;
+        h.innerHTML = "Pacotes - " + this.dataItens.length;
       })
     ).subscribe();
   }
@@ -49,8 +54,8 @@ export class TelaAdminiComponent implements OnInit {
     titleMain.innerHTML = e;
 
     h.innerHTML = e;
-    console.log(e.toLowerCase())
     if (e.toLowerCase() === "pacotes") {
+      this.getPacotes();
       mainContent.style.display = "flex";
       cadastroContent.style.display = "none";
       h.innerHTML = e + " - " + this.dataItens.length;
@@ -62,7 +67,18 @@ export class TelaAdminiComponent implements OnInit {
   }
 
   fnUpdateItem(id: any){
+    this.service.getPacote(id).pipe(
+      tap((res:any) => {
+        this.updateData = res
+      }),
+      finalize(() => {
+        const mainContent = document.querySelector(".main-content") as HTMLElement;
+        const cadastroContent = document.querySelector(".cadastro") as HTMLElement;
 
+        mainContent.style.display = "none";
+        cadastroContent.style.display = "flex";
+      })
+    ).subscribe();
   }
   
   fnDeleteItem(id: any){

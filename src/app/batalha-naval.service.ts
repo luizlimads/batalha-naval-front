@@ -30,4 +30,12 @@ export class BatalhaNavalService {
   deleteTema(temaId: number) {
     return this.http.delete(`${this.urlBase}/pacotes/${temaId}`);
   }
+
+  getPacote(temaId: number) {
+    return this.http.get(`${this.urlBase}/pacotes/${temaId}`);
+  }
+
+  updatePacote(temaId: number, formData: any) {
+    return this.http.put(`${this.urlBase}/pacotes/${temaId}`, formData);
+  }
 }
