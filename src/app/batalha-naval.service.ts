@@ -19,6 +19,10 @@ export class BatalhaNavalService {
     return this.http.post(`${this.urlBase}/usuarios`, formData);
   }
 
+  getUser(userId: any) {
+    return this.http.get(`${this.urlBase}/usuarios/${userId}`);
+  }
+
   postPacote(formData: any) {
     return this.http.post(`${this.urlBase}/pacotes`, formData);
   }
@@ -37,5 +41,9 @@ export class BatalhaNavalService {
 
   updatePacote(temaId: number, formData: any) {
     return this.http.put(`${this.urlBase}/pacotes/${temaId}`, formData);
+  }
+
+  login(formData: any) {
+    return this.http.post(`${this.urlBase}/usuarios/login`, formData);
   }
 }

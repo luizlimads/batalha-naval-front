@@ -1,4 +1,9 @@
 import { Component } from '@angular/core';
+import { BatalhaNavalService } from '../batalha-naval.service';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { tap } from 'rxjs';
+import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
+import { Route, Router } from '@angular/router';
 
 @Component({
   selector: 'app-tela-login',
@@ -7,4 +12,43 @@ import { Component } from '@angular/core';
 })
 export class TelaLoginComponent {
 
+  horizontalPosition: MatSnackBarHorizontalPosition = 'center';
+  verticalPosition: MatSnackBarVerticalPosition = 'top';
+  
+  form: FormGroup = this.fb.group({
+    login: [''],
+    senha: ['']
+  })
+
+  constructor(private service: BatalhaNavalService, private fb: FormBuilder, private _snackBar: MatSnackBar, private router: Router) {}
+
+  login() {
+    this.service.login(this.form.value).pipe(
+      tap((res:any) => {
+        this.openSnackBar(res.mensagem);
+        sessionStorage.setItem('userId', res.usuarioId);
+        this.router.navigate(['/'])
+      })
+    ).subscribe();
+  }
+
+  fnGetEmail(e: any) {
+    this.form.patchValue({
+      login: e
+    })
+  }
+
+  fnGetPassword(e: any)  {
+    this.form.patchValue({
+      senha: e
+    })
+  }
+
+  openSnackBar(message: string) {
+    this._snackBar.open(message, '', {
+      horizontalPosition: this.horizontalPosition,
+      verticalPosition: this.verticalPosition,
+      duration: 5000
+    });
+  }
 }

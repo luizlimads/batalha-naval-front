@@ -59,13 +59,10 @@ export class TelaCadastroComponent {
 
     if(this.fnValidate()) {
       //---------------------
-      alert('enviado')
-      this.resetForms();
       //---------------------
-      
-     // this.service.postUser(this.form.value).pipe(
-      //  finalize(() => this.resetForms())
-      //).subscribe();
+     this.service.postUser(this.form.value).pipe(
+       finalize(() => this.resetForms())
+      ).subscribe();
     }
   }
 

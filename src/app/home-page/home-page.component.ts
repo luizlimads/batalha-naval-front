@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BatalhaNavalService } from '../batalha-naval.service';
 import { finalize, pipe, tap } from 'rxjs';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -11,7 +12,7 @@ import { finalize, pipe, tap } from 'rxjs';
 export class HomePageComponent implements OnInit {
   dataCategorias: any[] = [];
   dataItens: any[] = [];
-
+  userData: any;
 
   open: boolean = false;
   // popupShop: boolean = false;
@@ -36,7 +37,7 @@ export class HomePageComponent implements OnInit {
 
 
 
-  constructor(private service: BatalhaNavalService) {
+  constructor(private service: BatalhaNavalService, private router: Router) {
     this.somBtn.src = "../../assets/audios/sombtnbatalhar.wav";
     this.somHomePage.src = "../../assets/audios/SomHomePage.mp3";
     this.somHomePopup.src = "../../assets/audios/openpopup.mp3";
@@ -70,7 +71,7 @@ export class HomePageComponent implements OnInit {
     console.log(this.oAvatar);
 
 
-
+    this.hasUserSessionId();
   }
 
 
@@ -83,8 +84,26 @@ export class HomePageComponent implements OnInit {
 
     this.getAllCategorias();
     this.getAllItems();
+  }
 
-    
+  hasUserSessionId() {
+    var usuarioLogadoId = sessionStorage.getItem('userId');
+
+    if (usuarioLogadoId === null) {
+      this.router.navigate(['login'])
+    } else {
+      this.getUser(usuarioLogadoId);
+    }
+
+    //sessionStorage.removeItem("key");
+  }
+
+  getUser(usuarioLogadoId: any) {
+    this.service.getUser(usuarioLogadoId).pipe(
+      tap((res:any) => {
+        this.userData = res
+      })
+    ).subscribe();
   }
 
   getAllCategorias() {
