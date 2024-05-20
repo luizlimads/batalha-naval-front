@@ -92,6 +92,11 @@ export class HomePageComponent implements OnInit {
     this.getAllItems();
   }
 
+  fnCarregar(){
+    this.router.navigate(['carr'])
+
+  }
+
   hasUserSessionId() {
     var usuarioLogadoId = sessionStorage.getItem('userId');
 
