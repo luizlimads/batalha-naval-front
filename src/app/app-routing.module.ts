@@ -7,6 +7,7 @@ import { DressUpComponent } from './dress-up/dress-up.component';
 import { DressUpAvatarComponent } from './dress-up-avatar/dress-up-avatar.component';
 import { TelaAdminComponent } from './tela-admin/tela-admin.component';
 import { TelaAdminiComponent } from './tela-admini/tela-admini.component';
+import { TelaPreparacaoComponent } from './tela-preparacao/tela-preparacao.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },
@@ -15,7 +16,8 @@ const routes: Routes = [
   { path: 'admin', component: TelaAdminComponent},
   { path: 'adm', component: TelaAdminiComponent},
   { path: 'dress', component: DressUpComponent},
-  { path: 'dres', component: DressUpAvatarComponent}
+  { path: 'dres', component: DressUpAvatarComponent},
+  { path: 'pre', component: TelaPreparacaoComponent}
 ];
 
 @NgModule({

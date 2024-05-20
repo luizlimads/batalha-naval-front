@@ -20,7 +20,9 @@ export class TelaLoginComponent {
     senha: ['']
   })
 
-  constructor(private service: BatalhaNavalService, private fb: FormBuilder, private _snackBar: MatSnackBar, private router: Router) {}
+  constructor(private service: BatalhaNavalService, private fb: FormBuilder, private _snackBar: MatSnackBar, private router: Router) {
+    this.hasUserSessionId();
+  }
 
   login() {
     this.service.login(this.form.value).pipe(
@@ -50,5 +52,17 @@ export class TelaLoginComponent {
       verticalPosition: this.verticalPosition,
       duration: 5000
     });
+  }
+
+  hasUserSessionId() {
+    var usuarioLogadoId = sessionStorage.getItem('userId');
+
+    if (usuarioLogadoId !== null) {
+      this.router.navigate(['/'])
+    } 
+  }
+
+  fnLinkCadastro(){
+    this.router.navigate(['/cadastro']);
   }
 }

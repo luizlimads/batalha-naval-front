@@ -3,6 +3,7 @@ import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BatalhaNavalService } from '../batalha-naval.service';
 import { finalize, tap } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tela-cadastro',
@@ -32,7 +33,21 @@ export class TelaCadastroComponent {
     senha: ['', Validators.required]
   });
 
-  constructor(private fb: FormBuilder, private service: BatalhaNavalService) {}
+  constructor(private fb: FormBuilder, private service: BatalhaNavalService, private router: Router) {
+    this.hasUserSessionId();
+  }
+
+  hasUserSessionId() {
+    var usuarioLogadoId = sessionStorage.getItem('userId');
+
+    if (usuarioLogadoId !== null) {
+      this.router.navigate(['/'])
+    } 
+  }
+
+  fnLinkLogin(){
+    this.router.navigate(['/login'])
+  }
 
   fnDica() {
     this.dica = !this.dica;

@@ -27,7 +27,10 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatDividerModule} from '@angular/material/divider';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {MatSelectModule} from '@angular/material/select';
+import { TelaPreparacaoComponent } from './tela-preparacao/tela-preparacao.component';
 
+import { DragDropModule } from "@angular/cdk/drag-drop";
+import { ShipComponent } from './ship/ship.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +45,9 @@ import {MatSelectModule} from '@angular/material/select';
     TelaAdminComponent,
     TelaAdminiComponent,
     CadastroPacoteComponent,
+    TelaPreparacaoComponent,
+    ShipComponent,
+    
   ],
   imports: [
     BrowserModule,
@@ -58,7 +64,8 @@ import {MatSelectModule} from '@angular/material/select';
     MatIconModule,
     MatDividerModule,
     MatSnackBarModule,
-    MatSelectModule
+    MatSelectModule,
+    DragDropModule
   ],
   providers: [
     provideAnimationsAsync()
