@@ -18,11 +18,20 @@ export class HomePageComponent implements OnInit {
   open: boolean = false;
   // popupShop: boolean = false;
   // selectGuia: boolean = 
+
+  sliderValueSound: number = 50; // Valor inicial dos sons
+  sliderValueMusic: number = 0; // Valor inicial da musica
+
+  compraAtual: any; //vai dizer se estou comprando moeda ou diamantes, é um objeto que tem valor e o preco
+
   alguma: boolean = true;
   somMenu: any = new Audio();
   somBtn: any = new Audio();
   somHomePage: any = new Audio();
   somHomePopup: any = new Audio();
+  somCoin: any = new Audio();
+
+
   clotheSelected: any;
   activeTab: string = ''; // A guia ativa do shop
   activeTabInvent: string = 'todos'; // guia ativa do inventario
@@ -33,6 +42,12 @@ export class HomePageComponent implements OnInit {
   // guiasShop: any[];
   itensInvent: any[];
   // itensShop: any[];
+
+  infoUser: any;
+
+
+  itensCoins: any[];
+  itensDiamonds: any[];
 
   oAvatar: any;
 
@@ -48,7 +63,18 @@ export class HomePageComponent implements OnInit {
     this.somHomePage.src = "../../assets/audios/SomHomePage.mp3";
     this.somHomePopup.src = "../../assets/audios/openpopup.mp3";
     this.somMenu.src = "../../assets/audios/somselecao.wav";
+    this.somCoin.src = "../../assets/audios/somMoeda.mp3";
 
+    this.itensCoins = [
+      { titulo: '1.000 Moedas', img: '../../assets/images/img-home-page/pctC1.png', preco: '100', valor: '1000' },
+      { titulo: '5.000 Moedas', img: '../../assets/images/img-home-page/pctC2.png', preco: '200', valor: '5000' },
+      { titulo: '10.000 Moedas', img: '../../assets/images/img-home-page/pctC3.png', preco: '400', valor: '10000' }
+    ];
+    this.itensDiamonds = [
+      { titulo: '100 Diamantes', img: '../../assets/images/img-home-page/pctD1.png', preco: '1000', valor: '100' },
+      { titulo: '500 Diamantes', img: '../../assets/images/img-home-page/pctD2.png', preco: '5000', valor: '500' },
+      { titulo: '1.000 Diamantes', img: '../../assets/images/img-home-page/pctD3.png', preco: '10000', valor: '1000' }
+    ];
     this.guiasInvent = [
       { titulo: 'Camisas', seletor: 'shirt' },
       { titulo: 'Calças', seletor: 'pants' },
@@ -67,6 +93,9 @@ export class HomePageComponent implements OnInit {
       { titulo: 'Sapatos2', categoria: 'shoes', imgUrl: "../../assets/imagesAvatar/pirataPrincipalShoes2.png" },
     ];
 
+    this.infoUser = { nome: 'teste', moedas: 1000, diamantes: 1000 }
+
+
     this.oAvatar = {};
 
 
@@ -80,21 +109,175 @@ export class HomePageComponent implements OnInit {
     // this.hasUserSessionId();
   }
 
-
   ngOnInit(): void {
     this.activeTab = 'moedas';
     this.activeTabInvent = 'todos';
-    // this.somHomePage.play()
-    // this.somHomePage.volume = 0.2;
+
+    this.fnMusicHomePage();
 
 
     this.getAllCategorias();
     this.getAllItems();
   }
 
-  fnCarregar(){
-    this.router.navigate(['carr'])
+  fnSomBtn() {
+    this.somBtn.volume = this.sliderValueSound / 100;
+    this.somBtn.play();
+  }
 
+  fnSomCoin() {
+    this.somCoin.volume = this.sliderValueSound / 100;
+    this.somCoin.play();
+  }
+
+  fnSomMenu() {
+    this.somMenu.volume = this.sliderValueSound / 100;
+    this.somMenu.play(); // Inicia a reprodução do novo arquivo
+  }
+
+  fnSomHomePopup() {
+    this.somHomePopup.volume = this.sliderValueSound / 100;
+    this.somHomePopup.play();
+  }
+
+  fnConfirmOpenModalConfirm(preco: any, valor: any, type: any) {
+
+    if (type === 'd') {
+      if (parseFloat(this.infoUser.diamantes) < parseFloat(preco)) {
+        this.fnMsg("Saldo insuficiente")
+      } else {
+        (document.getElementById("qtdCompraTitulo") as HTMLElement).innerHTML = 'Quantidade de Moedas:';
+        (document.getElementById("qtdCompra") as HTMLElement).innerHTML = this.formatarValor(valor);
+        (document.getElementById("valorCompra") as HTMLElement).innerHTML = this.formatarValor(preco) + " (Diamantes)";
+
+        
+        this.fnModalConfirm();
+
+        this.compraAtual = {type: 'c', valor: valor, preco: preco};
+
+      }
+    } else {
+
+      console.log("comprando diamante", parseFloat(this.infoUser.moedas), parseFloat(preco))
+
+      if (parseFloat(this.infoUser.moedas) < parseFloat(preco)) {
+        this.fnMsg("Saldo insuficiente")
+      } else {
+        (document.getElementById("qtdCompraTitulo") as HTMLElement).innerHTML = 'Quantidade de Diamantes:';
+        (document.getElementById("qtdCompra") as HTMLElement).innerHTML = this.formatarValor(valor);
+        (document.getElementById("valorCompra") as HTMLElement).innerHTML = this.formatarValor(preco) + "(Moedas)";
+        this.fnModalConfirm();
+
+        this.compraAtual = {type: 'd', valor: valor, preco: preco};
+      
+      }
+    }
+  }
+
+  fnModalConfirm() {
+    (document.querySelector(".shadow-modal-confirm") as HTMLElement).classList.toggle("active");
+  }
+
+  fnBuy() {
+    if(this.compraAtual){
+      if(this.compraAtual.type === 'd'){
+        this.fnBuyDiamond(this.compraAtual.preco, this.compraAtual.valor);
+      }else{
+        this.fnBuyCoin(this.compraAtual.preco, this.compraAtual.valor);
+      }
+    }
+  }
+
+
+  fnBuyCoin(preco: any, valor: any){
+    if (parseFloat(this.infoUser.diamantes) >= parseFloat(preco)) {
+      console.log("compra")
+      // faz a atualização no banco, adiciona moeda no campo moeda da tabela
+
+      let result = true
+
+      if (result) {
+
+        let valorAtual = this.infoUser.moedas;
+        this.infoUser.diamantes -= parseFloat(preco);
+        (document.getElementById("principalDiamondValue") as HTMLElement).innerHTML = this.formatarValor(this.infoUser.diamantes);
+
+      
+        this.infoUser.moedas += parseFloat(valor);
+        this.myCalculator("principalCoinsValue", valorAtual, parseFloat(valor));
+
+        this.fnModalConfirm();
+
+        this.open = false;
+      }
+
+    } else {
+      this.fnMsg("Saldo insuficiente")
+    }
+  }
+
+  fnBuyDiamond(preco: any, valor: any) {
+  
+    if (parseFloat(this.infoUser.moedas) >= parseFloat(preco)) {
+      // faz a atualização no banco, adiciona moeda no campo moeda da tabela
+
+      let result = true
+
+      if (result) {
+
+        let valorAtual = this.infoUser.diamantes;
+        this.infoUser.moedas -= parseFloat(preco);
+        (document.getElementById("principalCoinsValue") as HTMLElement).innerHTML = this.formatarValor(this.infoUser.moedas);
+
+        this.infoUser.diamantes += parseFloat(valor);
+        this.myCalculator("principalDiamondValue", valorAtual, parseFloat(valor));
+        this.fnModalConfirm();
+
+        this.open = false;
+      }
+
+    } else {
+      this.fnMsg("Saldo insuficiente")
+    }
+  }
+
+  myCalculator(id: any, start: any, end: any) {
+    var duration = 1000;
+
+    console.log( start, end, duration)
+    this.animateValue(id, start, end+start, duration); // remove .toLocaleString()
+  }
+  
+  animateValue(id: any, start: any, end: any, duration: any) {
+    var range = end - start;
+    var current = start;
+    var increment = end > start ? 10 : -10;
+
+    var stepTime = Math.abs(Math.floor(duration / range));
+    this.fnSomCoin();
+
+    var timer = setInterval(function() {
+      current += increment;
+
+      (document.getElementById(id) as HTMLElement).innerHTML = current.toLocaleString(); // add .toLocaleString() here
+      if (current == end) {
+        clearInterval(timer);
+      }
+    }, stepTime); 
+  }
+
+
+
+  
+
+
+  fnMusicHomePage() {
+    this.somHomePage.volume = this.sliderValueMusic / 100;
+    this.somHomePage.play()
+  }
+
+  fnCarregar() {
+    this.router.navigate(['carr'])
   }
 
   hasUserSessionId() {
@@ -116,6 +299,39 @@ export class HomePageComponent implements OnInit {
       })
     ).subscribe();
   }
+
+
+  updateValueSound(value = -1) {
+    let volumeS = document.getElementById("soundVolumeInput") as HTMLInputElement;
+
+    if (value < 0)
+      this.sliderValueSound = parseInt(volumeS.value);
+    else {
+      this.sliderValueSound = value;
+      volumeS.value = this.sliderValueSound.toString();
+    }
+  }
+
+  updateValueMusic(value = -1) {
+    let volumeM = document.getElementById("musicVolumeInput") as HTMLInputElement;
+
+    if (value < 0)
+      this.sliderValueMusic = parseInt(volumeM.value);
+    else {
+      this.sliderValueMusic = value;
+      volumeM.value = this.sliderValueMusic.toString();
+    }
+
+    this.fnMusicHomePage();
+  }
+
+  fnSalvaConfSounds() {
+    console.log(this.sliderValueMusic, this.sliderValueSound)
+    this.fnMsg("Alterações salvas com sucesso", "success")
+    this.open = false;
+  }
+
+
 
   getAllCategorias() {
     // this.service.getAllCategorias().pipe(
@@ -202,7 +418,7 @@ export class HomePageComponent implements OnInit {
     let confirm = document.getElementById("txtComfirm") as HTMLInputElement;
     let passDica = document.querySelector('.pass-dica') as HTMLElement;
 
-    console.log(oldPass.value, newPass.value)
+    //console.log(oldPass.value, newPass.value)
     if (oldPass.value === "" || newPass.value === "") {
       this.fnMsg("Os campos de senha não podem estar vazios!")
     } else if (confirm.value !== newPass.value) {
@@ -340,17 +556,14 @@ export class HomePageComponent implements OnInit {
   }
 
 
-
   openTabConf(tabName: any) {
-    console.log(tabName)
-    this.somBtn.play();
+    this.fnSomBtn();
 
     this.activeTabConf = tabName;
   }
 
   openTabInvent(tabName: string) {
-    console.log(tabName)
-    this.somBtn.play();
+    this.fnSomBtn();
 
     this.activeTabInvent = tabName;
     // Aqui você pode adicionar a lógica para exibir os itens da guia clicada
@@ -358,28 +571,30 @@ export class HomePageComponent implements OnInit {
 
 
   openTab(tabName: string) {
-    this.somBtn.play();
+    this.fnSomBtn();
 
     this.activeTab = tabName;
     // Aqui você pode adicionar a lógica para exibir os itens da guia clicada
   }
 
   fnOpen(namePopup: string) {
-    this.somHomePopup.play();
+    this.fnSomHomePopup();
     this.open = !this.open;
     this.activePopUp = namePopup
   }
 
   playSoundSelecao() {
-    this.somMenu.play(); // Inicia a reprodução do novo arquivo
+    this.fnSomMenu();
   }
 
   playSoundBtnBatalha() {
-    this.somBtn.play();
+    this.fnSomBtn();
   }
 
-  formatarValor(valor: number): string {
-    return valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
-    // return valor.toFixed(2).replace('.', ','); // Formata para duas casas decimais e substitui ponto por vírgula
+  formatarValor(valor: any): string {
+    console.log('Valor recebido:', valor);
+    valor = parseFloat(valor);
+
+    return valor.toLocaleString('pt-BR');
   }
 }

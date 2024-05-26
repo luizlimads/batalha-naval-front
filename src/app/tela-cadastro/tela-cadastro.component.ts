@@ -40,9 +40,9 @@ export class TelaCadastroComponent {
   hasUserSessionId() {
     var usuarioLogadoId = sessionStorage.getItem('userId');
 
-    if (usuarioLogadoId !== null) {
-      this.router.navigate(['/'])
-    } 
+    // if (usuarioLogadoId !== null) {
+    //   this.router.navigate(['/'])
+    // } 
   }
 
   fnLinkLogin(){

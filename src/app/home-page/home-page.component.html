@@ -29,7 +29,7 @@
                 </div>
                 <div class="item-coin-status">
                     <!-- <div></div> -->
-                    <p>35.500</p>
+                    <p id="principalCoinsValue">{{infoUser.moedas}}</p>
                 </div>
                 <div class="icon-coin">
                     <img src="../../assets/images/img-home-page/coin.png" alt="">
@@ -42,7 +42,7 @@
                 </div>
                 <div class="item-diamond-status">
                     <!-- <div></div> -->
-                    <p>500</p>
+                    <p id="principalDiamondValue">{{infoUser.diamantes}}</p>
                 </div>
                 <div class="icon-diamond">
                     <img src="../../assets/images/img-home-page/diamond.png" alt="">
@@ -296,7 +296,7 @@
 <div class="popups" [ngClass]="open? 'popup--visible': ''">
     <div class="bg-popups">
         <div class="popup-content">
-            <button id="btn-close-popups" (click)="open = false; this.somHomePopup.play();">
+            <button id="btn-close-popups" (click)="open = false; this.fnSomHomePopup();">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
                     <path
                         d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
@@ -469,12 +469,59 @@
                 <div class="popup-conf-screm" [class.selected]="activeTabConf === 'som'">
                     <!-- <h1>Configurações</h1> -->
                     <div class="conf-sound-effects">
-                        <input id="slider" type="range" min="4" max="32" value="16" />
-                        <!-- <input type="range" min="1" max="100" value="50" class="slider" id="myRange"> -->
+
+                        <div>
+                            <svg *ngIf="sliderValueSound !== 0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
+                                (click)="updateValueSound(0)">
+                                <path
+                                    d="M11.536 14.01A8.47 8.47 0 0 0 14.026 8a8.47 8.47 0 0 0-2.49-6.01l-.708.707A7.48 7.48 0 0 1 13.025 8c0 2.071-.84 3.946-2.197 5.303z" />
+                                <path
+                                    d="M10.121 12.596A6.48 6.48 0 0 0 12.025 8a6.48 6.48 0 0 0-1.904-4.596l-.707.707A5.48 5.48 0 0 1 11.025 8a5.48 5.48 0 0 1-1.61 3.89z" />
+                                <path
+                                    d="M8.707 11.182A4.5 4.5 0 0 0 10.025 8a4.5 4.5 0 0 0-1.318-3.182L8 5.525A3.5 3.5 0 0 1 9.025 8 3.5 3.5 0 0 1 8 10.475zM6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06" />
+                            </svg>
+
+                            <svg *ngIf="sliderValueSound === 0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
+                                (click)="updateValueSound(50)">
+                                <path
+                                    d="M6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06m7.137 2.096a.5.5 0 0 1 0 .708L12.207 8l1.647 1.646a.5.5 0 0 1-.708.708L11.5 8.707l-1.646 1.647a.5.5 0 0 1-.708-.708L10.793 8 9.146 6.354a.5.5 0 1 1 .708-.708L11.5 7.293l1.646-1.647a.5.5 0 0 1 .708 0" />
+                            </svg>
+                            <!-- <input id="soundVolumeInput" type="range"  type="range" min="0" max="100" value="50" (input)="fnSoundInput('')"/> -->
+                            <!-- <input type="range" min="1" max="100" value="50" class="slider" id="myRange"> -->
+                            <div class="range-slider">
+                                <input type="range" min="0" max="100" id="soundVolumeInput" [value]="sliderValueSound"
+                                    (input)="updateValueSound()" />
+                                <span class="range-value" id="spanSound">{{ sliderValueSound.toString() }}</span>
+                            </div>
+                        </div>
+                        <div class="conf-music">
+
+                            <svg *ngIf="sliderValueMusic !== 0" xmlns="http://www.w3.org/2000/svg"
+                                (click)="updateValueMusic(0)" viewBox="0 -960 960 960">
+                                <path
+                                    d="M400-120q-66 0-113-47t-47-113q0-66 47-113t113-47q23 0 42.5 5.5T480-418v-422h240v160H560v400q0 66-47 113t-113 47Z" />
+                            </svg>
+
+                            <svg *ngIf="sliderValueMusic === 0" xmlns="http://www.w3.org/2000/svg"
+                                (click)="updateValueMusic(50)" viewBox="0 -960 960 960">
+                                <path
+                                    d="M792-56 56-792l56-56 736 736-56 56ZM560-514l-80-80v-246h240v160H560v166ZM400-120q-66 0-113-47t-47-113q0-66 47-113t113-47q23 0 42.5 5.5T480-418v-62l80 80v120q0 66-47 113t-113 47Z" />
+                            </svg>
+
+                            <div class="range-slider">
+                                <input type="range" min="0" max="100" [value]="sliderValueMusic" id="musicVolumeInput"
+                                    (input)="updateValueMusic()" />
+                                <span class="range-value" id="spanMusic">{{ sliderValueMusic.toString() }}</span>
+                            </div>
+
+                        </div>
+
+                        <div class="sound-btn">
+                            <button (click)="fnSalvaConfSounds()">Ok</button>
+                        </div>
                     </div>
-                    <div class="conf-music">
-                        ..
-                    </div>
+
+
 
 
                 </div>
@@ -579,36 +626,35 @@
                         <p>{{cat.titulo}}</p>
                     </div>
 
-
-
                 </div>
 
                 <!-- Vai vir do banco -->
                 <div class="popup-shop-screm" [class.selected]="activeTab === 'moedas'">
-                    <div class="shop-item">
-                        <h3>100 diamantes</h3>
+
+                    <div class="shop-item" *ngFor="let c of itensCoins">
+                        <h3>{{c.titulo}}</h3>
                         <div class="item-img">
                             <div>
-                                <img src="../../assets/images/img-home-page/pirata1.png" alt="">
+                                <img [src]="c.img" alt="">
                             </div>
-                            <p>Descrição</p>
+                            <!-- <p>Descrição</p> -->
                         </div>
                         <div class="item-value">
                             <div class="value-type">
-                                <img src="../../assets/images/img-home-page/coin.png" alt="">
+                                <img src="../../assets/images/img-home-page/diamond.png" alt="">
                             </div>
                             <div class="value-price">
-                                <p>750,00</p>
+                                <!-- <p>{{formatarValor(c.preco)}}</p> -->
+                                <p>{{c.preco}}</p>
                             </div>
                             <div class="value-btn">
-                                <div>
+                                <div (click)="fnConfirmOpenModalConfirm(c.preco, c.valor, 'd')">
                                     Buy
                                 </div>
                             </div>
                         </div>
+
                     </div>
-
-
                 </div>
                 <!-- Vai vir do banco -->
 
@@ -617,7 +663,35 @@
                 <div class="popup-shop-screm" [class.selected]="activeTab === 'diamonds'">
                     <!-- Vai vir do banco -->
 
+                    <div class="shop-item" *ngFor="let d of itensDiamonds">
+                        <h3>{{d.titulo}}</h3>
+                        <div class="item-img">
+                            <div>
+                                <img [src]="d.img" alt="">
+                            </div>
+                            <!-- <p>Descrição</p> -->
+                        </div>
+                        <div class="item-value">
+                            <div class="value-type">
+                                <img src="../../assets/images/img-home-page/coin.png" alt="">
+                            </div>
+                            <div class="value-price">
+                                <!-- <p>{{formatarValor(d.preco)}}</p> -->
+                                <p>{{d.preco}}</p>
+                            </div>
+                            <div class="value-btn">
+                                <div (click)="fnConfirmOpenModalConfirm(d.preco, d.valor, 'c')">
+                                    Buy
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
                 </div>
+
 
                 <div *ngFor="let cat of dataCategorias" class="popup-shop-screm"
                     [class.selected]="activeTab === cat.titulo">
@@ -656,6 +730,32 @@
                     </ng-container>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="shadow-modal-confirm">
+    <div class="modal-confirm">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+            <path
+                d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+        </svg>
+        <h1>Tem certeza?</h1>
+        <p>Deseja realmente fazer essa compra?</p>
+        <div class="confirm-compra">
+            <span>
+                <p class="confirmP" id="qtdCompraTitulo">Quantidade de : </p>
+                <p id="qtdCompra"></p>
+            </span>
+            <span>
+                <p class="confirmP">Valor:</p>
+                <p id="valorCompra"></p>
+            </span>
+        </div>
+        <div>
+            <button class="btn no" (click)="fnModalConfirm()">Não</button>
+            <button class="btn" id="btnBuy" (click)="fnBuy()">Sim, quero comprar</button>
         </div>
     </div>
 </div>
