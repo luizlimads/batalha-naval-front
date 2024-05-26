@@ -44,9 +44,13 @@ export class TelaPreComponent {
   y: any;
 
   tabuleiro: any[] = [];
+  private webSocket!: WebSocket;
 
   constructor(private renderer: Renderer2) {
-
+    this.webSocket = new WebSocket('ws://localhost:8080/game');
+    this.webSocket.onmessage = (event) => {
+      console.log(JSON.parse(event.data))
+    };
   }
 
   ngAfterViewInit() {
@@ -486,12 +490,21 @@ export class TelaPreComponent {
 
       })
     })
+    var usuarioLogadoId = sessionStorage.getItem('userId');
 
     if (existeNavioGaragem) {
       alert("Todos os navios devem estar completamente dentro do tabuleiro!")
     }
     else {
       console.log(this.tabuleiro);
+
+      let messageObject = { 
+        usuarioId: usuarioLogadoId,
+        tabuleiro: this.tabuleiro,
+        navios: this.navios
+      }; 
+
+      this.webSocket.send(JSON.stringify(messageObject))
     }
 
    
