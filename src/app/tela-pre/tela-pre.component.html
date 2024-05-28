@@ -1,4 +1,10 @@
 <div class="container">
+    
+
+    
+    <canvas (mousemove)="fnCanvasMove($event)" #board width="1021" height="511" (click)="fnCanvasClick($event)">
+    </canvas>
+
     <button id="btnGirarA" (click)="fnGirar(true)">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
             class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
@@ -14,9 +20,5 @@
                 d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466" />
         </svg></button>
     <button id="btnOk" (click)="fnSalvaPosicao()">Ok</button>
-
-    
-    <canvas (mousemove)="fnCanvasMove($event)" #board width="1021" height="511" (click)="fnCanvasClick($event)">
-    </canvas>
 
 </div>

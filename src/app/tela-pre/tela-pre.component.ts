@@ -1,5 +1,5 @@
 import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
-import { Navio, Tile } from '../navio';
+import { Navio, Tile, Mina } from '../navio';
 
 @Component({
   selector: 'app-tela-pre',
@@ -27,11 +27,14 @@ export class TelaPreComponent {
   // espaço navios
   sizeSpaceShip: any = 10 * (this.sizeTiles + 1);
 
-  imagens: any = []
+  imagens: any = [];
+  imagensMina: any = [];
 
   update: boolean = true; // if true redraw
 
   tiles: Tile[] = [];
+
+  // minas: Mina[] = [];
 
   // Criando o array de navios
   navios: Navio[] = [];
@@ -42,6 +45,9 @@ export class TelaPreComponent {
   dragok = false;
   x: any;
   y: any;
+
+  xAnterior: any;
+  yAnterior: any;
 
   tabuleiro: any[] = [];
   private webSocket!: WebSocket;
@@ -75,6 +81,9 @@ export class TelaPreComponent {
     this.navios.push(this.criarNavio(1, 1, 7)); // 1 navio de 1 casas
     this.navios.push(this.criarNavio(1, 3, 7)); // 1 navio de 1 casas
 
+    // this.minas.push(this.criarMina(5, 7));
+    // this.minas.push(this.criarMina(6, 7));
+    // this.minas.push(this.criarMina(7, 7));
 
     // ----------------------------------------------------
 
@@ -91,6 +100,8 @@ export class TelaPreComponent {
 
     if (ctx) {
 
+
+      //carregando a imagem dos barcos
       for (let i = 0; i <= 270; i += 90) {
         var img = new Image();
         img.src = `../../assets/img/barco${i}.png`
@@ -104,6 +115,24 @@ export class TelaPreComponent {
           //this.fnDraw(ctx)
         }
       });
+      // ------------------------------------
+
+
+
+      // carregando a imagem das minas
+      for (let i = 0; i < 3; i++) {
+        var img = new Image();
+        img.src = `../../assets/img/mina.png`
+        this.imagensMina[i] = img
+      }
+
+      this.imagensMina.forEach((img: any) => {
+        img.onload = () => {
+          ctx.drawImage(img, 0, 0);
+          //this.fnDraw(ctx)
+        }
+      });
+      // -------------------------------------
 
       //ctx.clearRect(0, 0, 1021, 511);
 
@@ -142,7 +171,7 @@ export class TelaPreComponent {
               return;
             }
 
-            if (!this.isPosicaoDisponivelParaNavio(navio, tile.i, tile.j)) {
+            if (!this.isPosicaoOutroNavio(navio, tile.i, tile.j)) {
               return; //fazer bordar vermeçha ja que nao é disponivel apra o navio
             }
           }
@@ -227,6 +256,7 @@ export class TelaPreComponent {
   // Função para verificar se o mouse está sobre um navio
   isMouseOverNavio(navio: Navio, mouseX: any, mouseY: any) {
 
+
     for (let tile of navio.tiles) {
       let x = (tile.i * 51) + 1;
       let y = (tile.j * 51) + 1;
@@ -286,13 +316,32 @@ export class TelaPreComponent {
       }
     }
 
+    //desenha as minas
+
+    // this.minas.forEach(mina => {
+    //   // console.log(mina)
+    //   let x = (mina.i * 51) + 1;
+    //   let y = (mina.j * 51) + 1;
+
+    //   let img = this.imagensMina[1];
+
+    //   ctx.drawImage(img, x, y, this.sizeTiles + 1, this.sizeTiles + 1); // Desenha a imagem do tile no canvas
+
+
+    // })
+
     // Desenha os navios
     ctx.fillStyle = "blue";
 
     this.navios.forEach(navio => {
       let contador = 0
+      let posicaoOk = true
 
       navio.tiles.forEach(tile => {
+
+        if (!this.isPosicaoDisponivelParaNavio(navio, tile.i, tile.j)){
+          posicaoOk = false
+        }
 
         let x = (tile.i * 51) + 1;
         let y = (tile.j * 51) + 1;
@@ -309,6 +358,7 @@ export class TelaPreComponent {
         }
 
         contador += 1
+
       });
 
       if (this.navioSelecionado != null) {
@@ -323,6 +373,9 @@ export class TelaPreComponent {
         }
       }
 
+      if (!posicaoOk){
+        this.drawSelectedNavioBorder(ctx, navio, 3, 'red')
+      }
 
 
     });
@@ -348,6 +401,22 @@ export class TelaPreComponent {
 
   }
 
+  
+  isPosicaoOutroNavio(navio: Navio, i: any, j: any) {
+
+    for (let outroNavio of this.navios) {
+      if (outroNavio !== navio) {
+        for (let tile of outroNavio.tiles) {
+          if (i == tile.i && j == tile.j) {
+            return false;
+          }
+        }
+      }
+    }
+    return true;
+
+  }
+
   fnEstaNoTabuleiro(i: any, j: any) {
     if (i > 19 || i < 0 || j > 9 || j < 0)
       return false
@@ -361,6 +430,12 @@ export class TelaPreComponent {
       tiles.push(new Tile(i, pY)); // Adicionando tiles na mesma linha para simplificar
     }
     return new Navio(tiles, tamanho);
+  }
+
+  criarMina(pX: any, pY: any) {
+    // console.log(tamanho, pX, pY)
+
+    return new Mina(pX, pY);
   }
 
   // Função para verificar se dois navios são iguais
@@ -440,7 +515,7 @@ export class TelaPreComponent {
         }
         k += passo;
 
-        if (!this.isPosicaoDisponivelParaNavio(this.navioSelecionado, tile.i, tile.j)) {
+        if (!this.isPosicaoOutroNavio(this.navioSelecionado, tile.i, tile.j)) {
           alert("Não é possível girar o navio aqui!");
           return;
         }
@@ -466,6 +541,7 @@ export class TelaPreComponent {
     // Desenha os tiles do tabuleiro
     this.tabuleiro = []
     let existeNavioGaragem = false;
+    let posicaoOk = true;
 
     for (let i = 0; i < this.nTilesX; i++) {
       this.tabuleiro.push([])
@@ -481,6 +557,10 @@ export class TelaPreComponent {
 
       navio.tiles.forEach(tile => {
 
+        if (!this.isPosicaoDisponivelParaNavio(navio, tile.i, tile.j)){
+          posicaoOk = false
+        }
+
         if (tile.i < 10) {
           existeNavioGaragem = true
         }
@@ -495,19 +575,24 @@ export class TelaPreComponent {
     if (existeNavioGaragem) {
       alert("Todos os navios devem estar completamente dentro do tabuleiro!")
     }
+    else if (!posicaoOk) {
+      alert("Os navios não podem se encostar!")
+    }
     else {
       console.log(this.tabuleiro);
+      console.log(this.navios);
+      console.log(JSON.stringify(this.navios))
 
-      let messageObject = { 
+      let messageObject = {
         usuarioId: usuarioLogadoId,
         tabuleiro: this.tabuleiro,
         navios: this.navios
-      }; 
+      };
 
       this.webSocket.send(JSON.stringify(messageObject))
     }
 
-   
+
     // console.log(this.navios)
   }
 

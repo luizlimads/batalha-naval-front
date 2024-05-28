@@ -33,6 +33,7 @@ import { DragDropModule } from "@angular/cdk/drag-drop";
 import { ShipComponent } from './ship/ship.component';
 import { TelaCarregamentoComponent } from './tela-carregamento/tela-carregamento.component';
 import { TelaPreComponent } from './tela-pre/tela-pre.component';
+import { TelaPartidaComponent } from './tela-partida/tela-partida.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { TelaPreComponent } from './tela-pre/tela-pre.component';
     ShipComponent,
     TelaCarregamentoComponent,
     TelaPreComponent,
+    TelaPartidaComponent,
     
   ],
   imports: [

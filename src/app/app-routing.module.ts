@@ -9,6 +9,7 @@ import { TelaAdminComponent } from './tela-admin/tela-admin.component';
 import { TelaAdminiComponent } from './tela-admini/tela-admini.component';
 import { TelaCarregamentoComponent } from './tela-carregamento/tela-carregamento.component';
 import { TelaPreComponent } from './tela-pre/tela-pre.component';
+import { TelaPartidaComponent } from './tela-partida/tela-partida.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },
@@ -19,7 +20,8 @@ const routes: Routes = [
   { path: 'dress', component: DressUpComponent},
   { path: 'dres', component: DressUpAvatarComponent},
   { path: 'pre', component: TelaPreComponent},
-  { path: 'carr', component: TelaCarregamentoComponent}
+  { path: 'carr', component: TelaCarregamentoComponent},
+  { path: 'partida', component: TelaPartidaComponent }
 ];
 
 @NgModule({
