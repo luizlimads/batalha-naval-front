@@ -34,7 +34,6 @@ export class TelaCadastroComponent {
   });
 
   constructor(private fb: FormBuilder, private service: BatalhaNavalService, private router: Router) {
-    // console.log('cadastro')
     this.hasUserSessionId();
   }  
 
@@ -42,8 +41,7 @@ export class TelaCadastroComponent {
     var usuarioLogadoId = sessionStorage.getItem('userId');
 
     if (usuarioLogadoId !== null) {
-      console.log("entrei")
-      this.router.navigate(['/'])
+      this.router.navigate(['/']);
     } 
   }
 
@@ -74,9 +72,14 @@ export class TelaCadastroComponent {
       //---------------------
       //---------------------
      this.service.postUser(this.form.value).pipe(
+      tap((res: any)=>{
+        //colocar popup de cadastrado
+        sessionStorage.setItem('userId', res.id);
+        this.router.navigate(['/']);
+        
+      }),
        finalize(() => {
         this.resetForms();
-        this.router.navigate(['/'])
        })
        
       ).subscribe();

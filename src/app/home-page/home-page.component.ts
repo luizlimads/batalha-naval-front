@@ -147,7 +147,7 @@ export class HomePageComponent implements OnInit {
     console.log(this.oAvatar);
 
 
-    // this.hasUserSessionId();
+    this.hasUserSessionId();
 
 
   }
