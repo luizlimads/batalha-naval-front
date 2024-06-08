@@ -27,13 +27,13 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatDividerModule} from '@angular/material/divider';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {MatSelectModule} from '@angular/material/select';
-import { TelaPreparacaoComponent } from './tela-preparacao/tela-preparacao.component';
 
 import { DragDropModule } from "@angular/cdk/drag-drop";
 import { ShipComponent } from './ship/ship.component';
 import { TelaCarregamentoComponent } from './tela-carregamento/tela-carregamento.component';
 import { TelaPreComponent } from './tela-pre/tela-pre.component';
 import { TelaPartidaComponent } from './tela-partida/tela-partida.component';
+import { XpComponent } from './xp/xp.component';
 
 @NgModule({
   declarations: [
@@ -48,11 +48,11 @@ import { TelaPartidaComponent } from './tela-partida/tela-partida.component';
     TelaAdminComponent,
     TelaAdminiComponent,
     CadastroPacoteComponent,
-    TelaPreparacaoComponent,
     ShipComponent,
     TelaCarregamentoComponent,
     TelaPreComponent,
     TelaPartidaComponent,
+    XpComponent,
     
   ],
   imports: [

@@ -1,5 +1,183 @@
-<div class="container">
-    <canvas #myCanvas width="511" height="511"></canvas>
+<div class="pai-container">
+    <div class="container-emoji">
+        <div class="emojis">
+            <img src="../../assets/images/emojis/raiva.png" alt="" (click)="fnEmoji($event)">
+            <img src="../../assets/images/emojis/chorao.png" alt="" (click)="fnEmoji($event)">
+            <img src="../../assets/images/emojis/triste.png" alt="" (click)="fnEmoji($event)">
+            <img src="../../assets/images/emojis/morte.png" alt="" (click)="fnEmoji($event)">
+            <img src="../../assets/images/emojis/risada.png" alt="" (click)="fnEmoji($event)">
+            <img src="../../assets/images/emojis/surpresa.png" alt="" (click)="fnEmoji($event)">
+        </div>
+    </div>
+    <div class="tabuleiros">
+        <div class="ilhaL"></div>
 
-    <canvas (click)="fnCanvasOponenteClick($event)" #canvasOponente width="511" height="511"></canvas>
+        <div class="cont-tabu-infos">
+            <div class="container-info-jogador oponente">
+                <div class="jogador1">
+                    <div class="jogador-avatar">
+                        <p>Nome</p>
+                        <img src="../../assets/images/img-home-page/pirata1.png" alt="">
+                    </div>
+                    <div class="item-level">
+                        <div class="item-level-icon">
+                            <div class="chapeu">
+                                <img src="../../assets/images/img-home-page/hatPirate.png" alt="Chapéu">
+                                <p>1</p>
+                            </div>
+                        </div>
+
+                        <div class="item-level-status">
+                            <div></div>
+                            <p>50/100</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container">
+                <canvas #myCanvas width="411" height="411"></canvas>
+
+                <canvas (click)="fnCanvasOponenteClick($event)" class="canvasOp" #canvasOponente width="411"
+                    height="411"></canvas>
+            </div>
+
+            <div class="container-info-jogador">
+                <div class="jogador1">
+                    <div class="jogador-avatar">
+                        <p>MyUser</p>
+                        <img src="../../assets/images/img-home-page/pirata1.png" alt="">
+                    </div>
+                    <div class="item-level">
+                        <div class="item-level-icon">
+                            <div class="chapeu">
+                                <img src="../../assets/images/img-home-page/hatPirate.png" alt="Chapéu">
+                                <p>1</p>
+                            </div>
+                        </div>
+
+                        <div class="item-level-status">
+                            <div></div>
+                            <p>50/100</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ilhaR"></div>
+
+
+    </div>
+
+
 </div>
+
+<div class="shandow-modal" [class.active]="openShadow === true">
+    <div class="bg-modal">
+        <div class="modal-win" [class.active]="popup === 'win'">
+            <div class="banner">
+                <p>Você venceu!</p>
+            </div>
+            <div class="content">
+                <div class="trofeu">
+                    <p>+1 </p>
+                    <img src="../../assets/images/img-home-page/trofeu.png" alt="">
+                </div>
+                <div class="ganhos">
+                    <div class="moedas">
+                        <div>
+                            <img src="../../assets/images/img-home-page/coin.png" alt="">
+                        </div>
+                        <div>
+                            <p>+50</p>
+                        </div>
+                    </div>
+                    <div class="xp">
+                        <div>
+                            <img src="../../assets/images/img-home-page/hatPiratePartida.png" alt="">
+                        </div>
+                        <div>
+                            <p>+100 xp</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="btn">
+                    <button>
+                        <div>Ok</div>
+                    </button>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-loser" [class.active]="popup === 'loser'">
+            <div class="banner">
+                <p>Você Perdeu!</p>
+            </div>
+            <div class="content">
+                <div class="trofeu">
+                    <img src="../../assets/images/img-tela-partida/trofeu-loser.png" alt="">
+                </div>
+                <div class="ganhos">
+                    <div class="moedas">
+                        <div>
+                            <img src="../../assets/images/img-home-page/coin.png" alt="">
+                        </div>
+                        <div>
+                            <p>+10</p>
+                        </div>
+                    </div>
+                    <div class="xp">
+                        <div>
+                            <img src="../../assets/images/img-home-page/hatPiratePartida.png" alt="">
+                        </div>
+                        <div>
+                            <p>+20 xp</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="btn">
+                    <button>
+                        <div>Ok</div>
+                    </button>
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<!-- 
+<div id="modal-container">
+    <div class="modal-background">
+      <div class="modal">
+        <h2>I'm a Modal</h2>
+        <p>Hear me roar.</p>
+        <svg class="modal-svg" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" preserveAspectRatio="none">
+                                  <rect x="0" y="0" fill="none" width="226" height="162" rx="3" ry="3"></rect>
+                              </svg>
+      </div>
+    </div>
+  </div>
+  <div class="content">
+    <h1>Modal Animations</h1>
+    <div class="buttons">
+      <div id="one" class="button">Unfolding</div>
+      <div id="two" class="button">Revealing</div>
+      <div id="three" class="button">Uncovering</div>
+      <div id="four" class="button">Blow Up</div><br>
+      <div id="five" class="button">Meep Meep</div>
+      <div id="six" class="button">Sketch</div>
+      <div id="seven" class="button">Bond</div>
+    </div>
+  </div> -->
+
+<!-- <div class="f-notification danger">
+    <img src="../../assets/images/emojis/E27.png" alt="">
+</div> -->
+

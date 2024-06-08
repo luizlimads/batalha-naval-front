@@ -62,7 +62,4 @@ export class TelaLoginComponent {
     } 
   }
 
-  fnLinkCadastro(){
-    this.router.navigate(['/cadastro']);
-  }
 }

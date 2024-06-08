@@ -30,23 +30,21 @@ export class TelaCadastroComponent {
   form: FormGroup = this.fb.group({
     nome: ['', Validators.required],
     email: ['', Validators.required],
-    senha: ['', Validators.required]
+    senha: ['', Validators.required],
   });
 
   constructor(private fb: FormBuilder, private service: BatalhaNavalService, private router: Router) {
+    // console.log('cadastro')
     this.hasUserSessionId();
-  }
+  }  
 
   hasUserSessionId() {
     var usuarioLogadoId = sessionStorage.getItem('userId');
 
     if (usuarioLogadoId !== null) {
+      console.log("entrei")
       this.router.navigate(['/'])
     } 
-  }
-
-  fnLinkLogin(){
-    this.router.navigate(['/login'])
   }
 
   fnDica() {

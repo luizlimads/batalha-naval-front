@@ -5,6 +5,12 @@
     font-style: normal;
 }
 
+::ng-deep * {
+    /* font: 0 !important; */
+    /* font: bold clamp(0.5em, 0.01em + 2vw, .9em) / 1.5 "clash", Arial, Helvetica, sans-serif !important; */
+
+}
+
 .bg-image {
     background-image: url('./img/bgMadeira.png');
     background-repeat: no-repeat;
@@ -70,6 +76,8 @@ p {
     /* max-width: 100%; */
     margin-bottom: -25px;
 }
+
+
 
 .chapeu p {
     position: absolute;
@@ -167,7 +175,7 @@ p {
     background-color: #1BACD3;
     /* height: 25px; */
     height: 100%;
-    width: 50%;
+    width: 80%;
 }
 
 
@@ -689,6 +697,10 @@ p {
     align-items: center;
 }
 
+.conf-sound-effects p{
+    padding: 20px 0 0 0;
+}
+
 .conf-sound-effects > div{
     display: flex;
     align-items: center;
@@ -934,13 +946,23 @@ p {
     margin-top: 20px;
     width: 100%;
     /* padding: 20px; */
+
 }
 
 .popup-conf .content-infos div{
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
+
+    
 } 
+
+.popup-conf .content-infos div p,
+.popup-conf .content-infos div span{
+    font-size: clamp(0.7em, 0.5em + 2vw, .9em) !important;
+    font-family: 'clash', Arial, Helvetica, sans-serif !important;
+
+}
 
 .data-name, .data-email, .data-form-pass, .data-logout{
     padding: 15px;
@@ -1208,39 +1230,20 @@ p {
 
 
 /* *********************** */
+
+.popup-inventory,
 .popup-shop {
-    width: 900px;
-    max-width: 100%;
-    height: 500px;
-    background-color: #cda15e;
-    /*#BFB28F;/*#EDBD77;*/
-    padding: 10px;
-    color: rgb(219, 219, 219);
-    /* Use flex: 1 para preencher o espaço disponível */
-    /* flex: 1; */
-
-    /* Use flexbox para fazer a div pai um container flexível */
-    /* display: flex; */
-    display: none;
-    flex-direction: column;
-}
-
-.popup-inventory {
-    width: 1200px;
+    width: 920px;
     max-width: 100%;
     height: 600px;
     background-color: #cda15e;
     /*#BFB28F;/*#EDBD77;*/
     padding: 10px;
     color: rgb(219, 219, 219);
-    /* Use flex: 1 para preencher o espaço disponível */
-    /* flex: 1; */
-
-    /* Use flexbox para fazer a div pai um container flexível */
-    /* display: flex; */
     display: none;
-    /* flex-direction: column; */
+    flex-direction: column;
 }
+
 
 .popup-conf.active,
 .popup-inventory.active,
@@ -1249,60 +1252,12 @@ p {
 }
 
 
-.invent-itens {
-    flex: 2;
+/* .invent-itens {
     padding: 10px;
 
     display: flex;
     flex-direction: column;
-}
-
-.invent-avatar {
-    flex: 1;
-    background-color: #C5781D;
-    box-shadow: inset 1px 1px 5px 1px #402b11;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-
-
-/*  CSS DA PARTE DO AVATAR */
-
-#avatar {
-    background-image: url("../../assets/imagesAvatar/pirataPrincipalPelado.png");
-    background-repeat: no-repeat;
-    background-repeat: no-repeat;
-    position: absolute;
-    height: 353px;
-    width: 212px;
-    z-index: 1;
-    filter: drop-shadow(5px 1px 5px rgb(28, 27, 27));
-
-}
-
-.clothes {
-    background-repeat: no-repeat;
-    position: absolute;
-    height: 353px;
-    width: 212px;
-    z-index: 2;
-}
-
-#backdrop {
-    /* top: 2em;
-    margin: auto;
-    position: relative; */
-    background-color: rgba(246, 240, 255, 0.479);
-    border-radius: 20px;
-    height: 353px;
-    width: 212px;
-    /* text-align: center; */
-}
-
-/* ************************** */
-
+} */
 
 .popup-conf h1{
     text-align: center;
@@ -1357,17 +1312,7 @@ p {
 .popup-conf-screm{
     flex: 1;
     background-color: #C5781D;
-    /* padding: 10px; */
     display: none;
-    /* Alterado para flex para controlar a altura dos elementos */
-    /* flex-wrap: wrap; */
-    /* Permitir que os elementos quebrem para a próxima linha */
-    /* gap: 20px; */
-    /* Espaçamento entre os elementos */
-    /* overflow-y: auto; */
-    /* Adicionar uma barra de rolagem vertical se necessário */
-    /* align-content: flex-start; */
-    /* justify-content: space-evenly; */
 }
 
 .popup-invent-screm,
@@ -1379,18 +1324,17 @@ p {
     /* Alterado para flex para controlar a altura dos elementos */
     flex-wrap: wrap;
     /* Permitir que os elementos quebrem para a próxima linha */
-    gap: 20px;
+    gap: 15px;
     /* Espaçamento entre os elementos */
     overflow-y: auto;
     /* Adicionar uma barra de rolagem vertical se necessário */
     align-content: flex-start;
     /* justify-content: space-evenly; */
+    border-top-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
 }
 
-.popup-invent-screm {
-    background-color: #ffffff89;
-
-}
 
 .popup-conf-screm.selected,
 .popup-invent-screm.selected,
@@ -1398,6 +1342,134 @@ p {
     display: flex;
 }
 
+.popup-shop-screm.selectedP{
+    display: flex;
+    flex-wrap:initial;
+    gap: 0px;
+    align-content: normal;
+    justify-content: space-between;
+    align-content: flex-start;
+}
+
+.popup-shop-screm.selectedP .shop-item{
+    cursor: pointer;
+}
+
+.popup-shop-screm.selectedP .shop-item:hover{
+    transform: scale(1.08);
+    filter: drop-shadow(5px 1px 5px rgb(28, 27, 27));
+
+}
+
+
+
+
+.popup-shop-screm::-webkit-scrollbar {
+    width: 12px;
+}
+
+.popup-shop-screm::-webkit-scrollbar-track {
+    border-radius: 8px;
+    background-color: #DBCCA4;
+    border: 1px solid #13131369;
+    box-shadow: inset 0 0 6px rgba(124, 103, 45, 0.668);
+}
+
+.popup-shop-screm::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    border: 1px solid #17171769;
+
+    background-color: #baa363;
+}
+
+/* PACOTES */
+
+.container-pacotes{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-content: flex-start;
+}
+
+
+.info-pacote{
+    background-color: #cda15e;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    /* width: 270px;    */
+    width: 0px;
+    overflow: hidden; 
+   
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: width .3s ease, padding .3s ease;
+}
+
+.info-pacote.active{
+    width: 250px;
+    padding: 10px;
+}
+
+.info-pacote > div {
+    min-width: 220px;
+}
+
+.info-pacote svg{
+    float: right;
+    width: 25px;
+    height: 25px;
+    margin-bottom: -12px;
+    margin-right: -8px;
+    margin-top: -10px;
+    cursor: pointer;
+}
+
+.info-pacote p{
+    font-size: clamp(.5em, .5em + 2vw, .8em);
+    margin-bottom: 5px;
+    color: black;
+}
+
+.info-pacote-tema,
+.info-pacote-avatar,
+.info-pacote-embarcacoes{
+    width: 100%;
+    /* background-color: #03ddff; */
+    /* padding: 5px; */
+}
+
+.info-pacote-avatar div{
+    width: 60px;
+}
+
+
+.info-pacote-embarcacoes div{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.info-pacote-tema img,
+.info-pacote-avatar img{
+    width: 100%;
+}
+
+#bc1{
+    margin-top: -4px;
+    width: 70px;
+}
+
+#bc2{
+    width: 70px;
+}
+
+#bc3{
+    width: 90px;
+}
+
+#bc4{
+    width: 130px;
+}
 
 /* itens do shop e inventario *****************************/
 
@@ -1415,7 +1487,8 @@ p {
 }
 
 .shop-item{
-    width: 230px;
+    width: 200px;
+    transition: .3s ease;
 }
 
 .invent-item {
@@ -1424,11 +1497,38 @@ p {
     box-shadow: inset 1px 1px 5px 1px rgba(28, 27, 27, 0.901);
     cursor: pointer;
     transition: .2s ease;
+    position: relative;
+}
+
+.select-use-item{
+    justify-content: center;
+    position: absolute;
+    width: 100%;
+    /* background-color: #03ddff; */
+    margin-top: -25px;
+    margin-left: -10px;
+    gap: 5px;
+    display: none;   
+}
+
+.select-use-item svg{
+    width: 20px;
+    fill: #11da6f;
+    transition: .3s ease;
+}
+
+.select-use-item svg:hover{
+    transform: scale(1.1);
 }
 
 .invent-item.selected {
-    border: 2px solid red;
+    border: 2px solid rgb(17, 221, 85);
 }
+
+.select-use-item.selected{
+    display: flex;
+}
+
 
 .invent-item:hover {
     /* border: 2px solid rgba(159, 95, 5, 0.656); */

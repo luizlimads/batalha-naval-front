@@ -13,16 +13,16 @@ export class Mina {
 export class Tile {
   i: number;
   j: number;
-  isHead: boolean;
-  isMid: boolean;
-  isTail: boolean;
+  // isHead: boolean;
+  // isMid: boolean;
+  // isTail: boolean;
 
   constructor(i: number, j: number) {
     this.i = i;
     this.j = j;
-    this.isHead = false;
-    this.isMid = false;
-    this.isTail = false;
+    // this.isHead = false;
+    // this.isMid = false;
+    // this.isTail = false;
   }
 }
 
@@ -35,8 +35,9 @@ export class Navio {
   selecionado: boolean;
   horizontal: boolean;
   angulo: number;
+  tipo: number; //se tipo 1 é uma mina
 
-  constructor(tiles: Tile[], tamanho: number) {
+  constructor(tiles: Tile[], tamanho: number, tipo: number = 0) {
     this.tiles = tiles;
     this.tamanho = tamanho;
     this.cabeca = tiles[0];
@@ -45,6 +46,7 @@ export class Navio {
     this.selecionado = false;
     this.horizontal = true;
     this.angulo = 0;
+    this.tipo = tipo;
   }
 
   // girar(antihorario = false) {
