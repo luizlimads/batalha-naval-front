@@ -390,6 +390,9 @@ export class HomePageComponent implements OnInit {
     }, stepTime);
   }
 
+  fnCompraPacote(temaId: any){
+    //fazer req
+  }
 
   fnCarregar() {
     this.router.navigate(['carr'])
