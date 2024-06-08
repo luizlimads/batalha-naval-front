@@ -74,6 +74,7 @@ export class TelaCadastroComponent {
      this.service.postUser(this.form.value).pipe(
       tap((res: any)=>{
         //colocar popup de cadastrado
+        this.fnMsg("Usuario cadastrado com sucesso!", "success");
         sessionStorage.setItem('userId', res.id);
         this.router.navigate(['/']);
         
@@ -192,5 +193,26 @@ export class TelaCadastroComponent {
     this.form.patchValue({
       senha: e.text
     })    
+  }
+
+
+  fnMsg(msg: any, clss = "error") {
+    let msgErro = document.getElementById("msgAviso") as HTMLElement;
+
+    msgErro.innerHTML = msg
+
+    if (clss == "success") {
+      msgErro.classList.remove("error")
+      msgErro.classList.add("success")
+      setTimeout(function () {
+        msgErro.classList.remove("success")
+      }, 5000); // A mensagem de erro desaparecerá após 5 segundos (5000 milissegundos)
+    } else {
+      msgErro.classList.remove("success")
+      msgErro.classList.add("error")
+      setTimeout(function () {
+        msgErro.classList.remove("error")
+      }, 5000); // A mensagem de erro desaparecerá após 5 segundos (5000 milissegundos)
+    }
   }
 }

@@ -635,25 +635,29 @@
 
                     <div class="container-pacotes">
 
-                        <div class="shop-item" *ngFor="let d of itensDiamonds" (click)="fnInfoPacote($event)">
-                            <h3>{{d.titulo}}</h3>
+                        <div class="shop-item" *ngFor="let item of itensPacotes" (click)="fnInfoPacote(item.temaId)">
+                            <h3>{{item.nomeTema}}</h3>
                             <div class="item-img">
                                 <div>
                                     <!-- <img [src]="d.img" alt=""> -->
-                                    <img src="../../assets/images/img-home-page/bgMadeira.png" alt="">
+                                    <img [src]="item.barcosBase64" alt="">
                                 </div>
                                 <!-- <p>Descrição</p> -->
                             </div>
                             <div class="item-value">
-                                <div class="value-type">
+                                <div *ngIf="item.tipoPagamento === 'Diamante'" class="value-type">
+                                    <img src="../../assets/images/img-home-page/diamond.png" alt="">
+                                </div>
+                                <div *ngIf="item.tipoPagamento === 'Moeda'" class="value-type">
                                     <img src="../../assets/images/img-home-page/coin.png" alt="">
                                 </div>
                                 <div class="value-price">
-                                    <!-- <p>{{formatarValor(d.preco)}}</p> -->
-                                    <p>{{d.preco}}</p>
+                                    <!-- <p>{{formatarValor(d.preco)}}</p> 
+                                     fnConfirmOpenModalConfirm(item.valor, 0, 'c')-->
+                                    <p>{{item.valor}}</p>
                                 </div>
-                                <div class="value-btn">
-                                    <div (click)="fnConfirmOpenModalConfirm(d.preco, d.valor, 'c')">
+                                <div class="value-btn" (click)="fnCompraPacote(item.temaId)">
+                                    <div> 
                                         Buy
                                     </div>
                                 </div>
@@ -670,23 +674,22 @@
                             </svg>
                         </div>
                         <div class="info-pacote-tema">
-                            <p>Tema: Perola Negra</p>
-                            <img src="../../assets/images/img-home-page/bgMadeira.png" alt="">
+                            <p>Tema: {{pacoteSelected?.nomeTema}}</p>
+                            <img [src]="pacoteSelected?.fundoBase64" alt="">
                         </div>
                         <div class="info-pacote-avatar">
-                            <p>Avatar: Pirata Perola Negra</p>
+                            <p>Avatar: {{pacoteSelected?.nomeAvatar}}</p>
                             <div>
-                                <img src="../../assets/images/img-home-page/pirata1.png" alt="">
+                                <img [src]="pacoteSelected?.avatarBase64" alt="">
                             </div>
                         </div>
                         <div class="info-pacote-embarcacoes">
-                            <p>Barcos: Perola Negra</p>
+                            <p>Barcos: {{pacoteSelected?.nomeEmbarcacoes}}</p>
                             <div>
-                                <img id="bc1" src="../../assets/images/img-tela-pre/navios/barcopn01.png" alt="">
-                                <img id="bc2" src="../../assets/images/img-tela-pre/navios/barcopn02.png" alt="">
-                                <img id="bc3" src="../../assets/images/img-tela-pre/navios/barcopn03.png" alt="">
-                                <img id="bc4" src="../../assets/images/img-tela-pre/navios/barcopn04.png" alt="">
-
+                                <img id="bc1" [src]="pacoteSelected?.barco1Base64" alt="">
+                                <img id="bc2" [src]="pacoteSelected?.barco2Base64" alt="">
+                                <img id="bc3" [src]="pacoteSelected?.barco3Base64" alt="">
+                                <img id="bc4" [src]="pacoteSelected?.barco4Base64" alt="">
                             </div>
                         </div>
                     </div>

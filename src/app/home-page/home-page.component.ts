@@ -20,7 +20,7 @@ export class HomePageComponent implements OnInit {
   // selectGuia: boolean = 
 
   sliderValueSound: number = 50; // Valor inicial dos sons
-  sliderValueMusic: number = 30; // Valor inicial da musica
+  sliderValueMusic: number = 0; // Valor inicial da musica
 
   compraAtual: any; //vai dizer se estou comprando moeda ou diamantes, é um objeto que tem valor e o preco
 
@@ -49,7 +49,8 @@ export class HomePageComponent implements OnInit {
 
   itensCoins: any[];
   itensDiamonds: any[];
-  itensPacotes: any[];
+  itensPacote: any[];
+  itensPacotes: any[] = [];
 
   oAvatar: any;
 
@@ -82,6 +83,7 @@ export class HomePageComponent implements OnInit {
       { titulo: '1.000 Diamantes', img: '../../assets/images/img-home-page/pctD3.png', preco: '10000', valor: '1000' }
     ];
 
+    
 
 
     this.itensInvent = [
@@ -112,11 +114,11 @@ export class HomePageComponent implements OnInit {
 
 
 
-    this.itensPacotes = [
+    this.itensPacote = [
       { id: 1, titulo: "teste", tema: "../../assets/imagesAvatar/bgMadeira.png", avatar: this.avatares[0], embarcacoes: this.embarcacoes[0] }
     ]
 
-    console.log(this.itensPacotes)
+    console.log(this.itensPacote)
 
     this.infoUser = { nome: 'teste', moedas: 1000, diamantes: 1000 }
 
@@ -162,6 +164,9 @@ export class HomePageComponent implements OnInit {
 
     this.getAllCategorias();
     this.getAllItems();
+
+    this.getPacotes();
+
     // this.fnMusicHomePage();
 
   }
@@ -263,10 +268,14 @@ export class HomePageComponent implements OnInit {
     }
   }
 
+
   ActivePctInfo: boolean = false;
   timeoutId: any;
+  pacoteSelected: any = {};
 
-  fnInfoPacote(e: any) {// parei aqui
+  fnInfoPacote(temaId: any) {// parei aqui
+
+    console.log(temaId)
     if (this.timeoutId) {
       clearTimeout(this.timeoutId);
     }
@@ -277,6 +286,15 @@ export class HomePageComponent implements OnInit {
       this.ActivePctInfo = true;  // Reabrir a div com novas informações
     }, 400);
 
+
+
+    this.pacoteSelected = this.itensPacotes.find((pacote: any)=>{
+      if(pacote.temaId === temaId){
+        return pacote
+      }
+    })
+
+    console.log(this.pacoteSelected)
 
   }
 
@@ -683,8 +701,19 @@ export class HomePageComponent implements OnInit {
   }
 
   fnLogout() {
-    sessionStorage.removeItem("key");
+    sessionStorage.removeItem("userId");
+    this.router.navigate(['/login']);
   }
+
+  getPacotes() {
+    this.service.getPacotes().pipe(
+      tap((res:any) => {
+        this.itensPacotes = res
+        console.log(this.itensPacotes)
+      })
+    ).subscribe();
+  }
+
 
 
   openTabConf(tabName: any) {
