@@ -3,6 +3,7 @@ import { BatalhaNavalService } from '../batalha-naval.service';
 import { finalize, pipe, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { style } from '@angular/animations';
+import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -14,7 +15,9 @@ export class HomePageComponent implements OnInit {
   dataCategorias: any[] = [];
   dataItens: any[] = [];
   userData: any = null;
-
+  horizontalPosition: MatSnackBarHorizontalPosition = 'center';
+  verticalPosition: MatSnackBarVerticalPosition = 'top';
+  
   open: boolean = false;
   // popupShop: boolean = false;
   // selectGuia: boolean = 
@@ -46,6 +49,7 @@ export class HomePageComponent implements OnInit {
 
   infoUser: any;
 
+  usuarioLogadoId: any;
 
   itensCoins: any[];
   itensDiamonds: any[];
@@ -60,7 +64,7 @@ export class HomePageComponent implements OnInit {
   pontos = 0;
   icon = `<svg xmlns="http://www.w3.org/2000/svg" style="width: 22px; fill: green;" viewBox="0 0 16 16"><path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z" /></svg>`
 
-  constructor(private service: BatalhaNavalService, private router: Router, private renderer: Renderer2) {
+  constructor(private service: BatalhaNavalService, private router: Router, private renderer: Renderer2, private _snackBar: MatSnackBar) {
     this.somMenu = new Audio();
     this.somBtn = new Audio();
     this.somHomePage = new Audio();
@@ -82,9 +86,6 @@ export class HomePageComponent implements OnInit {
       { titulo: '500 Diamantes', img: '../../assets/images/img-home-page/pctD2.png', preco: '5000', valor: '500' },
       { titulo: '1.000 Diamantes', img: '../../assets/images/img-home-page/pctD3.png', preco: '10000', valor: '1000' }
     ];
-
-    
-
 
     this.itensInvent = [
       { titulo: 'Chapeu1', categoria: '1', imgUrl: "../../assets/imagesAvatar/pirataPrincipalHat.png" },
@@ -111,8 +112,6 @@ export class HomePageComponent implements OnInit {
       { id: "1", titulo: "embar1", img: "../../assets/imagesAvatar/pirataPrincipalShoes2.png" },
       { id: "2", titulo: "embar2", img: "../../assets/imagesAvatar/pirataPrincipalShoes2.png" }
     ]
-
-
 
     this.itensPacote = [
       { id: 1, titulo: "teste", tema: "../../assets/imagesAvatar/bgMadeira.png", avatar: this.avatares[0], embarcacoes: this.embarcacoes[0] }
@@ -155,7 +154,6 @@ export class HomePageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     // this.fnXP();
 
     this.activeTab = 'moedas';
@@ -391,7 +389,23 @@ export class HomePageComponent implements OnInit {
   }
 
   fnCompraPacote(temaId: any){
-    //fazer req
+    this.service.comprarPacote(this.usuarioLogadoId, temaId).pipe(
+      tap((res:any) => {
+        if (res.sucesso) {
+          this.fnMsg(res.mensagem, 'success')
+        } else {
+          this.fnMsg(res.mensagem)
+        }
+      })
+    ).subscribe()
+  }
+
+  openSnackBar(message: string) {
+    this._snackBar.open(message, '', {
+      horizontalPosition: this.horizontalPosition,
+      verticalPosition: this.verticalPosition,
+      duration: 5000
+    });
   }
 
   fnCarregar() {
@@ -399,12 +413,12 @@ export class HomePageComponent implements OnInit {
   }
 
   hasUserSessionId() {
-    var usuarioLogadoId = sessionStorage.getItem('userId');
+    this.usuarioLogadoId = sessionStorage.getItem('userId');
 
-    if (usuarioLogadoId === null) {
+    if (this.usuarioLogadoId === null || this.usuarioLogadoId === undefined) {
       this.router.navigate(['login'])
     } else {
-      this.getUser(usuarioLogadoId);
+      this.getUser(this.usuarioLogadoId);
     }
 
     // {"id":4,"nome":"tst","email":"tst@gmail.com","senha":"123Sa!","dataNascimento":"2024-06-01T20:44:11.313286","nivelAcesso":"USER","diamante":"10","moeda":"500","volumeMusica":1,"volumeSom":1,"srcAvatar":"../../assets/images/img-home-page/pirata1.png"}

@@ -46,4 +46,12 @@ export class BatalhaNavalService {
   login(formData: any) {
     return this.http.post(`${this.urlBase}/usuarios/login`, formData);
   }
+
+  comprarPacote(compradorId: number, temaId: number) {
+    return this.http.post(`${this.urlBase}/pacotes/usuarios/${compradorId}/temas/${temaId}/comprar`, null);
+  }
+
+  getUserPacotes(userId: number) {
+    return this.http.get(`${this.urlBase}/usuarios/${userId}/pacotes`);
+  }
 }
