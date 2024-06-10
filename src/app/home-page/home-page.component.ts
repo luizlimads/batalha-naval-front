@@ -40,12 +40,6 @@ export class HomePageComponent implements OnInit {
   activePopUp: string = '';
 
   guiasInvent: any[];
-  // guiasShop: any[];
-  itensInvent: any[];
-  temas: any[];
-  avatares: any[];
-  embarcacoes: any[];
-  // itensShop: any[];
 
   infoUser: any;
 
@@ -53,11 +47,8 @@ export class HomePageComponent implements OnInit {
 
   itensCoins: any[];
   itensDiamonds: any[];
-  itensPacote: any[];
   itensPacotes: any[] = [];
   meusPacotes: any[] = [];
-
-  oAvatar: any;
 
   larguraFraca = 0;
   larguraMedia = 0;
@@ -88,110 +79,29 @@ export class HomePageComponent implements OnInit {
       { titulo: '1.000 Diamantes', img: '../../assets/images/img-home-page/pctD3.png', preco: '10000', valor: '1000' }
     ];
 
-    this.itensInvent = [
-      { titulo: 'Chapeu1', categoria: '1', imgUrl: "../../assets/imagesAvatar/pirataPrincipalHat.png" },
-      { titulo: 'Chapeu2', categoria: '1', imgUrl: "../../assets/imagesAvatar/pirataPrincipalHat2.png" },
-      { titulo: 'Camisa1', categoria: '2', imgUrl: "../../assets/imagesAvatar/pirataPrincipalShirt.png" },
-      { titulo: 'Camisa2', categoria: '2', imgUrl: "../../assets/imagesAvatar/pirataPrincipalShirt2.png" },
-      { titulo: 'Calça1', categoria: '3', imgUrl: "../../assets/imagesAvatar/pirataPrincipalPants.png" },
-      { titulo: 'Calça2', categoria: '3', imgUrl: "../../assets/images/img-home-page/pirata1.png" },
-      { titulo: 'Sapatos1', categoria: '1', imgUrl: "../../assets/imagesAvatar/bgMadeira.png" },
-      { titulo: 'Sapatos2', categoria: '1', imgUrl: "../../assets/imagesAvatar/pirataPrincipalShoes2.png" },
-    ];
-
-    this.temas = [
-      { id: "1", titulo: "temax1", img: "../../assets/imagesAvatar/bgMadeira.png" },
-      { id: "2", titulo: "tema2", img: "../../assets/imagesAvatar/bgMadeira.png" }
-    ]
-
-    this.avatares = [
-      { id: "1", titulo: "avatar1", img: "../../assets/images/img-home-page/pirata1.png" },
-      { id: "2", titulo: "avatar2", img: "../../assets/images/img-home-page/pirata1.png" }
-    ]
-
-    this.embarcacoes = [
-      { id: "1", titulo: "embar1", img: "../../assets/imagesAvatar/pirataPrincipalShoes2.png" },
-      { id: "2", titulo: "embar2", img: "../../assets/imagesAvatar/pirataPrincipalShoes2.png" }
-    ]
-
-    this.itensPacote = [
-      { id: 1, titulo: "teste", tema: "../../assets/imagesAvatar/bgMadeira.png", avatar: this.avatares[0], embarcacoes: this.embarcacoes[0] }
-    ]
-
-    console.log(this.itensPacote)
+    // console.log(this.itensPacote)
 
     this.infoUser = { nome: 'teste', moedas: 1000, diamantes: 10000 }
 
 
-    this.oAvatar = {};
-
-    this.itensInvent = [
-      this.temas,
-      this.avatares,
-      this.embarcacoes
-    ]
-
-    // for (let item of this.itensInvent) {
-    //   console.log(item)
-    // }
-
     this.guiasInvent = [
-      { titulo: 'Avatar', seletor: '1', itens: this.avatares },
-      { titulo: 'Tema', seletor: '2', itens: this.temas },
-      { titulo: 'Embarcações', seletor: '3', itens: this.embarcacoes },
+      { titulo: 'Avatar', seletor: '1' },
+      { titulo: 'Tema', seletor: '2' },
+      { titulo: 'Embarcações', seletor: '3'},
     ];
 
-
-    for (let element of this.guiasInvent) {
-      this.oAvatar[element.seletor] = '';
-    }
-
-    console.log(this.oAvatar);
-
-
     this.hasUserSessionId();
-
-
   }
 
   ngOnInit(): void {
-    // this.fnGetUserPacotes();
     this.activeTab = 'moedas';
     this.activeTabInvent = 'todos';
-
-
-    this.getAllCategorias();
-    this.getAllItems();
 
     this.getPacotes();
 
 
 
-    // this.fnMusicHomePage();
-
-  }
-
-  ngAfterViewInit() {
-    this.cancelClick = this.renderer.listen(document, 'click', this.FirstClick.bind(this));
-  }
-
-  private cancelClick!: Function;
-  @ViewChild('audioPlayer', { static: false }) audioPlayerRef!: ElementRef;
-
-  FirstClick() {
-    this.cancelClick(); //tira o evento click do document
-
-    //remove a tag de audio embed e chama a função de audio homePage
-    if (this.audioPlayerRef && this.audioPlayerRef.nativeElement) {
-      const audioPlayer = this.audioPlayerRef.nativeElement;
-      // Remove o ouvinte de evento após o primeiro movimento do mouse
-      this.renderer.removeChild(audioPlayer.parentNode, audioPlayer);
-      this.fnMusicHomePage();
-
-      // Reproduz a música apenas após o primeiro movimento do mouse
-    } else {
-      console.error('audioPlayerRef or nativeElement is undefined');
-    }
+    this.fnMusicHomePage();
 
   }
 
@@ -226,11 +136,8 @@ export class HomePageComponent implements OnInit {
   fnMusicHomePage() {
     this.somHomePage.volume = this.sliderValueMusic / 100;
     this.somHomePage.play().catch((error) => {
-      // console.log('Error attempting to play the video:', error);
+      console.log('Error attempting to play the video:', error);
     });
-
-    // console.log(audioPlayer.volume)
-
   }
 
   fnConfirmOpenModalConfirm(preco: any, valor: any, type: any, tituloPacote = '', idPacote: any = null) {
@@ -345,12 +252,12 @@ export class HomePageComponent implements OnInit {
   fnBuyMoeda(preco: any, valor: any) {
     // faz a atualização no banco, adiciona moeda no campo moeda da tabela
 
-    let valorAtual = this.infoUser.moedas;
-    this.infoUser.diamantes -= parseFloat(preco);
-    (document.getElementById("principalDiamondValue") as HTMLElement).innerHTML = this.formatarValor(this.infoUser.diamantes);
+    let valorAtual = this.userData.moeda;
+    this.userData.diamante -= parseFloat(preco);
+    (document.getElementById("principalDiamondValue") as HTMLElement).innerHTML = this.formatarValor(this.userData.diamante);
 
 
-    this.infoUser.moedas += parseFloat(valor);
+    this.userData.moeda += parseFloat(valor);
     this.myCalculator("principalCoinsValue", valorAtual, parseFloat(valor));
 
     this.fnModalConfirm();
@@ -368,11 +275,11 @@ export class HomePageComponent implements OnInit {
 
     if (result) {
 
-      let valorAtual = this.infoUser.diamantes;
-      this.infoUser.moedas -= parseFloat(preco);
-      (document.getElementById("principalCoinsValue") as HTMLElement).innerHTML = this.formatarValor(this.infoUser.moedas);
+      let valorAtual = this.userData.diamante;
+      this.userData.moeda -= parseFloat(preco);
+      (document.getElementById("principalCoinsValue") as HTMLElement).innerHTML = this.formatarValor(this.userData.moeda);
 
-      this.infoUser.diamantes += parseFloat(valor);
+      this.userData.diamante += parseFloat(valor);
       this.myCalculator("principalDiamondValue", valorAtual, parseFloat(valor));
       this.fnModalConfirm();
 
@@ -463,14 +370,6 @@ export class HomePageComponent implements OnInit {
     ).subscribe();
   }
 
-  // openSnackBar(message: string) {
-  //   this._snackBar.open(message, '', {
-  //     horizontalPosition: this.horizontalPosition,
-  //     verticalPosition: this.verticalPosition,
-  //     duration: 5000
-  //   });
-  // }
-
   fnCarregar() {
     this.router.navigate(['carr'])
   }
@@ -498,7 +397,6 @@ export class HomePageComponent implements OnInit {
       })
     ).subscribe();
   }
-
 
   updateValueSound(value = -1) {
     let volumeS = document.getElementById("soundVolumeInput") as HTMLInputElement;
@@ -532,69 +430,6 @@ export class HomePageComponent implements OnInit {
     this.open = false;
   }
 
-
-
-  getAllCategorias() {
-    // this.service.getAllCategorias().pipe(
-    //   tap((res: any) => {
-    //     this.dataCategorias = res
-    //   }),
-    //   finalize(() => {
-    //     // (document.getElementById("mainH") as HTMLElement).innerHTML = "Categorias - " + this.dataCategorias.length;
-    //     console.log(this.dataCategorias)
-
-    //   })
-    // ).subscribe();
-
-
-  }
-
-  getAllItems() {
-
-    // this.service.getAllItems().pipe(
-    //   tap((res: any) => {
-    //     this.dataItens = res
-
-    //   }),
-    //   finalize(() => {
-    //     // (document.getElementById("mainH") as HTMLElement).innerHTML = "Itens - " + this.dataItens.length;
-    //     console.log(this.dataItens)
-    //   })
-    // ).subscribe();
-
-
-  }
-
-
-
-  fnSelectedClothe(item: any) {
-    // console.log(item);
-
-    // let target = e.currentTarget as HTMLElement;
-
-    // let pai = target.parentElement as HTMLElement;
-
-    // if(pai.classList.contains("selected")){
-    //   pai.querySelector(".select-use-item")?.classList.add("selected");
-
-    // }
-    for (let guia of this.guiasInvent) {
-      if (this.oAvatar[guia.seletor] == item.titulo) {
-        this.oAvatar[guia.seletor] = '';
-      }
-      else {
-        this.oAvatar[guia.seletor] = item.titulo;
-        break;
-
-      }
-    }
-
-    console.log(this.oAvatar)
-
-
-  }
-
-
   fnSelectUseItem(temaId: any, avatarId: any, embarcacaoId: any) {
     const formData = new FormData();
 
@@ -627,7 +462,6 @@ export class HomePageComponent implements OnInit {
 
     txtNome.value = name.innerHTML;
   }
-
 
   fnFechaAlterNome() {
     (document.getElementById("divName") as HTMLElement).style.display = "flex";
@@ -804,19 +638,9 @@ export class HomePageComponent implements OnInit {
     this.service.getPacotes().pipe(
       tap((res: any) => {
         this.itensPacotes = res
-        console.log(res)
-        // this.meusPacotes.push(this.itensPacotes.find((pacote: any) => {
-        //   if (pacote.temaId === 1) {
-        //     return pacote
-        //   }
-        // }))
-
-
       })
     ).subscribe();
   }
-
-
 
   openTabConf(tabName: any) {
     this.fnSomBtn();
@@ -830,7 +654,6 @@ export class HomePageComponent implements OnInit {
     this.activeTabInvent = tabName;
     // Aqui você pode adicionar a lógica para exibir os itens da guia clicada
   }
-
 
   openTab(tabName: string) {
     this.fnSomBtn();
@@ -861,8 +684,6 @@ export class HomePageComponent implements OnInit {
   playSoundBtnBatalha() {
     this.fnSomBtn();
   }
-
-
 
   formatarValor(valor: any): string {
     console.log('Valor recebido:', valor);
