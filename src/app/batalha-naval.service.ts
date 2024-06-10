@@ -54,4 +54,12 @@ export class BatalhaNavalService {
   getUserPacotes(userId: number) {
     return this.http.get(`${this.urlBase}/usuarios/${userId}/pacotes`);
   }
+
+  async getUserPacotesPre(userId: number): Promise<any> {
+    return this.http.get(`${this.urlBase}/usuarios/${userId}/pacotes`);
+  }
+
+  updateUserTemaId(userId: number, formData: any){
+    return this.http.put(`${this.urlBase}/usuarios/${userId}/alterar-ids-pacotes`, formData);
+  }
 }

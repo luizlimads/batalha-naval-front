@@ -10,15 +10,34 @@ export class GiraImgs {
         this.rotatedImages = {};
     }
 
-    loadImage(url: string) {
-        const img = new Image();
-        img.onload = () => {
-            this.canvas.width = img.width;
-            this.canvas.height = img.height;
-            this.ctx!.drawImage(img, 0, 0);
-            this.saveRotatedImages();
-        };
-        img.src = url;
+    // loadImage(url: string) {
+    //     // console.log("chechue")
+    //     const img = new Image();
+    //     img.onload = () => {
+    //         this.canvas.width = img.width;
+    //         this.canvas.height = img.height;
+    //         this.ctx!.drawImage(img, 0, 0);
+    //         this.saveRotatedImages(); 
+
+    //     };
+    //     img.src = url;
+    // }
+
+    loadImage(url: string): Promise<void> {
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => {
+                this.canvas.width = img.width;
+                this.canvas.height = img.height;
+                this.ctx!.drawImage(img, 0, 0);
+                this.saveRotatedImages();
+                resolve();
+            };
+            img.onerror = (error) => {
+                reject(error);
+            };
+            img.src = url;
+        });
     }
 
     private rotateAndSave(degrees: number) {
@@ -40,7 +59,7 @@ export class GiraImgs {
         rotatedCtx!.drawImage(this.canvas, -width / 2, -height / 2);
 
         const imgSrc = rotatedCanvas.toDataURL();
-        console.log("imagem:",imgSrc)
+        // console.log(imgSrc)
         this.rotatedImages[degrees] = imgSrc;
     }
 
@@ -57,7 +76,7 @@ export class GiraImgs {
     }
 
     getImgGiradas(): any {
-        console.log("entrei", this.rotatedImages)
+        // console.log(this.rotatedImages)
         return this.rotatedImages;
     }
 }

@@ -1,7 +1,9 @@
 import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
 import { Navio, Tile, Mina } from '../navio';
-import { pipe } from 'rxjs';
+import { finalize, pipe, tap } from 'rxjs';
 import { GiraImgs } from '../gira-imgs';
+import { BatalhaNavalService } from '../batalha-naval.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tela-pre',
@@ -39,8 +41,6 @@ export class TelaPreComponent {
 
   tiles: Tile[] = [];
 
-  // minas: Mina[] = [];
-
   // Criando o array de navios
   navios: Navio[] = [];
 
@@ -59,9 +59,9 @@ export class TelaPreComponent {
 
   somMar: any = new Audio();
   openShadow: boolean = false;
+  usuarioLogadoId: any;
 
-
-  constructor(private renderer: Renderer2) {
+  constructor(private router: Router, private service: BatalhaNavalService, private renderer: Renderer2) {
     this.somMar.src = "../../assets/audios/somMar.mp3";
 
 
@@ -71,104 +71,10 @@ export class TelaPreComponent {
     };
 
     this.fnSomMar();
-  }
-
-  fnSomMar() {
-    this.somMar.volume = 0;
-    this.somMar.loop = true;
-    this.somMar.play();
-  }
-
-  ngAfterViewInit() {
-    //Para gerar uma imagem
-    this.girarImgs = new GiraImgs(this.canvasAux.nativeElement);
-
-    const canvasEl = this.myCanvas.nativeElement;
-    this.renderer.listen(canvasEl, 'mousedown', this.myDown.bind(this));
-    this.renderer.listen(canvasEl, 'mouseup', this.myUp.bind(this));
-
-    this.loadImageFromDatabase();
-  }
-
-  imgs: any = [];
-
-  loadImageFromDatabase() {
-    let imgsBarco = ["../../assets/images/img-tela-pre/navios/barcopn01",
-      "../../assets/images/img-tela-pre/navios/barcopn02",
-      "../../assets/images/img-tela-pre/navios/barcopn03",
-      "../../assets/images/img-tela-pre/navios/barcopn04",
-    ]
-
-    //cada barco vai ter um objeto de imagem
-    // barco de 1 posição, vai ter o objeto { img0, img180, img270 }
-    // barco de 2 posição, vai ter o objeto
-
-    //PARA CADA BARCO DO BANCO DE DADOS, EU RODO O ARRAY QUE VAI RODAR
-    // AS IMAGENS EM 0, 180 E 270 GRAUS
-
-    // Array para armazenar as strings base64 das imagens
-
-    // Iterando sobre cada URL da imagem
-    // Array para armazenar as strings base64 das imagens
-    const base64Images: string[] = [];
-
-    for (let img of imgsBarco) {
-      this.convertImageToBase64(img)
-        .then((base64String) => {
-          base64Images.push(base64String);
-          console.log('Imagem convertida para base64:', base64String);
-
-          if (base64Images.length === imgsBarco.length) {
-            console.log('Todas as imagens foram convertidas para base64:', base64Images);
-            for (let str of base64Images) {
-              this.girarImgs.loadImage(str);
-              this.imgs.push(this.girarImgs.getImgGiradas());
-              console.log(this.imgs)
-            }
-          }
-          // Se todas as imagens forem convertidas, exibir o array de base64Images no console
-        })
-        .catch((error) => {
-          console.error('Erro ao converter a imagem:', error);
-        });
-    }
-
-    
-
-
-   
-
-  }
-
-  //temporareo so para fazer as url de imagens virar base64
-  convertImageToBase64(url: string): Promise<string> {
-    return new Promise<string>((resolve, reject) => {
-      fetch(url)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Erro ao carregar a imagem');
-          }
-          return response.blob();
-        })
-        .then(blob => {
-          const reader = new FileReader();
-          reader.onload = () => {
-            const base64String = reader.result as string;
-            resolve(base64String);
-          };
-          reader.onerror = () => {
-            reject(new Error('Erro ao converter o blob para base64'));
-          };
-          reader.readAsDataURL(blob);
-        })
-        .catch(error => {
-          reject(error);
-        });
-    });
+    this.hasUserSessionId();
   }
 
   ngOnInit(): void {
-
     this.navios.push(this.criarNavio(4, 1, 1)); // 1 navio de 4 casas
 
     this.navios.push(this.criarNavio(3, 6, 1)); // 1 navio de 3 casas
@@ -192,32 +98,6 @@ export class TelaPreComponent {
     if (ctx) {
 
 
-      //carregando a imagem dos barcos
-      for (let i = 0; i <= 270; i += 90) {
-        this.imagens[i] = [];
-        for (let j = 1; j <= 4; j++) {
-
-          var img = new Image();
-          // img.src = `../../assets/img/barco${i}.png`
-          img.src = `../../assets/images/img-tela-pre/navios/barcopn${i}${j}.png`
-          this.imagens[i].push(img);
-        }
-      }
-
-      this.imagens.forEach((imgs: any) => {
-
-        imgs.forEach((img: any) => {
-          img.onload = () => {
-            ctx.drawImage(img, 0, 0);
-            //this.fnDraw(ctx)
-          }
-        })
-
-      });
-      // ------------------------------------
-
-
-
       // carregando a imagem das minas
       let imgMina = new Image();
       imgMina.src = '../../assets/img/mina.png';
@@ -227,13 +107,146 @@ export class TelaPreComponent {
         ctx.drawImage(imgMina, 0, 0);
       }
 
-      // -------------------------------------
-
-      //ctx.clearRect(0, 0, 1021, 511);
-
-      this.fnDraw(ctx)
+      
+    let interval = setInterval(() => {
+      if (this.naviosCarregados) {
+        clearInterval(interval)
+        this.fnDraw(ctx);
+        //posso tirar o onloading
+      }
+    }, 1000);
     }
   }
+
+  async ngAfterViewInit() {
+
+    const canvasEl = this.myCanvas.nativeElement;
+    this.renderer.listen(canvasEl, 'mousedown', this.myDown.bind(this));
+    this.renderer.listen(canvasEl, 'mouseup', this.myUp.bind(this));
+
+    // this.fnGetUserPacotes();
+
+    //Para gerar uma imagem
+    this.girarImgs = new GiraImgs(this.canvasAux.nativeElement);
+
+    let interval = setInterval(() => {
+      if (this.imgNaviosBD.length === 4) {
+        this.someFunction();
+        clearInterval(interval)
+      }
+    }, 1000);
+  }
+
+  naviosCarregados = false;
+  async someFunction() {
+    await this.loadImageFromDatabase();
+
+    let tradutor: any = {
+      0: '270',
+      90: '180',
+      180: '90',
+      270: '0'
+    }
+
+    for (let j = 1; j <= 4; j++) {
+
+      this.imagens[j-1] = [];
+      for (let i = 0; i <= 270; i += 90) {
+
+        var img = new Image();
+        img.src = this.oImgNavios[j-1][i]
+        
+        this.imagens[j-1][tradutor[i]] = img;
+      }
+    }
+
+
+    this.imagens.forEach((imgs: any) => {
+
+      imgs.forEach((img: any) => {
+        img.onload = () => {
+          this.myCanvas.nativeElement.getContext('2d').drawImage(img, 0, 0);
+          //this.fnDraw(ctx)
+        }
+      })
+    
+    })
+    
+    this.naviosCarregados = true
+
+    
+
+  }
+
+
+
+  hasUserSessionId() {
+    this.usuarioLogadoId = sessionStorage.getItem('userId');
+
+    if (this.usuarioLogadoId === null || this.usuarioLogadoId === undefined) {
+      this.router.navigate(['login'])
+    } else {
+      this.getUser(this.usuarioLogadoId);
+    }
+
+  }
+
+  userData: any;
+
+  getUser(usuarioLogadoId: any) {
+    this.service.getUser(usuarioLogadoId).pipe(
+      tap(async (res: any) => {
+        this.userData = res
+        // this.sliderValueMusic = this.userData.volumeMusica * 100;
+        // this.sliderValueSound = this.userData.volumeSom * 100;
+        console.log(res)
+        await this.fnGetUserPacotes();
+        // this.fnXP();
+      })
+    ).subscribe();
+  }
+
+
+  oImgNavios: any[] = [];
+  imgNaviosBD: any = [];
+
+  fnGetUserPacotes() {
+    this.service.getUserPacotes(this.usuarioLogadoId).pipe(
+      tap((res: any) => {
+        if (res) {
+          for (let pacote of res) {
+            if (pacote.temaId === this.userData.idEmbarcacao) {
+              this.imgNaviosBD.push(pacote.barco1Base64);
+              this.imgNaviosBD.push(pacote.barco2Base64);
+              this.imgNaviosBD.push(pacote.barco3Base64);
+              this.imgNaviosBD.push(pacote.barco4Base64);
+            }
+
+          }
+
+        }
+
+      })
+    ).subscribe();
+  }
+
+  async loadImageFromDatabase() {
+    let i = 0;
+    for (let img of this.imgNaviosBD) {
+      await this.girarImgs.loadImage(img);
+      let imgsgiradas = this.girarImgs.getImgGiradas();
+      //imgsgiradas[270] = img;
+      this.oImgNavios[i] = (imgsgiradas);
+      i++;
+    }
+  }
+
+  fnSomMar() {
+    this.somMar.volume = 0;
+    this.somMar.loop = true;
+    this.somMar.play();
+  }
+
 
   myMove(e: any) {
     const rect = this.myCanvas.nativeElement.getBoundingClientRect();
@@ -415,6 +428,7 @@ export class TelaPreComponent {
       }
     }
 
+
     //desenha as minas
 
     // this.minas.forEach(mina => {
@@ -452,7 +466,7 @@ export class TelaPreComponent {
 
         } else {
 
-          let img = this.imagens[navio.angulo][navio.tamanho - 1]
+          let img = this.imagens[navio.tamanho - 1][navio.angulo.toString()]
 
           if (navio.horizontal) {
             ctx.drawImage(img, contador * img.width / navio.tiles.length, 0, img.width / navio.tiles.length, img.height, x, y, this.sizeTiles + 1, this.sizeTiles + 1); // Desenha a imagem do tile no canvas

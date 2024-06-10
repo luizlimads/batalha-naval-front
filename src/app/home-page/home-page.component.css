@@ -12,7 +12,8 @@
 }
 
 .bg-image {
-    background-image: url('./img/bgMadeira.png');
+    /* background-image: url('./img/bgMadeira.png'); */
+    background-color: #fff;
     background-repeat: no-repeat;
     background-size: cover;
     width: 100vw;
@@ -215,10 +216,10 @@ p {
 }
 
 .user-avatar {
-    margin-right: 10px;
+    margin-right: 10px; 
     max-width: 100%;
     width: 60px;
-    height: 50px;
+    height: 60px;
     border-radius: 10px;
     background-color: #1BACD3;
     overflow: hidden;
@@ -226,7 +227,7 @@ p {
 }
 
 .user-avatar img {
-    margin-top: -10px;
+    /* margin-top: -10px; */
     width: 100%;
 }
 
@@ -876,7 +877,7 @@ p {
     color: #771212;
     display: block;
     opacity: 1;
-    z-index: 10000;
+    z-index: 30000;
 }
 
 #msgAviso.success{
@@ -886,7 +887,7 @@ p {
     color: #03ddff;
     display: block;
     opacity: 1;
-    z-index: 10000;
+    z-index: 30000;
 }
 
 
@@ -1393,12 +1394,13 @@ p {
 
 
 .info-pacote{
-    background-color: #cda15e;
+    background-color: #b46436;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
     /* width: 270px;    */
     width: 0px;
     overflow: hidden; 
+    filter: drop-shadow(5px 1px 5px rgb(28, 27, 27));
    
     display: flex;
     flex-direction: column;
@@ -1420,33 +1422,35 @@ p {
     width: 25px;
     height: 25px;
     margin-bottom: -12px;
-    margin-right: -8px;
+    margin-right: -12px;
     margin-top: -10px;
     cursor: pointer;
+    fill: #fff;
 }
 
 .info-pacote p{
     font-size: clamp(.5em, .5em + 2vw, .8em);
     margin-bottom: 5px;
-    color: black;
+    color: rgb(240, 240, 240);
 }
 
-.info-pacote-tema,
-.info-pacote-avatar,
-.info-pacote-embarcacoes{
+.info-pacote-tema{
+    width: 100%;
+    margin-top: 5px;
+}
+.info-pacote-avatar{
     width: 100%;
     /* background-color: #03ddff; */
     /* padding: 5px; */
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .info-pacote-avatar div{
-    width: 60px;
-}
+    width: 90px;
 
-
-.info-pacote-embarcacoes div{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
 }
 
 .info-pacote-tema img,
@@ -1454,40 +1458,22 @@ p {
     width: 100%;
 }
 
-#bc1{
-    margin-top: -4px;
-    width: 70px;
-}
-
-#bc2{
-    width: 70px;
-}
-
-#bc3{
-    width: 90px;
-}
-
-#bc4{
-    width: 130px;
-}
-
 /* itens do shop e inventario *****************************/
 
 .invent-item,
 .shop-item {
-
+    width: 200px;
     background-color: #b46436;
     border: 2px solid rgb(159, 95, 5);
     margin-bottom: 20px;
     /* Espaçamento inferior entre os elementos */
     border-radius: 8px;
-    padding: 10px;
+    padding: 8px;
     box-sizing: border-box;
     /* Garantir que o padding não afete a largura */
 }
 
 .shop-item{
-    width: 200px;
     transition: .3s ease;
 }
 
@@ -1514,12 +1500,8 @@ p {
 .select-use-item svg{
     width: 20px;
     fill: #11da6f;
-    transition: .3s ease;
 }
 
-.select-use-item svg:hover{
-    transform: scale(1.1);
-}
 
 .invent-item.selected {
     border: 2px solid rgb(17, 221, 85);
@@ -1545,7 +1527,6 @@ p {
 }
 
 
-.invent-item .item-img,
 .shop-item .item-img {
     /* background-color: #1BACD3; */
     display: flex;
@@ -1554,11 +1535,33 @@ p {
     font-size: clamp(0.5em, 1.5vw, .7em);
 }
 
+.shop-item .item-img div {
+    flex: 1;
+}
 
-.invent-item .item-img img,
-.shop-item .item-img img {
-    /* display: block; */
-    /* width: 60px;  */
+.shop-item .item-img div,
+.invent-item .item-img div {
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.shop-item .item-img,
+.invent-item .item-img{
+
+    display: flex;
+    align-items: center;
+    /* padding: 5px; */
+    font-size: clamp(0.5em, 1.5vw, .7em);
+}
+
+.shop-item .item-img img,
+.invent-item .item-img img{
+    max-height: 100%;
+
     max-width: 100%; /* A imagem não será maior que o container */
     height: auto;   /* A altura será ajustada automaticamente para manter a proporção */
     display: block; /* Remove o espaço embaixo da imagem (comportamento padrão inline) */
@@ -1567,26 +1570,20 @@ p {
 
 }
 
-.invent-item .item-img img {
-    display: block;
-    margin: auto;
-    max-width: 100%;
-    max-height: 100%;
+#bc1i{
+    width: 35px;
 }
 
-.shop-item .item-img div {
-    max-width: 100%;
-    width: 80px;
-    height: 120px;
-    /* background-color: #d3bd1b; */
-    border-radius: 5px;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 5px;
+#bc2i{
+    width: 35px;
+}
 
-    flex: 1;
+#bc3i{
+    width: 45px;
+}
+
+#bc4i{
+    width: 65px;
 }
 
 .shop-item .item-img p{
@@ -1595,11 +1592,7 @@ p {
     flex: 1;
 }
 
-.invent-item .item-img div {
-    width: 100px;
-    height: 166px;
-    overflow: hidden;
-}
+
 
 .item-value {
     display: flex;

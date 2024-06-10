@@ -1,4 +1,4 @@
-import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 
 @Component({
@@ -6,11 +6,12 @@ import { Observable, Subscription } from 'rxjs';
   templateUrl: './tela-partida.component.html',
   styleUrl: './tela-partida.component.css'
 })
-export class TelaPartidaComponent {
+export class TelaPartidaComponent implements OnInit {
   @ViewChild('myCanvas', { static: true }) myCanvas!: ElementRef;
   @ViewChild('canvasOponente', { static: true }) canvasOponente!: ElementRef;
 
-  // private webSocket!: WebSocket;
+  private webSocket!: WebSocket;
+
 
   somPopupWin: HTMLAudioElement;
   somPopupLoser: HTMLAudioElement;
@@ -48,6 +49,8 @@ export class TelaPartidaComponent {
 
   navios: any[];
 
+  podeJogar: any = true;
+
   // meAutoAcertei: boolean;
 
 
@@ -57,16 +60,43 @@ export class TelaPartidaComponent {
     this.somPopupLoser = new Audio();
     this.somExplosao = new Audio();
     this.somFundo = new Audio();
-    this.somFundo.src = "../../assets/audios/somFundoPartida.mp3";
+    this.somFundo.src = "../../assets/audios/somFundoPartidda.mp3";
     this.somPopupWin.src = "../../assets/audios/somWin.mp3";
     this.somPopupLoser.src = "../../assets/audios/somLoser.mp3";
     // Crio um webSocket
-    // this.webSocket = new WebSocket('ws://localhost:8080/game');
+
+
+    this.webSocket = new WebSocket('ws://localhost:8080/game');
 
     // Adiciono o evento que vai ficar ouvindo esse webSocket
-    // this.webSocket.onmessage = (event) => {
-    //   console.log(JSON.parse(event.data))
-    // };
+    this.webSocket.onmessage = (event) => {
+      let msg = JSON.parse(event.data);
+      if (msg.emoji) {
+        this.fnRecebeReacao(msg.emoji);
+      } else {
+
+        this.myTabuleiro = msg.tabuleiroOp
+        this.podeJogar = msg.podeJogar;
+        // if(msg.coord){
+        // console.log("entreii")
+        // this.fnSendWebSocketsMsg(false, msg.coord);
+        this.tabuleiroOp = msg.myTabuleiro;
+        console.log(msg.myTabuleiro)
+        // }
+        if (this.podeJogar) {
+          console.log("Sua vez")
+          this.showNotification("Jogo", "Sua vez", "error");
+        } else {
+          console.log("Não é Sua vez")
+
+          this.showNotification("Jogo", "Esperando o outro jogador", "error");
+
+        }
+      }
+
+
+
+    };
 
     this.navios = [
       {
@@ -422,8 +452,8 @@ export class TelaPartidaComponent {
   }
 
 
-
   ngOnInit(): void {
+    this.hasUserSessionId();
     this.fnSomFundo();
 
     this.sizeWTabuleiro = this.myCanvas.nativeElement.width;
@@ -476,7 +506,7 @@ export class TelaPartidaComponent {
       })
     })
 
-    console.log(this.myTabuleiro)
+    // console.log(this.myTabuleiro)
 
     const myCvs: HTMLCanvasElement = this.myCanvas.nativeElement;
     const myCtx = myCvs.getContext('2d');
@@ -543,6 +573,19 @@ export class TelaPartidaComponent {
       this.fnDrawOponente(ctxOponente);
 
     }
+  }
+
+  usuarioLogadoId: any;
+
+  hasUserSessionId() {
+    this.usuarioLogadoId = sessionStorage.getItem('userId');
+
+    // if (this.usuarioLogadoId === null || this.usuarioLogadoId === undefined) {
+    //   this.router.navigate(['login'])
+    // } else {
+    //   this.getUser(this.usuarioLogadoId);
+    // }
+
   }
 
   fnDraw(ctx: CanvasRenderingContext2D) {
@@ -679,19 +722,19 @@ export class TelaPartidaComponent {
 
   }
 
-  fnSomExplosao(tipo: any){
+  fnSomExplosao(tipo: any) {
     this.somExplosao.volume = 0.3;
-    if(tipo === "agua"){
+    if (tipo === "agua") {
       this.somExplosao.src = "../../assets/audios/somExplosaoAgua.mp3"
       this.somExplosao.play().catch((error) => {
         // console.log('Error attempting to play the video:', error);
       });
-    }else if(tipo === "barco"){
+    } else if (tipo === "barco") {
       this.somExplosao.src = "../../assets/audios/somExplosaoBarco.mp3"
       this.somExplosao.play().catch((error) => {
         // console.log('Error attempting to play the video:', error);
       });
-    }else if(tipo === "mina"){
+    } else if (tipo === "mina") {
       this.somExplosao.src = "../../assets/audios/somExplosaoMina.mp3"
       this.somExplosao.play().catch((error) => {
         // console.log('Error attempting to play the video:', error);
@@ -710,8 +753,10 @@ export class TelaPartidaComponent {
 
   //quando eu clico no tabuleiro do oponente
   fnCanvasOponenteClick(e: any) {
+    // console.log(this.tabuleiroOp);
+
     // this.openShadow = true;
-    if (this.isRunning === false) {
+    if (this.podeJogar === true) {
       const rect = this.canvasOponente.nativeElement.getBoundingClientRect();
 
       // Calcula a posição do clique em relação ao canvas
@@ -736,6 +781,7 @@ export class TelaPartidaComponent {
         this.fnSomExplosao("barco");
 
         this.tabuleiroOp[j][i] = 3;
+        this.fnSendWebSocketsMsg(false);
 
         if (!this.checkForOnes(this.tabuleiroOp)) { //checando se no tabuleiro do oponente ainda tem navio não destruido
           // alert("você venceu!")
@@ -747,23 +793,63 @@ export class TelaPartidaComponent {
         // this.meAutoAcertei = true;
         this.fnSomExplosao("mina");
 
-        this.randomlyPlaceTwo(true, j, i);
+        this.fnVerifica(j, i);
+
+        this.fnSendWebSocketsMsg(true, true);
+
 
       } else if (this.tabuleiroOp[j][i] == 0) {
+        this.tabuleiroOp[j][i] = 2;
         // alert('Você errou!');
         this.fnSomExplosao("agua");
-        this.tabuleiroOp[j][i] = 2;
+
+        this.fnSendWebSocketsMsg(true);
 
         //apos o meu click eu envio uma mensagem para o outro jogador
-        this.fnSendMessageWS(); //coloquei aqui pois só passa a vez para o outro jogador, quando eu errar
+        //this.fnSendMessageWS(); //coloquei aqui pois só passa a vez para o outro jogador, quando eu errar
 
-      }
-      else {
+      } else {
         this.showNotification("Ops...", "escolha outra posição, essa ja foi escolhida", "error");
       }
 
     }
 
+  }
+
+  fnVerifica(j: any, i: any) {
+    /*
+      0 -> nunca clicou e não tem navio
+      1 -> nunca clicou e tem navio
+      2 -> clicou e não tem nada
+      3 -> clicou e tem navio
+      5 -> clicou em uma mina
+      6 -> clicou e tem uma mina explodida
+   
+      */
+
+    if (this.myTabuleiro[j][i] === 0) {
+      this.myTabuleiro[j][i] = 2;
+    } else if (this.myTabuleiro[j][i] === 1) {
+      this.myTabuleiro[j][i] = 3;
+    } else if (this.myTabuleiro[j][i] === 5) {
+      this.myTabuleiro[j][i] = 6;
+    }
+
+
+  }
+
+  fnSendWebSocketsMsg(podeJogar = true, coord: any = false) {
+    let messageObject = {
+      usuarioId: this.usuarioLogadoId,
+      tabuleiroOp: this.tabuleiroOp,
+      myTabuleiro: this.myTabuleiro,
+      podeJogar: podeJogar,
+      coord: coord
+      // navios: this.navios
+    };
+
+    this.webSocket.send(JSON.stringify(messageObject));
+    this.podeJogar = !podeJogar;
   }
 
   fnFim(result: any) {
@@ -973,7 +1059,8 @@ export class TelaPartidaComponent {
   fnEmoji(e: any) {
     (document.querySelector(".container-emoji") as HTMLElement).style.display = "none";
 
-    this.fnEnviaReacao();
+    let imgSrc = e.currentTarget.src;
+    this.fnSendWebSocketsEmoji(imgSrc);
     this.addEmoji(e);
 
     // this.fnPopUp('loser');
@@ -1036,8 +1123,18 @@ export class TelaPartidaComponent {
     }
   }
 
-  fnEnviaReacao() {
-    console.log("enviar reação para o oponetenente");
+  // fnEnviaReacao(emojiSrc: any) {
+  //   console.log("enviar reação para o oponetenente");
+  //   fnSendWebSocketsEmoji(emoji);
+  // }
+
+  fnSendWebSocketsEmoji(emoji: any) {
+    let messageObject = {
+      emoji: emoji
+    };
+
+    this.webSocket.send(JSON.stringify(messageObject));
+
   }
 
   fnRecebeReacao(imgSrc: any) {

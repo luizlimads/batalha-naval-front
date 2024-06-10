@@ -17,7 +17,7 @@ export class HomePageComponent implements OnInit {
   userData: any = null;
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
-  
+
   open: boolean = false;
   // popupShop: boolean = false;
   // selectGuia: boolean = 
@@ -55,6 +55,7 @@ export class HomePageComponent implements OnInit {
   itensDiamonds: any[];
   itensPacote: any[];
   itensPacotes: any[] = [];
+  meusPacotes: any[] = [];
 
   oAvatar: any;
 
@@ -119,7 +120,7 @@ export class HomePageComponent implements OnInit {
 
     console.log(this.itensPacote)
 
-    this.infoUser = { nome: 'teste', moedas: 1000, diamantes: 1000 }
+    this.infoUser = { nome: 'teste', moedas: 1000, diamantes: 10000 }
 
 
     this.oAvatar = {};
@@ -154,8 +155,7 @@ export class HomePageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.fnXP();
-
+    // this.fnGetUserPacotes();
     this.activeTab = 'moedas';
     this.activeTabInvent = 'todos';
 
@@ -164,6 +164,8 @@ export class HomePageComponent implements OnInit {
     this.getAllItems();
 
     this.getPacotes();
+
+
 
     // this.fnMusicHomePage();
 
@@ -192,7 +194,6 @@ export class HomePageComponent implements OnInit {
     }
 
   }
-
 
   fnSomBtn() {
     this.somBtn.volume = this.sliderValueSound / 100;
@@ -232,38 +233,37 @@ export class HomePageComponent implements OnInit {
 
   }
 
-  fnConfirmOpenModalConfirm(preco: any, valor: any, type: any) {
+  fnConfirmOpenModalConfirm(preco: any, valor: any, type: any, tituloPacote = '', idPacote: any = null) {
 
-    if (type === 'd') {
-      if (parseFloat(this.infoUser.diamantes) < parseFloat(preco)) {
+    console.log(preco, type, this.userData.moeda)
+    if (type === "Diamante") {
+      if (parseFloat(this.userData.diamante) < parseFloat(preco)) {
+        console.log("entre")
+
         this.fnMsg("Saldo insuficiente")
-      } else {
-        (document.getElementById("qtdCompraTitulo") as HTMLElement).innerHTML = 'Quantidade de Moedas:';
-        (document.getElementById("qtdCompra") as HTMLElement).innerHTML = this.formatarValor(valor);
-        (document.getElementById("valorCompra") as HTMLElement).innerHTML = this.formatarValor(preco) + " (Diamantes)";
-
-
-        this.fnModalConfirm();
-
-        this.compraAtual = { type: 'c', valor: valor, preco: preco };
-
+        return;
       }
     } else {
-
-      console.log("comprando diamante", parseFloat(this.infoUser.moedas), parseFloat(preco))
-
-      if (parseFloat(this.infoUser.moedas) < parseFloat(preco)) {
+      if (parseFloat(this.userData.moeda) < parseFloat(preco)) {
         this.fnMsg("Saldo insuficiente")
-      } else {
-        (document.getElementById("qtdCompraTitulo") as HTMLElement).innerHTML = 'Quantidade de Diamantes:';
-        (document.getElementById("qtdCompra") as HTMLElement).innerHTML = this.formatarValor(valor);
-        (document.getElementById("valorCompra") as HTMLElement).innerHTML = this.formatarValor(preco) + "(Moedas)";
-        this.fnModalConfirm();
-
-        this.compraAtual = { type: 'd', valor: valor, preco: preco };
-
+        return;
       }
     }
+
+    if (tituloPacote === '') {
+      (document.getElementById("qtdCompraTitulo") as HTMLElement).innerHTML = `Quantidade de ${type === "Diamante" ? 'Moedas' : 'Diamantes'}: `;
+      (document.getElementById("qtdCompra") as HTMLElement).innerHTML = this.formatarValor(valor);
+    }
+    else {
+      (document.getElementById("qtdCompraTitulo") as HTMLElement).innerHTML = 'Pacote: ' + tituloPacote;
+    }
+    (document.getElementById("valorCompra") as HTMLElement).innerHTML = this.formatarValor(preco) + ` (${type}s)`;
+
+
+    this.fnModalConfirm();
+
+    this.compraAtual = { type: type, valor: valor, preco: preco, pacote: idPacote };
+
   }
 
 
@@ -273,7 +273,6 @@ export class HomePageComponent implements OnInit {
 
   fnInfoPacote(temaId: any) {// parei aqui
 
-    console.log(temaId)
     if (this.timeoutId) {
       clearTimeout(this.timeoutId);
     }
@@ -286,8 +285,8 @@ export class HomePageComponent implements OnInit {
 
 
 
-    this.pacoteSelected = this.itensPacotes.find((pacote: any)=>{
-      if(pacote.temaId === temaId){
+    this.pacoteSelected = this.itensPacotes.find((pacote: any) => {
+      if (pacote.temaId === temaId) {
         return pacote
       }
     })
@@ -302,71 +301,89 @@ export class HomePageComponent implements OnInit {
 
   fnBuy() {
     if (this.compraAtual) {
-      if (this.compraAtual.type === 'd') {
-        this.fnBuyDiamond(this.compraAtual.preco, this.compraAtual.valor);
+      if (this.compraAtual.pacote !== null) {
+        this.fnCompraPacote(this.compraAtual.pacote, this.compraAtual.preco, this.compraAtual.type);
+        // this.fnBuyPacote(this.compraAtual.preco, this.compraAtual.type)
       } else {
-        this.fnBuyCoin(this.compraAtual.preco, this.compraAtual.valor);
+        if (this.compraAtual.type === 'Diamante') {
+          this.fnBuyMoeda(this.compraAtual.preco, this.compraAtual.valor);
+        } else {
+          this.fnBuyDiamante(this.compraAtual.preco, this.compraAtual.valor);
+        }
       }
     }
   }
 
+  fnBuyPacote(preco: any, tipoPagamento: any) {
 
-  fnBuyCoin(preco: any, valor: any) {
-    if (parseFloat(this.infoUser.diamantes) >= parseFloat(preco)) {
-      console.log("compra")
-      // faz a atualização no banco, adiciona moeda no campo moeda da tabela
+    let valorAtual = 0;
+    if (tipoPagamento === "Diamante") {
+      valorAtual = this.userData.diamante;
+      this.userData.diamante -= parseFloat(preco);
 
-      let result = true
+      this.myCalculator("principalDiamondValue", valorAtual, -parseFloat(preco));
 
-      if (result) {
+      this.fnModalConfirm();
 
-        let valorAtual = this.infoUser.moedas;
-        this.infoUser.diamantes -= parseFloat(preco);
-        (document.getElementById("principalDiamondValue") as HTMLElement).innerHTML = this.formatarValor(this.infoUser.diamantes);
+      this.open = false;
+
+    } else if (tipoPagamento === "Moeda") {
+
+      valorAtual = this.userData.moeda;
+      this.userData.moeda -= parseFloat(preco);
+
+      this.myCalculator("principalCoinsValue", valorAtual, -parseFloat(preco));
+
+      this.fnModalConfirm();
+
+      this.open = false;
 
 
-        this.infoUser.moedas += parseFloat(valor);
-        this.myCalculator("principalCoinsValue", valorAtual, parseFloat(valor));
-
-        this.fnModalConfirm();
-
-        this.open = false;
-      }
-
-    } else {
-      this.fnMsg("Saldo insuficiente")
     }
   }
 
-  fnBuyDiamond(preco: any, valor: any) {
+  fnBuyMoeda(preco: any, valor: any) {
+    // faz a atualização no banco, adiciona moeda no campo moeda da tabela
 
-    if (parseFloat(this.infoUser.moedas) >= parseFloat(preco)) {
-      // faz a atualização no banco, adiciona moeda no campo moeda da tabela
+    let valorAtual = this.infoUser.moedas;
+    this.infoUser.diamantes -= parseFloat(preco);
+    (document.getElementById("principalDiamondValue") as HTMLElement).innerHTML = this.formatarValor(this.infoUser.diamantes);
 
-      let result = true
 
-      if (result) {
+    this.infoUser.moedas += parseFloat(valor);
+    this.myCalculator("principalCoinsValue", valorAtual, parseFloat(valor));
 
-        let valorAtual = this.infoUser.diamantes;
-        this.infoUser.moedas -= parseFloat(preco);
-        (document.getElementById("principalCoinsValue") as HTMLElement).innerHTML = this.formatarValor(this.infoUser.moedas);
+    this.fnModalConfirm();
 
-        this.infoUser.diamantes += parseFloat(valor);
-        this.myCalculator("principalDiamondValue", valorAtual, parseFloat(valor));
-        this.fnModalConfirm();
+    this.open = false;
 
-        this.open = false;
-      }
 
-    } else {
-      this.fnMsg("Saldo insuficiente")
+  }
+
+  fnBuyDiamante(preco: any, valor: any) {
+
+    // faz a atualização no banco, adiciona moeda no campo moeda da tabela
+
+    let result = true
+
+    if (result) {
+
+      let valorAtual = this.infoUser.diamantes;
+      this.infoUser.moedas -= parseFloat(preco);
+      (document.getElementById("principalCoinsValue") as HTMLElement).innerHTML = this.formatarValor(this.infoUser.moedas);
+
+      this.infoUser.diamantes += parseFloat(valor);
+      this.myCalculator("principalDiamondValue", valorAtual, parseFloat(valor));
+      this.fnModalConfirm();
+
+      this.open = false;
     }
+
   }
 
   myCalculator(id: any, start: any, end: any) {
     var duration = 1000;
 
-    console.log(start, end, duration)
     this.animateValue(id, start, end + start, duration); // remove .toLocaleString()
   }
 
@@ -379,6 +396,14 @@ export class HomePageComponent implements OnInit {
     this.fnSomCoin();
 
     var timer = setInterval(function () {
+      if (increment > 0) {
+        if (current + increment >= end)
+          increment = end - current
+      }
+      else {
+        if (current + increment <= end)
+          increment = end - current
+      }
       current += increment;
 
       (document.getElementById(id) as HTMLElement).innerHTML = current.toLocaleString(); // add .toLocaleString() here
@@ -386,13 +411,18 @@ export class HomePageComponent implements OnInit {
         clearInterval(timer);
       }
     }, stepTime);
+
   }
 
-  fnCompraPacote(temaId: any){
+  fnCompraPacote(temaId: any, temaValor: any, tipoPagamento: any) {
+
     this.service.comprarPacote(this.usuarioLogadoId, temaId).pipe(
-      tap((res:any) => {
+      tap((res: any) => {
         if (res.sucesso) {
           this.fnMsg(res.mensagem, 'success')
+          this.fnBuyPacote(temaValor, tipoPagamento);
+          this.open = false;
+          this.fnGetUserPacotes();
         } else {
           this.fnMsg(res.mensagem)
         }
@@ -400,13 +430,46 @@ export class HomePageComponent implements OnInit {
     ).subscribe()
   }
 
-  openSnackBar(message: string) {
-    this._snackBar.open(message, '', {
-      horizontalPosition: this.horizontalPosition,
-      verticalPosition: this.verticalPosition,
-      duration: 5000
-    });
+  imgTemaSelecionado: any = {};
+  imgAvatarSelecionado: any = {};
+  imgEmbarcacoesSelecionado: any = [];
+
+  fnGetUserPacotes() {
+    this.service.getUserPacotes(this.usuarioLogadoId).pipe(
+      tap((res: any) => {
+        this.meusPacotes = res;
+
+        for (let pacote of this.meusPacotes) {
+          if (pacote.temaId === this.userData.idTema)
+            this.imgTemaSelecionado = pacote.fundoBase64;
+        }
+
+        for (let pacote of this.meusPacotes) {
+          if (pacote.temaId === this.userData.idAvatar)
+            this.imgAvatarSelecionado = pacote.avatarBase64;
+        }
+
+        for (let pacote of this.meusPacotes) {
+          if (pacote.temaId === this.userData.idEmbarcacao) {
+            this.imgEmbarcacoesSelecionado.push(pacote.barco1Base64);
+            this.imgEmbarcacoesSelecionado.push(pacote.barco2Base64);
+            this.imgEmbarcacoesSelecionado.push(pacote.barco3Base64);
+            this.imgEmbarcacoesSelecionado.push(pacote.barco4Base64);
+          }
+        }
+        // console.log(">>>>>",this.imgEmbarcacoesSelecionado)
+
+      })
+    ).subscribe();
   }
+
+  // openSnackBar(message: string) {
+  //   this._snackBar.open(message, '', {
+  //     horizontalPosition: this.horizontalPosition,
+  //     verticalPosition: this.verticalPosition,
+  //     duration: 5000
+  //   });
+  // }
 
   fnCarregar() {
     this.router.navigate(['carr'])
@@ -421,8 +484,6 @@ export class HomePageComponent implements OnInit {
       this.getUser(this.usuarioLogadoId);
     }
 
-    // {"id":4,"nome":"tst","email":"tst@gmail.com","senha":"123Sa!","dataNascimento":"2024-06-01T20:44:11.313286","nivelAcesso":"USER","diamante":"10","moeda":"500","volumeMusica":1,"volumeSom":1,"srcAvatar":"../../assets/images/img-home-page/pirata1.png"}
-    //sessionStorage.removeItem("key");
   }
 
   getUser(usuarioLogadoId: any) {
@@ -431,7 +492,9 @@ export class HomePageComponent implements OnInit {
         this.userData = res
         this.sliderValueMusic = this.userData.volumeMusica * 100;
         this.sliderValueSound = this.userData.volumeSom * 100;
-        console.log(this.userData);
+        console.log(res)
+        this.fnXP();
+        this.fnGetUserPacotes();
       })
     ).subscribe();
   }
@@ -532,9 +595,24 @@ export class HomePageComponent implements OnInit {
   }
 
 
-  fnSelectUseItem(item: any) {
-    alert("item selecionado");
+  fnSelectUseItem(temaId: any, avatarId: any, embarcacaoId: any) {
+    const formData = new FormData();
 
+    formData.append("newTemaId", temaId);
+    formData.append("newAvatarId", avatarId);
+    formData.append("newEmbarcacoesId", embarcacaoId);
+
+    this.service.updateUserTemaId(parseInt(this.usuarioLogadoId), formData).pipe(
+      tap((res: any) => {
+        console.log(res)
+        if (res) {
+          this.getUser(this.usuarioLogadoId);
+          this.fnGetUserPacotes();
+          this.fnMsg("Item selecionado com sucesso", "success")
+          this.open = false;
+        }
+      })
+    ).subscribe();
   }
 
   fnOpenAlterSenha() {
@@ -724,9 +802,16 @@ export class HomePageComponent implements OnInit {
 
   getPacotes() {
     this.service.getPacotes().pipe(
-      tap((res:any) => {
+      tap((res: any) => {
         this.itensPacotes = res
-        console.log(this.itensPacotes)
+        console.log(res)
+        // this.meusPacotes.push(this.itensPacotes.find((pacote: any) => {
+        //   if (pacote.temaId === 1) {
+        //     return pacote
+        //   }
+        // }))
+
+
       })
     ).subscribe();
   }
@@ -787,22 +872,29 @@ export class HomePageComponent implements OnInit {
   }
 
   fnXP() {
-    let nVitorias = 5;
-    let nDerrotas = 1;
+    let nVitorias = this.userData.vitorias;
+    let nDerrotas = this.userData.derrotas;
 
-    let nivel = "?";
-    let xp = 50 * nVitorias + 5 * nDerrotas;
+    let xp = 100 * nVitorias + 5 * nDerrotas;
 
-    let Sn = Math.floor(xp / 100) * 100
-    let n = Sn * 2 / 100
-    n = (-1 + Math.sqrt(1 + 4 * Sn / 50)) / 2 + 1
-    console.log("Nível: " + n)
-    console.log("XP para nível " + (n + 1) + ": " + n * 100)
-    console.log("XP Acumulado " + (xp - Sn))
+    let soma = 0
+    let soma_anterior = 0
+    let xp_prox = 0
+    let nivel = 1
 
-    let relacao = (xp - Sn) / (n * 100);
+    for (nivel; soma <= xp; ++nivel) {
+      xp_prox = nivel * 100
+      soma += xp_prox
+      soma_anterior = soma - xp_prox
+    }
+    nivel--
+
+    let relacao = (xp - soma_anterior) / (xp_prox) * 100;
+
     console.log(relacao);
     (document.querySelector(".status-xp") as HTMLElement).style.width = `${relacao}%`;
+    (document.querySelector(".relacao-xp") as HTMLElement).innerHTML = `${xp - soma_anterior}/${xp_prox}`;
+    (document.querySelector(".nivel") as HTMLElement).innerHTML = `${nivel}`;
   }
 
 }
