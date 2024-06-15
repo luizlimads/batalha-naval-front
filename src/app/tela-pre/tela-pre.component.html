@@ -1,8 +1,65 @@
+<div class="conf-sound-effects">
+
+    <div>
+        <div class="icons-som">
+            <svg *ngIf="sliderValueSound !== 0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
+                (click)="updateValueSound(0)">
+                <path
+                    d="M11.536 14.01A8.47 8.47 0 0 0 14.026 8a8.47 8.47 0 0 0-2.49-6.01l-.708.707A7.48 7.48 0 0 1 13.025 8c0 2.071-.84 3.946-2.197 5.303z" />
+                <path
+                    d="M10.121 12.596A6.48 6.48 0 0 0 12.025 8a6.48 6.48 0 0 0-1.904-4.596l-.707.707A5.48 5.48 0 0 1 11.025 8a5.48 5.48 0 0 1-1.61 3.89z" />
+                <path
+                    d="M8.707 11.182A4.5 4.5 0 0 0 10.025 8a4.5 4.5 0 0 0-1.318-3.182L8 5.525A3.5 3.5 0 0 1 9.025 8 3.5 3.5 0 0 1 8 10.475zM6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06" />
+            </svg>
+
+            <svg *ngIf="sliderValueSound === 0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
+                (click)="updateValueSound(50)">
+                <path
+                    d="M6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06m7.137 2.096a.5.5 0 0 1 0 .708L12.207 8l1.647 1.646a.5.5 0 0 1-.708.708L11.5 8.707l-1.646 1.647a.5.5 0 0 1-.708-.708L10.793 8 9.146 6.354a.5.5 0 1 1 .708-.708L11.5 7.293l1.646-1.647a.5.5 0 0 1 .708 0" />
+            </svg>
+        </div>
+
+        <div class="range-slider">
+            <input type="range" min="0" max="100" id="soundVolumeInput" [value]="sliderValueSound"
+                (input)="updateValueSound()" />
+            <span class="range-value" id="spanSound">{{ sliderValueSound.toString() }}</span>
+        </div>
+    </div>
+    <div class="conf-music">
+        <div class="icons-som">
+            <svg *ngIf="sliderValueMusic !== 0" xmlns="http://www.w3.org/2000/svg" (click)="updateValueMusic(0)"
+                viewBox="0 -960 960 960">
+                <path
+                    d="M400-120q-66 0-113-47t-47-113q0-66 47-113t113-47q23 0 42.5 5.5T480-418v-422h240v160H560v400q0 66-47 113t-113 47Z" />
+            </svg>
+
+            <svg *ngIf="sliderValueMusic === 0" xmlns="http://www.w3.org/2000/svg" (click)="updateValueMusic(50)"
+                viewBox="0 -960 960 960">
+                <path
+                    d="M792-56 56-792l56-56 736 736-56 56ZM560-514l-80-80v-246h240v160H560v166ZM400-120q-66 0-113-47t-47-113q0-66 47-113t113-47q23 0 42.5 5.5T480-418v-62l80 80v120q0 66-47 113t-113 47Z" />
+            </svg>
+        </div>
+
+        <div class="range-slider">
+            <input type="range" min="0" max="100" [value]="sliderValueMusic" id="musicVolumeInput"
+                (input)="updateValueMusic()" />
+            <span class="range-value" id="spanMusic">{{ sliderValueMusic.toString() }}</span>
+        </div>
+
+    </div>
+
+</div>
+
+
 <div class="pai-container">
     <div class="ilhaL">
     </div>
     <div class="container">
-        <div class="buttons">
+        <div class="buttons c">
+            <!-- <span id="hour">00</span>: -->
+            <div class="cronometro">
+                <span id="minute">00</span>:<span id="second">00</span>:<span id="millisecond">000</span>
+            </div>
             <button id="btnGirarA" (click)="fnGirar(true)">
 
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -17,6 +74,16 @@
                         <path
                             d="M478.291,255.492c-16.133,0.143-29.689,12.161-31.765,28.16c-15.37,105.014-112.961,177.685-217.975,162.315   S50.866,333.006,66.236,227.992S179.197,50.307,284.211,65.677c35.796,5.239,69.386,20.476,96.907,43.959l-24.107,24.107   c-8.33,8.332-8.328,21.84,0.004,30.17c4.015,4.014,9.465,6.262,15.142,6.246h97.835c11.782,0,21.333-9.551,21.333-21.333V50.991   c-0.003-11.782-9.556-21.331-21.338-21.329c-5.655,0.001-11.079,2.248-15.078,6.246l-28.416,28.416   C320.774-29.34,159.141-19.568,65.476,86.152S-18.415,353.505,87.304,447.17s267.353,83.892,361.017-21.828   c32.972-37.216,54.381-83.237,61.607-132.431c2.828-17.612-9.157-34.183-26.769-37.011   C481.549,255.641,479.922,255.505,478.291,255.492z" />
                     </g>
+                </svg>
+            </button>
+
+            <button id="btnAleatorio" (click)="fnGeraPosicaoAleatoria()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" stroke="white"
+                    style="stroke-width:0.810537">
+                    <path fill-rule="evenodd"
+                        d="M0 3.5A.5.5 0 0 1 .5 3H1c2.202 0 3.827 1.24 4.874 2.418.49.552.865 1.102 1.126 1.532.26-.43.636-.98 1.126-1.532C9.173 4.24 10.798 3 13 3v1c-1.798 0-3.173 1.01-4.126 2.082A9.6 9.6 0 0 0 7.556 8a9.6 9.6 0 0 0 1.317 1.918C9.828 10.99 11.204 12 13 12v1c-2.202 0-3.827-1.24-4.874-2.418A10.6 10.6 0 0 1 7 9.05c-.26.43-.636.98-1.126 1.532C4.827 11.76 3.202 13 1 13H.5a.5.5 0 0 1 0-1H1c1.798 0 3.173-1.01 4.126-2.082A9.6 9.6 0 0 0 6.444 8a9.6 9.6 0 0 0-1.317-1.918C4.172 5.01 2.796 4 1 4H.5a.5.5 0 0 1-.5-.5" />
+                    <path
+                        d="M13 5.466V1.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192m0 9v-3.932a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192" />
                 </svg>
             </button>
 
@@ -48,14 +115,24 @@
             </div>
             <div class="content">
                 <div class="oponente">
-                   
+
                     <div class="loading-container">
                         <div class="loading"></div>
                         <div id="loading-text">Esperando o oponente</div>
                     </div>
                 </div>
-                
+
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="fundo-loading">
+    <div class="bg-loading">
+        <div class="loading-container">
+            <div class="loading"></div>
+            <!-- {{ hasOponente ? 'Carregando tabuleiro' : 'Esperando o oponente' }} -->
+            <div id="loading-text">Loading</div>
         </div>
     </div>
 </div>

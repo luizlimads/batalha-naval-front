@@ -10,7 +10,7 @@
 
                 <div class="item-level-icon">
                     <div class="chapeu">
-                        <img src="../../assets/images/img-home-page/hatPirate.png" alt="Chapéu">
+                        <img src="assets/images/img-home-page/hatPirate.png" alt="Chapéu">
                         <p class="nivel">1</p>
                     </div>
                 </div>
@@ -24,18 +24,18 @@
 
             <div class="item-coin">
 
-                <div class="icon-plus" (click)="openTab('moedas'); fnOpen('shop');">
-                    <img src="../../assets/images/img-home-page/pluscoins.png" alt="">
+                <div class="icon-plus" (click)="openTab('moedas'); fnOpen('shop', 'moedas');">
+                    <img src="assets/images/img-home-page/pluscoins.png" alt="">
                 </div>
                 <div class="item-coin-status">
                     <!-- <div></div> -->
                     <p id="principalCoinsValue">{{this.userData?.moeda}}</p>
                 </div>
                 <div class="icon-coin">
-                    <img src="../../assets/images/img-home-page/coin.png" alt="">
+                    <img src="assets/images/img-home-page/coin.png" alt="">
                 </div>
             </div>
-            <div class="item-diamond" (click)="openTab('diamonds'); fnOpen('shop');">
+            <div class="item-diamond" (click)="openTab('diamonds'); fnOpen('shop', 'diamonds');">
 
                 <div class="icon-plus">
                     <img src="../../assets/images/img-home-page/pluscoins.png" alt="">
@@ -87,19 +87,21 @@
 
                 <div class="rank-classifications">
 
-                    <div class="rank-item">
+                    <div class="rank-item" *ngFor="let user of listUsers">
+                       <div class="all-itens">
                         <div class="item-position">
                             <p>1</p>
                         </div>
                         <div class="item-avatar">
                             <!-- <div class="user-avatar"> -->
-                            <img src="../../assets/images/img-home-page/pirata1.png" alt="">
+                            <img [src]="fnFindImgAvatar(user.idTema)" alt="">
                             <!-- </div> -->
                         </div>
                         <div class="item-name">
-                            <p>UserName</p>
+                            <p>{{user.nome}}</p>
 
                         </div>
+                       </div>
                         <div class="item-trofeus">
                             <div class="item-trofeu-status">
 
@@ -107,152 +109,12 @@
                                 <div class="item-trofeu-icon">
                                     <img src="../../assets/images/img-home-page/trofeu.png">
                                 </div>
-                                <p>500</p>
+                                <p>{{user.vitorias}}</p>
 
 
                             </div>
                         </div>
                     </div>
-
-                    <div class="rank-item">
-                        <div class="item-position">
-                            <p>2</p>
-                        </div>
-                        <div class="item-avatar">
-                            <!-- <div class="user-avatar"> -->
-                            <img src="../../assets/images/img-home-page/pirata1.png" alt="">
-                            <!-- </div> -->
-                        </div>
-                        <div class="item-name">
-                            <p>UserName</p>
-
-                        </div>
-                        <div class="item-trofeus">
-                            <div class="item-trofeu-status">
-
-
-                                <div class="item-trofeu-icon">
-                                    <img src="../../assets/images/img-home-page/trofeu.png">
-                                </div>
-                                <p>51</p>
-
-
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="rank-item">
-                        <div class="item-position">
-                            <p>3</p>
-                        </div>
-                        <div class="item-avatar">
-                            <!-- <div class="user-avatar"> -->
-                            <img src="../../assets/images/img-home-page/pirata1.png" alt="">
-                            <!-- </div> -->
-                        </div>
-                        <div class="item-name">
-                            <p>UserName</p>
-
-                        </div>
-                        <div class="item-trofeus">
-                            <div class="item-trofeu-status">
-
-
-                                <div class="item-trofeu-icon">
-                                    <img src="../../assets/images/img-home-page/trofeu.png">
-                                </div>
-                                <p>10</p>
-
-
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="rank-item">
-                        <div class="item-position">
-                            <p>4</p>
-                        </div>
-                        <div class="item-avatar">
-                            <!-- <div class="user-avatar"> -->
-                            <img src="../../assets/images/img-home-page/pirata1.png" alt="">
-                            <!-- </div> -->
-                        </div>
-                        <div class="item-name">
-                            <p>UserName</p>
-
-                        </div>
-                        <div class="item-trofeus">
-                            <div class="item-trofeu-status">
-
-
-                                <div class="item-trofeu-icon">
-                                    <img src="../../assets/images/img-home-page/trofeu.png">
-                                </div>
-                                <p>5</p>
-
-
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="rank-item">
-                        <div class="item-position">
-                            <p>4</p>
-                        </div>
-                        <div class="item-avatar">
-                            <!-- <div class="user-avatar"> -->
-                            <img src="../../assets/images/img-home-page/pirata1.png" alt="">
-                            <!-- </div> -->
-                        </div>
-                        <div class="item-name">
-                            <p>UserName</p>
-
-                        </div>
-                        <div class="item-trofeus">
-                            <div class="item-trofeu-status">
-
-
-                                <div class="item-trofeu-icon">
-                                    <img src="../../assets/images/img-home-page/trofeu.png">
-                                </div>
-                                <p>5</p>
-
-
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="rank-item">
-                        <div class="item-position">
-                            <p>4</p>
-                        </div>
-                        <div class="item-avatar">
-                            <!-- <div class="user-avatar"> -->
-                            <img src="../../assets/images/img-home-page/pirata1.png" alt="">
-                            <!-- </div> -->
-                        </div>
-                        <div class="item-name">
-                            <p>UserName</p>
-
-                        </div>
-                        <div class="item-trofeus">
-                            <div class="item-trofeu-status">
-
-
-                                <div class="item-trofeu-icon">
-                                    <img src="../../assets/images/img-home-page/trofeu.png">
-                                </div>
-                                <p>5</p>
-
-
-                            </div>
-                        </div>
-                    </div>
-
-
-
 
                 </div>
             </div>
@@ -292,7 +154,7 @@
     </div>
 </div>
   
-<!-- <embed #audioPlayer src="../../assets/audios/SomHomePage.mp3" loop="true" hidden="true" autostart="true"> -->
+<embed #audioPlayer src="../../assets/audios/SomHomePage.mp3" loop="true" hidden="true" autostart="true">
 
 <div class="popups" [class.popup--visible]="open === true"> <!-- [ngClass]="open? 'popup--visible': ''"-->
     <div class="bg-popups">
@@ -327,10 +189,11 @@
 
                                 <div class="content-icon">
                                     <div class="profile">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                                        <!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
                                             <path
                                                 d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
-                                        </svg>
+                                        </svg> -->
+                                        <img [src]="this.imgAvatarSelecionado" alt="">
                                     </div>
                                 </div>
 
@@ -512,9 +375,6 @@
                         </div>
                     </div>
 
-
-
-
                 </div>
 
 
@@ -553,6 +413,7 @@
 
                         <div class="invent-item" (click)="fnSelectUseItem(pacote.temaId, 0, 0)" [class.selected]="userData?.idTema === pacote.temaId">
                             <!-- <h3>100 diamantes</h3> (click)="fnSelectedClothe(item)" [class.selected]="oAvatar[guias.seletor] === item.titulo"-->
+                            <p>{{pacote.nomeTema}}</p>  
                             <div class="item-img" >
                                 <div>
                                     <img [src]="pacote.fundoBase64" alt="">
@@ -569,6 +430,8 @@
 
                         <div class="invent-item" (click)="fnSelectUseItem(0, pacote.temaId, 0)" [class.selected]="userData?.idAvatar === pacote.temaId">
                             <!-- <h3>100 diamantes</h3> (click)="fnSelectedClothe(item)" [class.selected]="oAvatar[guias.seletor] === item.titulo"-->
+                            <p>{{pacote.nomeAvatar}}</p>  
+                            
                             <div class="item-img" >
                                 <div>
                                     <img [src]="pacote.avatarBase64" alt="">
@@ -585,6 +448,8 @@
 
                         <div class="invent-item" (click)="fnSelectUseItem(0, 0, pacote.temaId)" [class.selected]="userData?.idEmbarcacao === pacote.temaId">
                             <!-- <h3>100 diamantes</h3> (click)="fnSelectedClothe(item)" [class.selected]="oAvatar[guias.seletor] === item.titulo"-->
+                            <p>{{pacote.nomeEmbarcacoes}} jdjas saidhas dsj jdsjdha</p>  
+                            
                             <div class="item-img" >
                                 <div>
                                     <img id="bc1i" [src]="pacote?.barco1Base64" alt="">
@@ -615,6 +480,7 @@
 
                         <div class="invent-item" (click)="fnSelectUseItem(0, pacote.temaId, 0)" *ngFor="let pacote of meusPacotes" [class.selected]="userData?.idAvatar === pacote.temaId">
                             <!-- <h3>100 diamantes</h3> [class.selected]="oAvatar[guia.seletor] === item.titulo" *ngIf="guia.seletor === item.categoria"(click)="fnSelectedClothe(item)"-->
+                            <p>{{pacote.nomeAvatar}}</p> 
                             <div class="item-img" >
                                 <div>
                                     <img [src]="pacote.avatarBase64" alt="">
@@ -633,6 +499,7 @@
                     <ng-container *ngIf="guia.titulo === 'Tema'">
                         <div class="invent-item" (click)="fnSelectUseItem(pacote.temaId, 0, 0)" *ngFor="let pacote of meusPacotes" [class.selected]="userData?.idTema === pacote.temaId">
                             <!-- <h3>100 diamantes</h3> [class.selected]="oAvatar[guia.seletor] === item.titulo" *ngIf="guia.seletor === item.categoria"(click)="fnSelectedClothe(item)"-->
+                            <p>{{pacote.nomeTema}}</p> 
                             <div class="item-img" >
                                 <div>
                                     <img [src]="pacote.fundoBase64" alt="">
@@ -651,6 +518,7 @@
                     <ng-container *ngIf="guia.titulo === 'Embarcações'" >
                         <div class="invent-item" (click)="fnSelectUseItem(0, 0, pacote.temaId)" *ngFor="let pacote of meusPacotes" [class.selected]="userData?.idEmbarcacao === pacote.temaId">
                             <!-- <h3>100 diamantes</h3> [class.selected]="oAvatar[guia.seletor] === item.titulo" *ngIf="guia.seletor === item.categoria"(click)="fnSelectedClothe(item)"-->
+                            <p>{{pacote.nomeEmbarcacoes}}</p> 
                             <div class="item-img" >
                                 <div>
                                     <img id="bc1i" [src]="pacote?.barco1Base64" alt="">

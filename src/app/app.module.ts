@@ -11,8 +11,6 @@ import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HomePageComponent } from './home-page/home-page.component';
 import { HttpClientModule } from '@angular/common/http';
-import { DressUpComponent } from './dress-up/dress-up.component';
-import { DressUpAvatarComponent } from './dress-up-avatar/dress-up-avatar.component';
 import { TelaAdminComponent } from './tela-admin/tela-admin.component';
 import { NgxCurrencyDirective } from "ngx-currency";
 import { TelaAdminiComponent } from './tela-admini/tela-admini.component';
@@ -29,11 +27,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {MatSelectModule} from '@angular/material/select';
 
 import { DragDropModule } from "@angular/cdk/drag-drop";
-import { ShipComponent } from './ship/ship.component';
-import { TelaCarregamentoComponent } from './tela-carregamento/tela-carregamento.component';
 import { TelaPreComponent } from './tela-pre/tela-pre.component';
 import { TelaPartidaComponent } from './tela-partida/tela-partida.component';
-import { XpComponent } from './xp/xp.component';
 
 @NgModule({
   declarations: [
@@ -43,16 +38,11 @@ import { XpComponent } from './xp/xp.component';
     TelaLoginComponent,
     TelaCadastroComponent,
     HomePageComponent,
-    DressUpComponent,
-    DressUpAvatarComponent,
     TelaAdminComponent,
     TelaAdminiComponent,
     CadastroPacoteComponent,
-    ShipComponent,
-    TelaCarregamentoComponent,
     TelaPreComponent,
-    TelaPartidaComponent,
-    XpComponent,
+    TelaPartidaComponent
     
   ],
   imports: [

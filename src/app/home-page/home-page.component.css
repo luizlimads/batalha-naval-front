@@ -472,6 +472,10 @@ p {
     align-items: center;
 }
 
+.all-itens{
+    display: flex;
+    flex: 3;
+}
 /* .item-avatar, */
 .item-position,
 .item-name,
@@ -520,6 +524,7 @@ p {
     /* background-color: rgb(191, 255, 0); */
     -webkit-text-stroke-width: 0;
     -webkit-text-stroke-color: #262626;
+    position: relative;
 }
 
 
@@ -550,6 +555,7 @@ p {
 .item-trofeu-icon img {
     max-width: 50%;
     width: 30px;
+    margin-top: -21px;
 
 }
 
@@ -824,7 +830,7 @@ p {
     background-color: #cda15e;
     /*#BFB28F;/*#EDBD77;*/
     padding: 10px;
-    color: rgb(219, 219, 219);
+    color: rgb(236, 236, 236);
     /* Use flex: 1 para preencher o espaço disponível */
     /* flex: 1; */
 
@@ -930,13 +936,17 @@ p {
     margin: auto;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: start;
     width: 190px;
     height: 190px;
     background-color: #84510a;
     border-radius: 50%;
+    overflow: hidden;
 }
 
+.popup-conf .profile img{
+    width: 100%;
+}
 .popup-conf .profile svg {
     fill: white;
     width: 140px;
@@ -954,8 +964,6 @@ p {
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
-
-    
 } 
 
 .popup-conf .content-infos div p,
@@ -1484,6 +1492,35 @@ p {
     cursor: pointer;
     transition: .2s ease;
     position: relative;
+}
+
+
+.invent-item p{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 100000;
+    height: auto;
+    width: 100%;
+    max-width: 80%;
+    transform: translate(-50%, -50%);
+    font-size: clamp(0.5em, 1.5vw, .6em);
+
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-align: center;
+    opacity: 0;
+    /* Inicia invisível */
+    transition: opacity 0.3s ease;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    top: 13px;
+    overflow: hidden;
+}
+
+.invent-item:hover p{
+    opacity: 1;
 }
 
 .select-use-item{

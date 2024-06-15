@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild, ViewRef } from '@angular/core';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit, Renderer2, ViewChild, ViewRef } from '@angular/core';
 import { BatalhaNavalService } from '../batalha-naval.service';
 import { finalize, pipe, tap } from 'rxjs';
 import { Router } from '@angular/router';
@@ -11,7 +11,7 @@ import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css'
 })
-export class HomePageComponent implements OnInit {
+export class HomePageComponent implements OnInit, OnDestroy {
   dataCategorias: any[] = [];
   dataItens: any[] = [];
   userData: any = null;
@@ -27,11 +27,12 @@ export class HomePageComponent implements OnInit {
 
   compraAtual: any; //vai dizer se estou comprando moeda ou diamantes, é um objeto que tem valor e o preco
 
-  somHomePopup: HTMLAudioElement;
-  somMenu: HTMLAudioElement;
-  somBtn: HTMLAudioElement;
-  somHomePage: HTMLAudioElement;
-  somCoin: HTMLAudioElement;
+  somMenu = new Audio();
+  somBtn = new Audio();
+  somHomePage = new Audio();
+  somHomePopup = new Audio();
+  somCoin = new Audio();
+  somEntraLoadingPre = new Audio();
 
   clotheSelected: any;
   activeTab: string = 'pacotes'; // A guia ativa do shop
@@ -41,7 +42,6 @@ export class HomePageComponent implements OnInit {
 
   guiasInvent: any[];
 
-  infoUser: any;
 
   usuarioLogadoId: any;
 
@@ -56,17 +56,13 @@ export class HomePageComponent implements OnInit {
   pontos = 0;
   icon = `<svg xmlns="http://www.w3.org/2000/svg" style="width: 22px; fill: green;" viewBox="0 0 16 16"><path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z" /></svg>`
 
-  constructor(private service: BatalhaNavalService, private router: Router, private renderer: Renderer2, private _snackBar: MatSnackBar) {
-    this.somMenu = new Audio();
-    this.somBtn = new Audio();
-    this.somHomePage = new Audio();
-    this.somHomePopup = new Audio();
-    this.somCoin = new Audio();
+  constructor(private service: BatalhaNavalService, private router: Router, private renderer: Renderer2) {
     this.somBtn.src = "../../assets/audios/sombtnbatalhar.wav";
     this.somHomePage.src = "../../assets/audios/SomHomePage.mp3";
     this.somHomePopup.src = "../../assets/audios/openpopup.mp3";
     this.somMenu.src = "../../assets/audios/somselecao.wav";
     this.somCoin.src = "../../assets/audios/somMoeda.mp3";
+    this.somEntraLoadingPre.src = "../../assets/audios/somEntraLoadingPre.mp3"
 
     this.itensCoins = [
       { titulo: '1.000 Moedas', img: '../../assets/images/img-home-page/pctC1.png', preco: '100', valor: '1000' },
@@ -79,34 +75,64 @@ export class HomePageComponent implements OnInit {
       { titulo: '1.000 Diamantes', img: '../../assets/images/img-home-page/pctD3.png', preco: '10000', valor: '1000' }
     ];
 
-    // console.log(this.itensPacote)
-
-    this.infoUser = { nome: 'teste', moedas: 1000, diamantes: 10000 }
-
 
     this.guiasInvent = [
       { titulo: 'Avatar', seletor: '1' },
       { titulo: 'Tema', seletor: '2' },
-      { titulo: 'Embarcações', seletor: '3'},
+      { titulo: 'Embarcações', seletor: '3' },
     ];
 
     this.hasUserSessionId();
   }
 
   ngOnInit(): void {
+    this.fnMusicHomePage();
     this.activeTab = 'moedas';
     this.activeTabInvent = 'todos';
 
     this.getPacotes();
+  }
 
-
-
-    this.fnMusicHomePage();
+  ngOnDestroy() {
+    // destroy audio here
+    if (this.somHomePage) {
+      this.somHomePage.pause();
+      this.somHomePage = null!;
+    }
 
   }
 
+  ngAfterViewInit() {
+    this.cancelClick = this.renderer.listen(document, 'click', this.FirstClick.bind(this));
+  }
+
+  private cancelClick!: Function;
+  @ViewChild('audioPlayer', { static: false }) audioPlayerRef!: ElementRef;
+  FirstClick() {
+    this.fnRemoveAudioEmbed();
+    this.cancelClick(); //tira o evento click do document
+  }
+
+  //função que remove a musica do fundo que ta no embed, criei separado pois vou chamar novamente quando user sair dessa tela
+  fnRemoveAudioEmbed() {
+    //remove a tag de audio embed e chama a função de audio homePage
+    if (this.audioPlayerRef && this.audioPlayerRef.nativeElement) {
+      const audioPlayer = this.audioPlayerRef.nativeElement;
+      // Remove o ouvinte de evento após o primeiro movimento do mouse
+      this.renderer.removeChild(audioPlayer.parentNode, audioPlayer);
+      this.fnMusicHomePage();
+
+      // Reproduz a música apenas após o primeiro movimento do mouse
+    } else {
+      console.error('audioPlayerRef or nativeElement is undefined');
+    }
+
+  }
+
+
   fnSomBtn() {
     this.somBtn.volume = this.sliderValueSound / 100;
+    this.somBtn.load();
     this.somBtn.play().catch((error) => {
       // console.log('Error attempting to play the video:', error);
     });
@@ -114,6 +140,7 @@ export class HomePageComponent implements OnInit {
 
   fnSomCoin() {
     this.somCoin.volume = this.sliderValueSound / 100;
+    this.somCoin.load();
     this.somCoin.play().catch((error) => {
       // console.log('Error attempting to play the video:', error);
     });
@@ -121,6 +148,7 @@ export class HomePageComponent implements OnInit {
 
   fnSomMenu() {
     this.somMenu.volume = this.sliderValueSound / 100;
+    this.somMenu.load();
     this.somMenu.play().catch((error) => {
       // console.log('Error attempting to play the video:', error);
     }); // Inicia a reprodução do novo arquivo
@@ -128,6 +156,7 @@ export class HomePageComponent implements OnInit {
 
   fnSomHomePopup() {
     this.somHomePopup.volume = this.sliderValueSound / 100;
+    this.somHomePopup.load();
     this.somHomePopup.play().catch((error) => {
       // console.log('Error attempting to play the video:', error);
     });
@@ -135,17 +164,26 @@ export class HomePageComponent implements OnInit {
 
   fnMusicHomePage() {
     this.somHomePage.volume = this.sliderValueMusic / 100;
+    this.somHomePage.load();
     this.somHomePage.play().catch((error) => {
       console.log('Error attempting to play the video:', error);
+    });
+
+  }
+
+  fnSomLoadingPre() {
+    this.somEntraLoadingPre.volume = this.sliderValueSound / 100;
+    this.somEntraLoadingPre.load();
+    this.somEntraLoadingPre.play().catch((error) => {
+      // console.log('Error attempting to play the video:', error);
     });
   }
 
   fnConfirmOpenModalConfirm(preco: any, valor: any, type: any, tituloPacote = '', idPacote: any = null) {
 
-    console.log(preco, type, this.userData.moeda)
+    // console.log(preco, type, this.userData.moeda)
     if (type === "Diamante") {
       if (parseFloat(this.userData.diamante) < parseFloat(preco)) {
-        console.log("entre")
 
         this.fnMsg("Saldo insuficiente")
         return;
@@ -198,7 +236,7 @@ export class HomePageComponent implements OnInit {
       }
     })
 
-    console.log(this.pacoteSelected)
+    // console.log(this.pacoteSelected)
 
   }
 
@@ -249,44 +287,107 @@ export class HomePageComponent implements OnInit {
     }
   }
 
-  fnBuyMoeda(preco: any, valor: any) {
-    // faz a atualização no banco, adiciona moeda no campo moeda da tabela
 
+  async fnBuyMoeda(preco: any, valor: any) {
     let valorAtual = this.userData.moeda;
-    this.userData.diamante -= parseFloat(preco);
-    (document.getElementById("principalDiamondValue") as HTMLElement).innerHTML = this.formatarValor(this.userData.diamante);
+    let valorNovoM = valorAtual + parseInt(valor);
+    let valorNovoD = this.userData.diamante - parseInt(preco);
 
+    let resultMoeda = await this.fnUpdateMoeda(valorNovoM);
+    if (resultMoeda) {
+      let resultDiamante = await this.fnUpdateDiamante(valorNovoD);
 
-    this.userData.moeda += parseFloat(valor);
-    this.myCalculator("principalCoinsValue", valorAtual, parseFloat(valor));
+      if (resultDiamante) {
+        (document.getElementById("principalDiamondValue") as HTMLElement).innerHTML = this.formatarValor(valorNovoD);
 
-    this.fnModalConfirm();
+        this.myCalculator("principalCoinsValue", valorAtual, parseInt(valor));
 
-    this.open = false;
+        this.userData.diamante = valorNovoD;
+        this.userData.moeda = valorNovoM;
 
+        this.fnModalConfirm();
 
+        this.open = false;
+      }
+    }
   }
 
-  fnBuyDiamante(preco: any, valor: any) {
 
-    // faz a atualização no banco, adiciona moeda no campo moeda da tabela
+  async fnBuyDiamante(preco: any, valor: any) {
 
-    let result = true
+    let valorAtual = this.userData.diamante;
+    let valorNovoD = valorAtual + parseInt(valor);
+    let valorNovoM = this.userData.moeda - parseInt(preco);
 
-    if (result) {
+    let resultDiamante = await this.fnUpdateDiamante(valorNovoD);
+    if (resultDiamante) {
+      let resultMoeda = await this.fnUpdateMoeda(valorNovoM);
 
-      let valorAtual = this.userData.diamante;
-      this.userData.moeda -= parseFloat(preco);
-      (document.getElementById("principalCoinsValue") as HTMLElement).innerHTML = this.formatarValor(this.userData.moeda);
+      if (resultMoeda) {
+        (document.getElementById("principalCoinsValue") as HTMLElement).innerHTML = this.formatarValor(valorNovoM);
 
-      this.userData.diamante += parseFloat(valor);
-      this.myCalculator("principalDiamondValue", valorAtual, parseFloat(valor));
-      this.fnModalConfirm();
+        this.myCalculator("principalDiamondValue", valorAtual, parseInt(valor));
 
-      this.open = false;
+        this.userData.diamante = valorNovoD;
+        this.userData.moeda = valorNovoM;
+
+        this.fnModalConfirm();
+
+        this.open = false;
+      }
     }
 
   }
+
+  async fnUpdateMoeda(valor: any): Promise<boolean> {
+    let result = false;
+    const formData = new FormData();
+
+    formData.append("valorMoeda", valor.toString());
+
+    try {
+      const res: any = await this.service.updateMoeda(this.usuarioLogadoId, formData).toPromise();
+      if (res) {
+        // this.fnMsg(res.mensagem, 'success')
+        // this.open = false;
+        result = true;
+      } else {
+        this.fnMsg(res.mensagem);
+        result = false;
+      }
+    } catch (error) {
+      console.error("Erro ao atualizar moeda:", error);
+      this.fnMsg("Erro ao atualizar moeda");
+      result = false;
+    }
+
+    return result;
+  }
+
+  async fnUpdateDiamante(valor: any): Promise<boolean> {
+    let result = false;
+
+    const formData = new FormData();
+    formData.append("valorDiamante", valor.toString());
+
+    try {
+      const res: any = await this.service.updateDiamante(this.usuarioLogadoId, formData).toPromise();
+      if (res) {
+        result = true;
+      } else {
+        this.fnMsg(res.mensagem);
+        result = false;
+      }
+    } catch (error) {
+      console.error("Erro ao atualizar diamante:", error);
+      this.fnMsg("Erro ao atualizar diamante");
+      result = false;
+    }
+
+    return result;
+  }
+
+
 
   myCalculator(id: any, start: any, end: any) {
     var duration = 1000;
@@ -337,6 +438,8 @@ export class HomePageComponent implements OnInit {
     ).subscribe()
   }
 
+
+
   imgTemaSelecionado: any = {};
   imgAvatarSelecionado: any = {};
   imgEmbarcacoesSelecionado: any = [];
@@ -370,8 +473,11 @@ export class HomePageComponent implements OnInit {
     ).subscribe();
   }
 
+
+
   fnCarregar() {
-    this.router.navigate(['carr'])
+    this.fnSomLoadingPre();
+    this.router.navigate(['/pre'])
   }
 
   hasUserSessionId() {
@@ -381,6 +487,7 @@ export class HomePageComponent implements OnInit {
       this.router.navigate(['login'])
     } else {
       this.getUser(this.usuarioLogadoId);
+      this.getAllUsers();
     }
 
   }
@@ -389,8 +496,8 @@ export class HomePageComponent implements OnInit {
     this.service.getUser(usuarioLogadoId).pipe(
       tap((res: any) => {
         this.userData = res
-        this.sliderValueMusic = this.userData.volumeMusica * 100;
-        this.sliderValueSound = this.userData.volumeSom * 100;
+        this.sliderValueMusic = this.userData.volumeMusica;
+        this.sliderValueSound = this.userData.volumeSom;
         console.log(res)
         this.fnXP();
         this.fnGetUserPacotes();
@@ -419,15 +526,26 @@ export class HomePageComponent implements OnInit {
       volumeM.value = this.sliderValueMusic.toString();
     }
 
-    this.fnMusicHomePage();
+    this.somHomePage.volume = this.sliderValueMusic / 100
   }
 
   fnSalvaConfSounds() {
-    console.log(this.sliderValueMusic, this.sliderValueSound)
-    this.fnMsg("Alterações salvas com sucesso", "success")
-    //this.sliderValueMusic / 100
-    //this.sliderValueSound / 100
-    this.open = false;
+    // console.log(this.sliderValueMusic.toString, this.sliderValueSound.toString)
+
+    const formData = new FormData();
+
+    formData.append("volumeSom", this.sliderValueSound.toString());
+    formData.append("volumeMusica", this.sliderValueMusic.toString());
+
+    this.service.updateVolumeUser(parseInt(this.userData.id), formData).pipe(
+      tap((res: any) => {
+        // console.log(res)
+        if (res) {
+          this.fnMsg("Alterações salvas com sucesso", "success")
+          this.open = false;
+        }
+      })
+    ).subscribe();
   }
 
   fnSelectUseItem(temaId: any, avatarId: any, embarcacaoId: any) {
@@ -439,7 +557,7 @@ export class HomePageComponent implements OnInit {
 
     this.service.updateUserTemaId(parseInt(this.usuarioLogadoId), formData).pipe(
       tap((res: any) => {
-        console.log(res)
+        // console.log(res)
         if (res) {
           this.getUser(this.usuarioLogadoId);
           this.fnGetUserPacotes();
@@ -454,7 +572,7 @@ export class HomePageComponent implements OnInit {
     scroll(0, 0);
     let name = document.getElementById("nomeUser") as HTMLElement;
 
-    console.log(name.innerHTML);
+    // console.log(name.innerHTML);
 
     (document.getElementById("divName") as HTMLElement).style.display = "none";
     (document.getElementById("divAlter") as HTMLElement).style.display = "flex";
@@ -474,9 +592,19 @@ export class HomePageComponent implements OnInit {
     if (txtNome.value === this.userData.nome && txtNome.value === "") {
       this.fnMsg("Nome inválido.");
     } else {
-      alert("alterado o nome");
-      this.userData.nome = txtNome.value;
-      this.fnFechaAlterNome();
+      const formData = new FormData();
+
+      formData.append("novoNome", txtNome.value);
+
+      this.service.updateNameUser(parseInt(this.userData.id), formData).pipe(
+        tap((res: any) => {
+          if (res) {
+            this.fnMsg("Nome alterado com sucesso", "success")
+            this.userData.nome = txtNome.value;
+            this.fnFechaAlterNome();
+          }
+        })
+      ).subscribe();
     }
 
     // faça a alteração nome
@@ -508,15 +636,27 @@ export class HomePageComponent implements OnInit {
       }, 3000);
 
     } else {
-      alert("foi")
-      this.open = false;
-      this.pontos = 0;
-      oldPass.value = "";
-      newPass.value = "";
-      confirm.value = "";
+      const formData = new FormData();
 
-      // fnReqSenhaUsuario()
-      // SALVA A SENHA
+      formData.append("novaSenha", newPass.value);
+
+      this.service.updateSenhaUser(parseInt(this.userData.id), formData).pipe(
+        tap((res: any) => {
+          if (res) {
+            this.fnMsg("Senha alterada com sucesso", "success")
+            this.userData.senha = newPass.value;
+            this.open = false;
+            this.pontos = 0;
+            this.larguraFraca = 0;
+            this.larguraMedia = 0;
+            this.larguraForte = 0;
+            oldPass.value = "";
+            newPass.value = "";
+            confirm.value = "";
+          }
+        })
+      ).subscribe();
+
     }
   }
 
@@ -638,6 +778,29 @@ export class HomePageComponent implements OnInit {
     this.service.getPacotes().pipe(
       tap((res: any) => {
         this.itensPacotes = res
+        console.log(res)
+      })
+    ).subscribe();
+  }
+
+  fnFindImgAvatar(idTema: any) {
+    let url = '';
+
+    this.itensPacotes.find(pacote => {
+      if (pacote.temaId === idTema) {
+        url = pacote.avatarBase64;
+      }
+    })
+
+    return url;
+  }
+
+  listUsers: any;
+  getAllUsers() {
+    this.service.getAllUsers().pipe(
+      tap((res: any) => {
+        this.listUsers = res;
+        // console.log(res);
       })
     ).subscribe();
   }
@@ -667,10 +830,10 @@ export class HomePageComponent implements OnInit {
     this.open = false;
   }
 
-  fnOpen(namePopup: string) {
+  fnOpen(namePopup: string, guia: any = null) {
     this.ActivePctInfo = false; //fechar div de info dos pacotes
     this.activeTabConf = 'perfil'; // a guia ativa das confs
-    this.activeTab = 'pacotes'; // A guia ativa do shop
+    this.activeTab = guia === null ? 'pacotes' : guia; // A guia ativa do shop
     this.activeTabInvent = 'todos'; // guia ativa do inventario
     this.fnSomHomePopup();
     this.open = !this.open;
@@ -686,7 +849,7 @@ export class HomePageComponent implements OnInit {
   }
 
   formatarValor(valor: any): string {
-    console.log('Valor recebido:', valor);
+    // console.log('Valor recebido:', valor);
     valor = parseFloat(valor);
 
     return valor.toLocaleString('pt-BR');
@@ -712,7 +875,7 @@ export class HomePageComponent implements OnInit {
 
     let relacao = (xp - soma_anterior) / (xp_prox) * 100;
 
-    console.log(relacao);
+    // console.log(relacao);
     (document.querySelector(".status-xp") as HTMLElement).style.width = `${relacao}%`;
     (document.querySelector(".relacao-xp") as HTMLElement).innerHTML = `${xp - soma_anterior}/${xp_prox}`;
     (document.querySelector(".nivel") as HTMLElement).innerHTML = `${nivel}`;

@@ -37,6 +37,10 @@ export class TelaCadastroComponent {
     this.hasUserSessionId();
   }  
 
+  onKeydown(event: any) {
+    console.log(event);
+  }
+
   hasUserSessionId() {
     var usuarioLogadoId = sessionStorage.getItem('userId');
 
@@ -95,18 +99,27 @@ export class TelaCadastroComponent {
   }
 
   fnValidate() {
+    let passDica = document.querySelector('.pass-dica') as HTMLElement;
+
     if (this.form.invalid || this.password === null) {
-      alert('Por favor, preencha todos os campos obrigatórios antes de prosseguir.');
+      this.fnMsg('Por favor, preencha todos os campos obrigatórios antes de prosseguir.');
       return false;
     }
 
     if (this.pontos < 25) {
-      alert('Senha não é forte o suficiente!')
+      this.fnMsg('Senha não é forte o suficiente!')
+      this.fnDica()
+
+      passDica.classList.add("treme")
+      setTimeout(() => {
+        this.fnDica()
+        passDica.classList.remove("treme")
+      }, 3000);
       return false;
     }
 
     if (this.password !== this.form.get('senha')?.value) {
-      alert('Senhas não conferem.')
+      this.fnMsg('Senhas não conferem.')
       return false;
     }
 
@@ -206,13 +219,13 @@ export class TelaCadastroComponent {
       msgErro.classList.add("success")
       setTimeout(function () {
         msgErro.classList.remove("success")
-      }, 5000); // A mensagem de erro desaparecerá após 5 segundos (5000 milissegundos)
+      }, 4000); // A mensagem de erro desaparecerá após 5 segundos (5000 milissegundos)
     } else {
       msgErro.classList.remove("success")
       msgErro.classList.add("error")
       setTimeout(function () {
         msgErro.classList.remove("error")
-      }, 5000); // A mensagem de erro desaparecerá após 5 segundos (5000 milissegundos)
+      }, 4000); // A mensagem de erro desaparecerá após 5 segundos (5000 milissegundos)
     }
   }
 }

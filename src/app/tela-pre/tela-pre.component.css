@@ -47,10 +47,21 @@
     text-align: center;
 }
 
+/* .buttons.c{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+} */
+
 .buttons svg {
     width: 20px;
     height: 20px;
     fill: rgb(233, 233, 233);
+}
+
+.buttons svg path{
+    /* stroke-width: 5; */
+
 }
 
 .buttons button {
@@ -499,4 +510,373 @@
     100% {
         opacity: 0
     }
+}
+
+
+/* CRONOMETRO */
+
+.cronometro {
+    padding: 5px;
+    background-image: url("../../assets/images/img-tela-pre/madeira.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 200px;
+    height: 50px;
+    margin: auto;
+    filter: drop-shadow(5px 5px 5px rgb(28, 27, 27));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cronometro,
+.cronometro span{
+    font-family: 'clash', Arial, Helvetica, sans-serif;
+    font-size: clamp(0.7em, 1.5vw, 1em);
+    color: #e3e3e3;
+    text-shadow: 2px 2px 2px black;
+
+}
+
+/* LOADING */
+
+.fundo-loading{
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #000000;
+    width: 100vw;
+    height: 100vh;
+}
+
+.bg-loading {
+    position: absolute;
+    /* z-index: 20000; */
+    top: 0;
+    left: 0;
+    background: #333333;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden !important; 
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url('../../assets/images/img-home-page/bgMadeira.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    /* position: relative; */
+    animation: expand 0.6s ease forwards;
+}
+
+.bg-loading::before {
+    content: '';
+    position: absolute;
+    /* z-index: 20000; */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.689);
+    pointer-events: none;
+    overflow: hidden;
+
+}
+
+@keyframes expand {
+    0% {
+        transform: translateX(1400px);
+    }
+
+    100% {
+        transform: translateX(0px);
+    }
+}
+
+@keyframes rotate-loading {
+    0% {
+        transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+    }
+}
+
+@-moz-keyframes rotate-loading {
+    0% {
+        transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+    }
+}
+
+@-webkit-keyframes rotate-loading {
+    0% {
+        transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+    }
+}
+
+@-o-keyframes rotate-loading {
+    0% {
+        transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+    }
+}
+
+@keyframes loading-text-opacity {
+    0% {
+        opacity: 0
+    }
+
+    20% {
+        opacity: 0
+    }
+
+    50% {
+        opacity: 1
+    }
+
+    100% {
+        opacity: 0
+    }
+}
+
+@-moz-keyframes loading-text-opacity {
+    0% {
+        opacity: 0
+    }
+
+    20% {
+        opacity: 0
+    }
+
+    50% {
+        opacity: 1
+    }
+
+    100% {
+        opacity: 0
+    }
+}
+
+@-webkit-keyframes loading-text-opacity {
+    0% {
+        opacity: 0
+    }
+
+    20% {
+        opacity: 0
+    }
+
+    50% {
+        opacity: 1
+    }
+
+    100% {
+        opacity: 0
+    }
+}
+
+@-o-keyframes loading-text-opacity {
+    0% {
+        opacity: 0
+    }
+
+    20% {
+        opacity: 0
+    }
+
+    50% {
+        opacity: 1
+    }
+
+    100% {
+        opacity: 0
+    }
+}
+
+.loading-container,
+.loading {
+    height: 100px;
+    position: relative;
+    width: 100px;
+    border-radius: 100%;
+}
+
+
+.loading-container {
+    margin: 40px auto
+}
+
+.loading {
+    border: 2px solid transparent;
+    border-color: transparent #fff transparent #FFF;
+    -moz-animation: rotate-loading 1.5s linear 0s infinite normal;
+    -moz-transform-origin: 50% 50%;
+    -o-animation: rotate-loading 1.5s linear 0s infinite normal;
+    -o-transform-origin: 50% 50%;
+    -webkit-animation: rotate-loading 1.5s linear 0s infinite normal;
+    -webkit-transform-origin: 50% 50%;
+    animation: rotate-loading 1.5s linear 0s infinite normal;
+    transform-origin: 50% 50%;
+}
+
+.loading-container:hover .loading {
+    border-color: transparent #E45635 transparent #E45635;
+}
+
+.loading-container:hover .loading,
+.loading-container .loading {
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -ms-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+}
+
+#loading-text {
+    -moz-animation: loading-text-opacity 2s linear 0s infinite normal;
+    -o-animation: loading-text-opacity 2s linear 0s infinite normal;
+    -webkit-animation: loading-text-opacity 2s linear 0s infinite normal;
+    animation: loading-text-opacity 2s linear 0s infinite normal;
+    color: #ffffff;
+    font-family: "Helvetica Neue, " Helvetica", " "arial";
+    font-size: 10px;
+    font-weight: bold;
+    margin-top: 45px;
+    opacity: 0;
+    position: absolute;
+    text-align: center;
+    text-transform: uppercase;
+    top: 0;
+    width: 100px;
+}
+
+
+.conf-sound-effects{
+    z-index: 1;
+    padding: 3px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    /* background-color: #2784B6; */
+}
+
+.conf-sound-effects > div{
+    display: flex;
+}
+.conf-sound-effects svg{
+    width: 32px;
+    cursor: pointer;
+    fill: #5c3908;
+    filter: drop-shadow(2px 2px 2px rgb(28, 27, 27));
+
+}
+
+.range-slider{
+    display: none;
+    transition: .2s ease;
+    padding: 7px 5px 8px 5px;
+}
+
+
+.range-slider:hover,
+.icons-som:hover + .range-slider{
+    display: block;
+    /* background-color: #2ecc71; */
+}
+
+.range-slider input[type="range"]{
+    filter: drop-shadow(2px 2px 2px rgb(28, 27, 27));
+
+    background: #623c06;
+    /* width: 100%; */
+    height: 8px;
+    outline: none;
+    -webkit-appearance: none;
+}
+.range-slider input[type="range"]::-webkit-slider-thumb{
+    background: #402b11;
+    width: 15px;
+    height: 20px;
+    border-radius: 10%;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out 0s;
+    -webkit-appearance: none;
+    appearance: none;
+}
+.range-slider input[type="range"]::-webkit-slider-thumb:hover,
+.range-slider input[type="range"]:active::-webkit-slider-thumb{
+    box-shadow: 0 0 5px #36240d;
+}
+
+.range-slider input[type="range"]::-moz-range-thumb:hover,
+.range-slider input[type="range"]:active::-moz-range-thumb{
+    box-shadow: 0 0 5px #36240d;
+}
+
+.range-slider .range-value{
+    filter: drop-shadow(2px 2px 2px rgb(28, 27, 27));
+
+    color: #fff;
+    background-color: #623c06;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    /* line-height: 38px; */
+    /* height: 38px; */
+    /* width: 50px; */
+    padding: 5px;
+    margin-left: 4px;
+}
+::-moz-range-track{
+    background: transparent;
+    border: 0;
+}
+::-moz-range-track{
+    background: transparent;
+    border: 0;
 }

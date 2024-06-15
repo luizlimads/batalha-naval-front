@@ -23,6 +23,10 @@ export class BatalhaNavalService {
     return this.http.get(`${this.urlBase}/usuarios/${userId}`);
   }
 
+  getAllUsers(){ //quero que retorne o base64 do user
+    return this.http.get(`${this.urlBase}/usuarios`);
+  }
+
   postPacote(formData: any) {
     return this.http.post(`${this.urlBase}/pacotes`, formData);
   }
@@ -55,11 +59,28 @@ export class BatalhaNavalService {
     return this.http.get(`${this.urlBase}/usuarios/${userId}/pacotes`);
   }
 
-  async getUserPacotesPre(userId: number): Promise<any> {
-    return this.http.get(`${this.urlBase}/usuarios/${userId}/pacotes`);
-  }
-
   updateUserTemaId(userId: number, formData: any){
     return this.http.put(`${this.urlBase}/usuarios/${userId}/alterar-ids-pacotes`, formData);
   }
+
+  updateNameUser(userId: number, formData: any){
+    return this.http.put(`${this.urlBase}/usuarios/${userId}/alterar-nome`, formData);
+  }
+
+  updateSenhaUser(userId: number, formData: any){
+    return this.http.put(`${this.urlBase}/usuarios/${userId}/alterar-senha`, formData);
+  }
+
+  updateVolumeUser(userId: number, formData: any){
+    return this.http.put(`${this.urlBase}/usuarios/${userId}/alterar-volume`, formData);
+  }
+
+  updateMoeda(userId: number, formData: any){
+    return this.http.put(`${this.urlBase}/usuarios/${userId}/update-moeda`, formData);
+  }
+
+  updateDiamante(userId: number, formData: any){
+    return this.http.put(`${this.urlBase}/usuarios/${userId}/update-diamante`, formData);
+  }
+
 }

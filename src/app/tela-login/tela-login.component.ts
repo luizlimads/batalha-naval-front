@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { BatalhaNavalService } from '../batalha-naval.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { tap } from 'rxjs';
 import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 import { Route, Router } from '@angular/router';
@@ -14,10 +14,10 @@ export class TelaLoginComponent {
 
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
-  
+
   form: FormGroup = this.fb.group({
-    login: [''],
-    senha: ['']
+    login: ['', Validators.required],
+    senha: ['', Validators.required]
   })
 
   constructor(private service: BatalhaNavalService, private fb: FormBuilder, private _snackBar: MatSnackBar, private router: Router) {
@@ -25,17 +25,24 @@ export class TelaLoginComponent {
   }
 
   login() {
-    this.service.login(this.form.value).pipe(
-      tap((res:any) => {
 
-        this.openSnackBar(res.mensagem);
-        
-        if(res.sucessoLogin){
-          sessionStorage.setItem('userId', res.usuarioId);
-          this.router.navigate(['/'])
-        }
-      })
-    ).subscribe();
+    if (this.form.valid === false) {
+      this.fnMsg("Preencha todos os campos antes de prosseguir!")
+    } else {
+      this.service.login(this.form.value).pipe(
+        tap((res: any) => {
+
+          if (res.sucessoLogin) {
+            this.fnMsg(res.mensagem);
+            sessionStorage.setItem('userId', res.usuarioId);
+            this.router.navigate(['/'])
+          } else {
+            this.fnMsg(res.mensagem);
+          }
+        })
+      ).subscribe();
+    }
+
   }
 
   fnGetEmail(e: any) {
@@ -44,7 +51,7 @@ export class TelaLoginComponent {
     })
   }
 
-  fnGetPassword(e: any)  {
+  fnGetPassword(e: any) {
     this.form.patchValue({
       senha: e
     })
@@ -63,7 +70,27 @@ export class TelaLoginComponent {
 
     if (usuarioLogadoId !== null) {
       this.router.navigate(['/'])
-    } 
+    }
+  }
+
+  fnMsg(msg: any, clss = "error") {
+    let msgErro = document.getElementById("msgAviso") as HTMLElement;
+
+    msgErro.innerHTML = msg
+
+    if (clss == "success") {
+      msgErro.classList.remove("error")
+      msgErro.classList.add("success")
+      setTimeout(function () {
+        msgErro.classList.remove("success")
+      }, 4000); // A mensagem de erro desaparecerá após 5 segundos (5000 milissegundos)
+    } else {
+      msgErro.classList.remove("success")
+      msgErro.classList.add("error")
+      setTimeout(function () {
+        msgErro.classList.remove("error")
+      }, 4000); // A mensagem de erro desaparecerá após 5 segundos (5000 milissegundos)
+    }
   }
 
 }

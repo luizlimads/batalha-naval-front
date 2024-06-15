@@ -1,11 +1,12 @@
+<h2 id="msgAviso"></h2>
 <div class="bg-container">
 
     <div class="form-login">
         <div class="logo">
-            <img src="../../assets/images/logo.png" alt="">
+            <img src="../../assets/images/log.png" alt="">
         </div>
         <div class="form-inputs">
-            <img src="../../assets/images/granada.png" alt="">
+            <img src="../../assets/images/img-tela-partida/mina.png" alt="">
             <div>
                 <div class="div-form-rtg">
                     <app-input [inputText]="'Login:'" [inputType]="'text'" [inputId]="'txtLogin'" (data)="fnGetEmail($event)"></app-input>
@@ -17,7 +18,7 @@
         </div>
 
         <div class="form-btn">
-            <app-button [btnText]="'Entrar!'" (click)="login()"></app-button>
+            <app-button [btnText]="'Entrar!'" (click)="login()" ></app-button>
         </div>
         <div class="form-link-register">
             <p>Não é cadastrado? <a href="/cadastro"> Registrar</a></p>

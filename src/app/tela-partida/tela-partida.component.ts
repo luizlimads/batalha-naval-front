@@ -1,5 +1,7 @@
 import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, tap } from 'rxjs';
+import { BatalhaNavalService } from '../batalha-naval.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tela-partida',
@@ -17,7 +19,9 @@ export class TelaPartidaComponent implements OnInit {
   somPopupLoser: HTMLAudioElement;
   somEmoji: HTMLAudioElement;
   somExplosao: HTMLAudioElement;
-  somFundo: HTMLAudioElement;
+  somFundo: HTMLAudioElement; // Valor inicial dos sons
+  sliderValueSound: any = 50;
+  sliderValueMusic: any = 50;
 
   openShadow = false;
   popup = '';
@@ -46,57 +50,95 @@ export class TelaPartidaComponent implements OnInit {
   sizeSpaceShip: any = 10 * (this.sizeTiles + 1);
   tabuleiroOp: any[] = [];
   myTabuleiro: any[] = [];
-
+  naviosOp!: any[];
   navios: any[];
 
   podeJogar: any = true;
-
   // meAutoAcertei: boolean;
 
 
-  constructor(private renderer: Renderer2) {
+  constructor(private renderer: Renderer2, private service: BatalhaNavalService, private router: Router) {
     this.somEmoji = new Audio();
     this.somPopupWin = new Audio();
     this.somPopupLoser = new Audio();
     this.somExplosao = new Audio();
     this.somFundo = new Audio();
-    this.somFundo.src = "../../assets/audios/somFundoPartidda.mp3";
+    this.somFundo.src = "../../assets/audios/somFundo2.mp3";
     this.somPopupWin.src = "../../assets/audios/somWin.mp3";
     this.somPopupLoser.src = "../../assets/audios/somLoser.mp3";
+
+
     // Crio um webSocket
 
 
     this.webSocket = new WebSocket('ws://localhost:8080/game');
+    this.webSocket.onopen = () => {
+      console.log('WebSocket connection opened');
+
+      this.myTabuleiro = JSON.parse(sessionStorage.getItem('tabuleiro')!);
+
+      // console.log("meuuu", this.myTabuleiro)
+
+      this.fnSendWebSocketsMeuTabuleiro();
+      this.fnDraw();
+      this.fnDrawOponente();
+
+    };
+
 
     // Adiciono o evento que vai ficar ouvindo esse webSocket
     this.webSocket.onmessage = (event) => {
       let msg = JSON.parse(event.data);
-      if (msg.emoji) {
+
+      if (msg.win === true) {
+        this.myTabuleiro = msg.tabuleiro1
+        this.fnFim("loser");
+      } else if (msg.tabuleiro) {
+        //tabuleiro do oponente
+        this.tabuleiroOp = msg.tabuleiro;
+       
+        console.log("tabu op", this.tabuleiroOp);
+      } else if (msg.emoji) {
         this.fnRecebeReacao(msg.emoji);
       } else {
 
-        this.myTabuleiro = msg.tabuleiroOp
+        
+        for(let i = 0; i < this.myTabuleiro.length; i++){
+          for(let j = 0; j < this.myTabuleiro.length; j++){
+            if(this.myTabuleiro[j][i] !== msg.tabuleiro1[j][i]){
+              if(msg.tabuleiro1[j][i] === 3){
+                (document.querySelector(".myCanvas") as HTMLElement).classList.add("treme")
+                setTimeout(() => {
+                  (document.querySelector(".myCanvas") as HTMLElement).classList.remove("treme")
+                }, 200);
+              }
+            }
+          }
+        }
+        //meu tabuleiro
+        this.myTabuleiro = msg.tabuleiro1
         this.podeJogar = msg.podeJogar;
-        // if(msg.coord){
-        // console.log("entreii")
-        // this.fnSendWebSocketsMsg(false, msg.coord);
-        this.tabuleiroOp = msg.myTabuleiro;
-        console.log(msg.myTabuleiro)
+        // this.naviosOp = msg.naviosOp;
+
+
+        // console.log(this.myTabuleiro)
+        // console.log(this.tabuleiroOp)
         // }
         if (this.podeJogar) {
-          console.log("Sua vez")
-          this.showNotification("Jogo", "Sua vez", "error");
-        } else {
-          console.log("Não é Sua vez")
+          this.fnPopVez("verde", "Sua vez")
 
-          this.showNotification("Jogo", "Esperando o outro jogador", "error");
+          console.log("Sua vez")
+          // this.showNotification("Jogo", "Sua vez", "error");
+        } else {
+          console.log("Esperando o outro jogador")
+          // this.showNotification("Jogo", "Esperando o outro jogador", "error");
 
         }
       }
 
-
-
     };
+
+
 
     this.navios = [
       {
@@ -449,12 +491,71 @@ export class TelaPartidaComponent implements OnInit {
       }
     ]
 
+
+
+  }
+
+  updateValueSound(value = -1) {
+    let volumeS = document.getElementById("soundVolumeInput") as HTMLInputElement;
+
+    if (value < 0)
+      this.sliderValueSound = parseInt(volumeS.value);
+    else {
+      this.sliderValueSound = value;
+      volumeS.value = this.sliderValueSound.toString();
+    }
+  }
+
+  updateValueMusic(value = -1) {
+    let volumeM = document.getElementById("musicVolumeInput") as HTMLInputElement;
+
+    if (value < 0)
+      this.sliderValueMusic = parseInt(volumeM.value);
+    else {
+      this.sliderValueMusic = value;
+      volumeM.value = this.sliderValueMusic.toString();
+    }
+
+    this.fnSomFundo();
+  }
+
+  fnPopVez(className: any, msg: any, removePop = false) {
+
+    let popup = document.querySelector(".popup-info") as HTMLElement;
+
+    if (removePop) {
+      popup.style.display = "none";
+    }
+    if (className === "amarelo") {
+      popup.classList.remove("verde");
+    } else {
+      popup.classList.remove("amarelo");
+    }
+
+    popup.classList.add(className);
+    (document.getElementById("msgVez") as HTMLElement).innerHTML = msg;
+
+
+  }
+
+  meusNavios: any = ''
+  imgNavios: any = '';
+
+
+  ngOnDestroy(): void {
+    if(this.somFundo) {
+      this.somFundo.pause();
+      this.somFundo = null!;
+    }
   }
 
 
   ngOnInit(): void {
     this.hasUserSessionId();
-    this.fnSomFundo();
+    this.meusNavios = sessionStorage.getItem('meusNavios');
+    this.meusNavios = JSON.parse(this.meusNavios);
+
+    this.fnCarregaImages();
 
     this.sizeWTabuleiro = this.myCanvas.nativeElement.width;
 
@@ -474,37 +575,39 @@ export class TelaPartidaComponent implements OnInit {
     }
 
     //PREENCHENDO O MEU TABULEIRO 
-    for (let i = 0; i < this.nTilesX; i++) {
-      this.myTabuleiro.push([])
-      for (let j = 0; j < this.nTilesY; j++) {
-        this.myTabuleiro[i].push(0);
+    // for (let i = 0; i < this.nTilesX; i++) {
+    //   this.myTabuleiro.push([])
+    //   for (let j = 0; j < this.nTilesY; j++) {
+    //     this.myTabuleiro[i].push(0);
 
-      }
-    }
+    //   }
+    // }
 
-    //COLOCANDO NAVIOS NO TABULEIRO DO OPONENTE
-    this.navios.forEach(navio => {
+    // COLOCANDO NAVIOS NO TABULEIRO DO OPONENTE
+    // this.navios.forEach((navio: any) => {
 
-      navio.tiles.forEach((tile: { i: number; j: number; }) => {
-        if (navio.tipo === 0)
-          this.tabuleiroOp[tile.j][tile.i - 10] = 1
-        else
-          this.tabuleiroOp[tile.j][tile.i - 10] = 5
+    //   navio.tiles.forEach((tile: { i: number; j: number; }) => {
+    //     if (navio.tipo === 0)
+    //       this.tabuleiroOp[tile.j][tile.i - 10] = 1
+    //     else
+    //       this.tabuleiroOp[tile.j][tile.i - 10] = 5
 
-      })
-    })
+    //   })
+    // })
 
     //COLOCANDO NAVIOS NO MEU TABULEIRO
-    this.navios.forEach(navio => {
+    // this.meusNavios.forEach((navio: any) => {
 
-      navio.tiles.forEach((tile: { i: number; j: number; }) => {
-        if (navio.tipo === 0)
-          this.myTabuleiro[tile.j][tile.i - 10] = 1
-        else
-          this.myTabuleiro[tile.j][tile.i - 10] = 5
+    //   navio.tiles.forEach((tile: { i: number; j: number; }) => {
+    //     if (navio.tipo === 0)
+    //       this.myTabuleiro[tile.j][tile.i - 10] = 1
+    //     else
+    //       this.myTabuleiro[tile.j][tile.i - 10] = 5
 
-      })
-    })
+    //   })
+    // })
+
+
 
     // console.log(this.myTabuleiro)
 
@@ -515,12 +618,12 @@ export class TelaPartidaComponent implements OnInit {
     const ctxOponente = cvsOponente.getContext('2d');
 
     if (myCtx) {
-      for (let i = 0; i <= 270; i += 90) {
-        var img = new Image();
-        img.src = `../../assets/img/barcom${i}.png`
-        this.imagens[i] = img
-        // console.log(i)
-      }
+      // for (let i = 0; i <= 270; i += 90) {
+      //   var img = new Image();
+      //   img.src = `../../assets/img/barcom${i}.png`
+      //   this.imagens[i] = img
+      //   // console.log(i)
+      // }
 
       this.imagens.forEach((img: any) => {
         img.onload = () => {
@@ -540,7 +643,7 @@ export class TelaPartidaComponent implements OnInit {
       }
       //ctx.clearRect(0, 0, 1021, 511);
 
-      this.fnDraw(myCtx);
+      // this.fnDraw(myCtx);
     }
 
     if (ctxOponente) {
@@ -570,7 +673,7 @@ export class TelaPartidaComponent implements OnInit {
         ctxOponente.drawImage(this.imagemExplodeAgua, 0, 0);
       }
 
-      this.fnDrawOponente(ctxOponente);
+      // this.fnDrawOponente(ctxOponente);
 
     }
   }
@@ -580,145 +683,255 @@ export class TelaPartidaComponent implements OnInit {
   hasUserSessionId() {
     this.usuarioLogadoId = sessionStorage.getItem('userId');
 
-    // if (this.usuarioLogadoId === null || this.usuarioLogadoId === undefined) {
-    //   this.router.navigate(['login'])
-    // } else {
-    //   this.getUser(this.usuarioLogadoId);
-    // }
+    if (this.usuarioLogadoId === null || this.usuarioLogadoId === undefined) {
+      this.router.navigate(['login'])
+    } else {
+      this.getUser(this.usuarioLogadoId);
+    }
 
   }
 
-  fnDraw(ctx: CanvasRenderingContext2D) {
-    // ctx.clearRect(0, 0, 1021, 511);
-    ctx.clearRect(0, 0, (this.sizeWTabuleiro * 2), this.sizeWTabuleiro);
-    ctx.fillStyle = "#03a5fc50";
-    ctx.strokeStyle = "#00000050"
+  userData!: any;
 
-    // Desenha os tiles do tabuleiro
-    for (let i = 0; i < this.nTilesX; i++) {
-      for (let j = 0; j < this.nTilesY; j++) {
-        let x = (i * (this.sizeTiles + 1)) + 1;
-        let y = (j * (this.sizeTiles + 1)) + 1;
-
-        // console.log(i, j)
-        if (this.myTabuleiro[j][i] == 3 || this.myTabuleiro[j][i] == 6) {
-          ctx.fillStyle = "#00000080";
+  getUser(usuarioLogadoId: any) {
+    this.service.getUser(usuarioLogadoId).pipe(
+      tap((res: any) => {
+        this.userData = res
+        // console.log(res)
+        this.fnGetUserPacotes();
+        this.fnXP();
+        this.fnSomFundo();
+      })
+    ).subscribe();
+  }
 
 
-        } else if (this.myTabuleiro[j][i] == 2) {
-          ctx.fillStyle = "#ff000080";
+  imgAvatarSelecionado: any = {};
+  meusPacotes: any[] = [];
 
-        } else {
-          ctx.fillStyle = "#03a5fc50";
+  fnGetUserPacotes() {
+    this.service.getUserPacotes(this.usuarioLogadoId).pipe(
+      tap((res: any) => {
+        this.meusPacotes = res;
 
-
+        for (let pacote of this.meusPacotes) {
+          if (pacote.temaId === this.userData.idAvatar)
+            this.imgAvatarSelecionado = pacote.avatarBase64;
         }
-        ctx.fillRect(x, y, this.sizeTiles, this.sizeTiles);
-        ctx.strokeRect(x, y, this.sizeTiles, this.sizeTiles);
 
+      })
+    ).subscribe();
+  }
+
+
+  nivel: any;
+  relacaoXp: any;
+  fnXP() {
+    let nVitorias = this.userData.vitorias;
+    let nDerrotas = this.userData.derrotas;
+
+    let xp = 100 * nVitorias + 5 * nDerrotas;
+
+    let soma = 0
+    let soma_anterior = 0
+    let xp_prox = 0
+    let nivel = 1
+
+    for (nivel; soma <= xp; ++nivel) {
+      xp_prox = nivel * 100
+      soma += xp_prox
+      soma_anterior = soma - xp_prox
+    }
+    nivel--
+
+    let relacao = (xp - soma_anterior) / (xp_prox) * 100;
+
+    // console.log(relacao);
+    (document.querySelector(".status-xp") as HTMLElement).style.width = `${relacao}%`;
+    this.relacaoXp = `${xp - soma_anterior}/${xp_prox}`;
+    this.nivel = `${nivel}`;
+  }
+
+  fnCarregaImages() {
+
+    this.imgNavios = sessionStorage.getItem('imgsNavios');
+    this.imgNavios = JSON.parse(this.imgNavios);
+    let tradutor: any = {
+      0: '270',
+      90: '180',
+      180: '90',
+      270: '0'
+    }
+
+    for (let j = 1; j <= 4; j++) {
+
+      this.imagens[j - 1] = [];
+      for (let i = 0; i <= 270; i += 90) {
+
+        var img = new Image();
+        img.src = this.imgNavios[j - 1][i]
+
+        this.imagens[j - 1][tradutor[i]] = img;
       }
     }
 
-    this.navios.forEach(navio => {
-      let contador = 0
 
-      navio.tiles.forEach((tile: { i: number; j: number; }) => {
+    // this.imagens.forEach((imgs: any) => {
 
-        // let x = ((tile.i - 10) * 41) + 1; //era 51
-        // let y = (tile.j * 41) + 1;      //era 51
+    //   imgs.forEach((img: any) => {
+    //     img.onload = () => {
+    //       this.myCanvas.nativeElement.getContext('2d').drawImage(img, 0, 0);
+    //     }
+    //   })
 
-        let x = ((tile.i - 10) * Math.floor(this.sizeWTabuleiro / 10)) + 1; //era 51
-        let y = (tile.j * Math.floor(this.sizeWTabuleiro / 10)) + 1;      //era 51
-        // ctx.fillRect(x, y, 50, 50);
+    // })
+  }
 
-        if (navio.tipo === 1) { //é uma mina
-          // let img = this.imagemMina;
-          ctx.drawImage(this.imagemMina, x, y, this.sizeTiles + 1, this.sizeTiles + 1); // Desenha a imagem do tile no canvas
+  fnDraw() {
+    // ctx.clearRect(0, 0, 1021, 511);]
+    const myCvs: HTMLCanvasElement = this.myCanvas.nativeElement;
+    const ctx = myCvs.getContext('2d');
 
-        } else {
+    if (ctx) {
 
-          let img = this.imagens[navio.angulo]
 
-          if (navio.horizontal) {
-            ctx.drawImage(img, contador * img.width / navio.tiles.length, 0, img.width / navio.tiles.length, img.height, x, y, this.sizeTiles + 1, this.sizeTiles + 1); // Desenha a imagem do tile no canvas
+      ctx.clearRect(0, 0, (this.sizeWTabuleiro * 2), this.sizeWTabuleiro);
+      ctx.fillStyle = "#03a5fc50";
+      ctx.strokeStyle = "#00000050"
+
+      // Desenha os tiles do tabuleiro
+      for (let i = 0; i < this.nTilesX; i++) {
+        for (let j = 0; j < this.nTilesY; j++) {
+          let x = (i * (this.sizeTiles + 1)) + 1;
+          let y = (j * (this.sizeTiles + 1)) + 1;
+
+          // console.log(i, j)
+          if (this.myTabuleiro[j][i] == 3 || this.myTabuleiro[j][i] == 6) {
+            ctx.fillStyle = "#00000080";
+
+
+          } else if (this.myTabuleiro[j][i] == 2) {
+            ctx.fillStyle = "#ff000080";
+
+          } else {
+            ctx.fillStyle = "#03a5fc50";
+
 
           }
-          else {
-            ctx.drawImage(img, 0, contador * img.height / navio.tiles.length, img.width, img.height / navio.tiles.length, x, y, this.sizeTiles + 1, this.sizeTiles + 1); // Desenha a imagem do tile no canvas
-          }
+          ctx.fillRect(x, y, this.sizeTiles, this.sizeTiles);
+          ctx.strokeRect(x, y, this.sizeTiles, this.sizeTiles);
 
-          contador += 1
         }
+      }
+
+      this.meusNavios.forEach((navio: any) => {
+        let contador = 0
+
+        navio.tiles.forEach((tile: { i: number; j: number; }) => {
+
+          // let x = ((tile.i - 10) * 41) + 1; //era 51
+          // let y = (tile.j * 41) + 1;      //era 51
+
+          let x = ((tile.i - 10) * Math.floor(this.sizeWTabuleiro / 10)) + 1; //era 51
+          let y = (tile.j * Math.floor(this.sizeWTabuleiro / 10)) + 1;      //era 51
+          // ctx.fillRect(x, y, 50, 50);
+
+          if (navio.tipo === 1) { //é uma mina
+            // let img = this.imagemMina;
+            ctx.drawImage(this.imagemMina, x, y, this.sizeTiles + 1, this.sizeTiles + 1); // Desenha a imagem do tile no canvas
+
+          } else {
+
+            // let img = this.imagens[navio.angulo]
+            let img = this.imagens[navio.tamanho - 1][navio.angulo.toString()]
+
+            if (navio.horizontal) {
+              ctx.drawImage(img, contador * img.width / navio.tiles.length, 0, img.width / navio.tiles.length, img.height, x, y, this.sizeTiles + 1, this.sizeTiles + 1); // Desenha a imagem do tile no canvas
+
+            }
+            else {
+              ctx.drawImage(img, 0, contador * img.height / navio.tiles.length, img.width, img.height / navio.tiles.length, x, y, this.sizeTiles + 1, this.sizeTiles + 1); // Desenha a imagem do tile no canvas
+            }
+
+            contador += 1
+          }
+        });
+
+
       });
 
 
-    });
+      // Desenha os tiles do tabuleiro
+      for (let i = 0; i < this.nTilesX; i++) {
+        for (let j = 0; j < this.nTilesY; j++) {
+          let x = (i * (this.sizeTiles + 1)) + 1;
+          let y = (j * (this.sizeTiles + 1)) + 1;
 
+          // console.log(i, j)
+          if (this.myTabuleiro[j][i] == 3) {
+            ctx.drawImage(this.imagemXNavio, x, y, this.sizeTiles + 1, this.sizeTiles + 1); // Desenha a imagem do tile no canvas
+          } else if (this.myTabuleiro[j][i] == 6) {
+            ctx.drawImage(this.imagemMinaExplodida, x, y, this.sizeTiles + 1, this.sizeTiles + 1); // Desenha a imagem do tile no canvas
+          }
 
-    // Desenha os tiles do tabuleiro
-    for (let i = 0; i < this.nTilesX; i++) {
-      for (let j = 0; j < this.nTilesY; j++) {
-        let x = (i * (this.sizeTiles + 1)) + 1;
-        let y = (j * (this.sizeTiles + 1)) + 1;
-
-        // console.log(i, j)
-        if (this.myTabuleiro[j][i] == 3) {
-          ctx.drawImage(this.imagemXNavio, x, y, this.sizeTiles + 1, this.sizeTiles + 1); // Desenha a imagem do tile no canvas
-        } else if (this.myTabuleiro[j][i] == 6) {
-          ctx.drawImage(this.imagemMinaExplodida, x, y, this.sizeTiles + 1, this.sizeTiles + 1); // Desenha a imagem do tile no canvas
         }
-
       }
-    }
 
-    requestAnimationFrame(() => {
-      this.fnDraw(ctx)
-    });
+      requestAnimationFrame(() => {
+        this.fnDraw()
+      });
+    }
 
   }
 
 
-  fnDrawOponente(ctx: CanvasRenderingContext2D) {
+  fnDrawOponente() {
 
-    ctx.clearRect(0, 0, (this.sizeWTabuleiro * 2), this.sizeWTabuleiro);
-    ctx.fillStyle = "#FF000050";
-    ctx.strokeStyle = "#00000050"
+    const cvsOponente: HTMLCanvasElement = this.canvasOponente.nativeElement;
+    const ctx = cvsOponente.getContext('2d');
 
-    // Desenha as imagens do tabuleiro
-    for (let i = 0; i < this.nTilesX; i++) {
-      for (let j = 0; j < this.nTilesY; j++) {
-        let x = (i * (this.sizeTiles + 1)) + 1;
-        let y = (j * (this.sizeTiles + 1)) + 1;
+    if (ctx) {
 
-        // console.log(i, j)
+      ctx.clearRect(0, 0, (this.sizeWTabuleiro * 2), this.sizeWTabuleiro);
+      ctx.fillStyle = "#FF000050";
+      ctx.strokeStyle = "#00000050"
 
-        if (this.tabuleiroOp[j][i] == 3) {
-          ctx.fillStyle = "#00000090";
-          ctx.drawImage(this.imagemXNavio, x, y, this.sizeTiles + 1, this.sizeTiles + 1); // Desenha a imagem do tile no canvas
+      // Desenha as imagens do tabuleiro
+      for (let i = 0; i < this.nTilesX; i++) {
+        for (let j = 0; j < this.nTilesY; j++) {
+          let x = (i * (this.sizeTiles + 1)) + 1;
+          let y = (j * (this.sizeTiles + 1)) + 1;
 
-        } else if (this.tabuleiroOp[j][i] == 2) {
-          ctx.fillStyle = "#03a5fc00";
-          ctx.fillRect(x, y, this.sizeTiles + 1, this.sizeTiles + 1);
-          ctx.drawImage(this.imagemExplodeAgua, x, y, this.sizeTiles + 1, this.sizeTiles + 1); // Desenha a imagem do tile no canvas
-        } else if (this.tabuleiroOp[j][i] == 6) {
-          ctx.fillStyle = "#00000010";
+          // console.log(i, j)
 
-          ctx.drawImage(this.imagemMinaExplodida, x, y, this.sizeTiles + 1, this.sizeTiles + 1); // Desenha a imagem do tile no canvas
+          if (this.tabuleiroOp[j][i] == 3) {
+            ctx.fillStyle = "#00000090";
+            ctx.drawImage(this.imagemXNavio, x, y, this.sizeTiles + 1, this.sizeTiles + 1); // Desenha a imagem do tile no canvas
 
-        } else {
-          ctx.fillStyle = "#FF000050";
+          } else if (this.tabuleiroOp[j][i] == 2) {
+            ctx.fillStyle = "#03a5fc00";
+            ctx.fillRect(x, y, this.sizeTiles + 1, this.sizeTiles + 1);
+            ctx.drawImage(this.imagemExplodeAgua, x, y, this.sizeTiles + 1, this.sizeTiles + 1); // Desenha a imagem do tile no canvas
+          } else if (this.tabuleiroOp[j][i] == 6) {
+            ctx.fillStyle = "#00000010";
+
+            ctx.drawImage(this.imagemMinaExplodida, x, y, this.sizeTiles + 1, this.sizeTiles + 1); // Desenha a imagem do tile no canvas
+
+          } else {
+            ctx.fillStyle = "#FF000050";
+          }
+
+          ctx.fillRect(x, y, this.sizeTiles, this.sizeTiles);
+          ctx.strokeRect(x, y, this.sizeTiles, this.sizeTiles);
+
+
         }
-
-        ctx.fillRect(x, y, this.sizeTiles, this.sizeTiles);
-        ctx.strokeRect(x, y, this.sizeTiles, this.sizeTiles);
-
-
       }
-    }
 
-    requestAnimationFrame(() => {
-      this.fnDrawOponente(ctx)
-    });
+      requestAnimationFrame(() => {
+        this.fnDrawOponente()
+      });
+    }
 
   }
 
@@ -744,7 +957,7 @@ export class TelaPartidaComponent implements OnInit {
 
   fnSomFundo() {
     //https://www.forhub.io/download.php baixar sons piratas
-    this.somFundo.volume = 1;
+    this.somFundo.volume = this.sliderValueMusic / 100;
     this.somFundo.play().catch((error) => {
       // console.log('Error attempting to play the video:', error);
     });
@@ -777,6 +990,9 @@ export class TelaPartidaComponent implements OnInit {
       6 -> clicou e tem uma mina explodida
    
       */
+
+      console.log(this.tabuleiroOp[j][i])
+      console.log(this.tabuleiroOp)
       if (this.tabuleiroOp[j][i] == 1) {
         this.fnSomExplosao("barco");
 
@@ -795,7 +1011,11 @@ export class TelaPartidaComponent implements OnInit {
 
         this.fnVerifica(j, i);
 
-        this.fnSendWebSocketsMsg(true, true);
+        if (!this.checkForOnes(this.tabuleiroOp)) { //checando se no tabuleiro do oponente ainda tem navio não destruido
+          // alert("você venceu!")
+          this.fnFim("win");
+        } else
+          this.fnSendWebSocketsMsg(true, true);
 
 
       } else if (this.tabuleiroOp[j][i] == 0) {
@@ -827,6 +1047,7 @@ export class TelaPartidaComponent implements OnInit {
    
       */
 
+      console.log(this.myTabuleiro[j][i])
     if (this.myTabuleiro[j][i] === 0) {
       this.myTabuleiro[j][i] = 2;
     } else if (this.myTabuleiro[j][i] === 1) {
@@ -838,11 +1059,33 @@ export class TelaPartidaComponent implements OnInit {
 
   }
 
+  fnSendWebSocketsResultadoFinal(result: any) {
+    let messageObject = {
+      usuarioId: this.usuarioLogadoId,
+      tabuleiro1: this.tabuleiroOp,
+      win: result === "win" ? true : false
+    };
+
+    this.webSocket.send(JSON.stringify(messageObject));
+  }
+
+  fnSendWebSocketsMeuTabuleiro() {
+    // console.log("enviando o meu tabuleriooo", this.myTabuleiro)
+
+    let messageObject = {
+      usuarioId: this.usuarioLogadoId,
+      tabuleiro: this.myTabuleiro
+    };
+
+    this.webSocket.send(JSON.stringify(messageObject));
+  }
+
   fnSendWebSocketsMsg(podeJogar = true, coord: any = false) {
     let messageObject = {
       usuarioId: this.usuarioLogadoId,
-      tabuleiroOp: this.tabuleiroOp,
-      myTabuleiro: this.myTabuleiro,
+      tabuleiro1: this.tabuleiroOp,
+      tabuleiro2: this.myTabuleiro,
+      naviosOp: this.meusNavios,
       podeJogar: podeJogar,
       coord: coord
       // navios: this.navios
@@ -850,12 +1093,21 @@ export class TelaPartidaComponent implements OnInit {
 
     this.webSocket.send(JSON.stringify(messageObject));
     this.podeJogar = !podeJogar;
+
+    if (this.podeJogar === false) {
+      this.fnPopVez("amarelo", "Esperando o outro jogador")
+    }
   }
 
   fnFim(result: any) {
-    this.fnAtualizaValores();
 
-    this.fnPopUp(result);
+    this.fnSendWebSocketsResultadoFinal(result);
+    setTimeout(() => {
+      this.fnAtualizaValores();
+      this.fnPopUp(result);
+      this.fnPopVez("", "", true);
+    }, 1500)
+
   }
 
   fnPopUp(popname: any) {
@@ -864,12 +1116,12 @@ export class TelaPartidaComponent implements OnInit {
     this.popup = popname; //win ou loser[
 
     if (popname === "win") {
-      this.somPopupWin.volume = 0.8;//this.sliderValueSound / 100;
+      this.somPopupWin.volume = this.sliderValueSound / 100;
       this.somPopupWin.play().catch((error) => {
         // console.log('Error attempting to play the video:', error);
       });
     } else {
-      this.somPopupLoser.volume = 0.8;//this.sliderValueSound / 100;
+      this.somPopupLoser.volume = this.sliderValueSound / 100;
       this.somPopupLoser.play().catch((error) => {
         // console.log('Error attempting to play the video:', error);
       });
@@ -877,6 +1129,9 @@ export class TelaPartidaComponent implements OnInit {
   }
 
   fnAtualizaValores() {
+
+    // 
+    
     //faz a inserção de moedas na tabela usuario
     //faz a inserção de trofeu na tabela usuario
     //faz a inserção de xp na tabela usuario
@@ -1104,7 +1359,7 @@ export class TelaPartidaComponent implements OnInit {
     this.somEmoji.play().catch((error) => {
       // console.log('Error attempting to play the video:', error);
     });
-    console.log(lastPart)
+    // console.log(lastPart)
   }
 
   removeEmoji() {
@@ -1122,11 +1377,6 @@ export class TelaPartidaComponent implements OnInit {
       }, 500);
     }
   }
-
-  // fnEnviaReacao(emojiSrc: any) {
-  //   console.log("enviar reação para o oponetenente");
-  //   fnSendWebSocketsEmoji(emoji);
-  // }
 
   fnSendWebSocketsEmoji(emoji: any) {
     let messageObject = {
