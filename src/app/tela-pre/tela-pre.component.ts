@@ -85,19 +85,6 @@ export class TelaPreComponent implements OnInit, OnDestroy {
     this.somEntraLoadingPre.src = "../../assets/audios/somEntraLoadingPre.mp3"
     this.hasUserSessionId();
 
-
-
-    // this.webSocket = new WebSocket('ws://localhost:8080/game');
-
-
-    // this.webSocket.onmessage = (event) => {
-    //   let msg = JSON.parse(event.data);
-
-
-    //   console.log(msg)
-
-    // };
-
   }
 
   updateValueSound(value = -1) {
@@ -124,44 +111,7 @@ export class TelaPreComponent implements OnInit, OnDestroy {
     this.fnSomMar();
   }
 
-  startCrono() {
-    // pause();
-    this.cron = setInterval(() => { this.timer(); }, 10);
-  }
-
-  pauseCrono() {
-    clearInterval(this.cron);
-  }
-
-  timer() {
-    if ((this.millisecond += 10) == 1000) {
-      this.millisecond = 0;
-      this.second++;
-    }
-    if (this.second == 60) {
-      this.second = 0;
-      this.minute++;
-    }
-    // if (this.minute == 60) {
-    //   this.minute = 0;
-    //   this.hour++;
-    // }
-    if (this.minute === 2) {
-      alert("O tempo acabou")
-      this.pauseCrono();
-    }
-    // (document.getElementById('hour') as HTMLElement).innerText = this.returnData(this.hour);
-    (document.getElementById('minute') as HTMLElement).innerText = this.returnData(this.minute);
-    (document.getElementById('second') as HTMLElement).innerText = this.returnData(this.second);
-    (document.getElementById('millisecond') as HTMLElement).innerText = this.returnData(this.millisecond);
-  }
-
-  returnData(input: any) {
-    return input >= 10 ? input : `0${input}`
-  }
-
   ngOnInit(): void {
-
 
     this.renderer.setStyle(document.body, 'overflow', 'hidden');
 
@@ -187,7 +137,6 @@ export class TelaPreComponent implements OnInit, OnDestroy {
 
     if (ctx) {
 
-
       // carregando a imagem das minas
       let imgMina = new Image();
       imgMina.src = '../../assets/img/mina.png';
@@ -198,43 +147,39 @@ export class TelaPreComponent implements OnInit, OnDestroy {
       }
 
 
-      let interval = setInterval(() => {
+      this.intervalo = setInterval(() => {
 
-          if (this.naviosCarregados) {
-            this.fnDraw(ctx);
+        if (this.naviosCarregados) {
+          this.fnDraw(ctx);
 
-            //posso tirar o onloading
-            (document.querySelector(".fundo-loading") as HTMLElement).style.display = "none";
-            clearInterval(interval)
-            this.fnSomMar();
-            // this.startCrono();
-          }
+          //posso tirar o onloading
+          (document.querySelector(".fundo-loading") as HTMLElement).style.display = "none";
+          clearInterval(this.intervalo)
+          this.fnSomMar();
+          // this.startCrono();
+        }
 
       }, 1000);
     }
   }
 
-
-  
+  intervalo: any;
   fnSomLoadingPre() {
-    this.somEntraLoadingPre.volume = this.sliderValueMusic/100;;
+    this.somEntraLoadingPre.volume = this.sliderValueMusic / 100;;
     this.somEntraLoadingPre.load();
     this.somEntraLoadingPre.play().catch((error) => {
       // console.log('Error attempting to play the video:', error);
     });
   }
 
-  
-
   ngOnDestroy(): void {
     this.renderer.removeStyle(document.body, 'overflow');
-    if(this.somMar) {
+    clearInterval(this.intervalo);
+    if (this.somMar) {
       this.somMar.pause();
       this.somMar = null!;
     }
   }
-
-  
 
   //tinha um async aqui
   ngAfterViewInit() {
@@ -242,8 +187,6 @@ export class TelaPreComponent implements OnInit, OnDestroy {
     const canvasEl = this.myCanvas.nativeElement;
     this.renderer.listen(canvasEl, 'mousedown', this.myDown.bind(this));
     this.renderer.listen(canvasEl, 'mouseup', this.myUp.bind(this));
-
-    // this.fnGetUserPacotes();
 
     //Para gerar uma imagem
     this.girarImgs = new GiraImgs(this.canvasAux.nativeElement);
@@ -254,8 +197,6 @@ export class TelaPreComponent implements OnInit, OnDestroy {
         clearInterval(interval)
       }
     }, 1000);
-
-
 
   }
 
@@ -285,7 +226,6 @@ export class TelaPreComponent implements OnInit, OnDestroy {
       }
     }
 
-
     this.imagens.forEach((imgs: any) => {
 
       imgs.forEach((img: any) => {
@@ -299,11 +239,7 @@ export class TelaPreComponent implements OnInit, OnDestroy {
 
     this.naviosCarregados = true
 
-
-
   }
-
-
 
   hasUserSessionId() {
     this.usuarioLogadoId = sessionStorage.getItem('userId');
@@ -322,15 +258,14 @@ export class TelaPreComponent implements OnInit, OnDestroy {
     this.service.getUser(usuarioLogadoId).pipe(
       tap(async (res: any) => {
         this.userData = res
-        // this.sliderValueMusic = this.userData.volumeMusica * 100;
-        // this.sliderValueSound = this.userData.volumeSom * 100;
+        this.sliderValueMusic = this.userData.volumeMusica;
+        this.sliderValueSound = this.userData.volumeSom;
         console.log(res)
         await this.fnGetUserPacotes();
         // this.fnXP();
       })
     ).subscribe();
   }
-
 
   oImgNavios: any[] = [];
   imgNaviosBD: any = [];
@@ -367,15 +302,23 @@ export class TelaPreComponent implements OnInit, OnDestroy {
   }
 
   fnSomMar() {
-    this.somMar.volume = this.sliderValueMusic/100 ;
-    this.somMar.loop = true;
-    this.somMar.play().catch(() => {
-      // console.log('Error attempting to play the video:', error);
-    });
+    if (this.somMar) {
+      try {
+        this.somMar.volume = this.sliderValueMusic / 100;
+        this.somMar.loop = true;
+        this.somMar.play().catch((error: any) => {
+          console.error('Error attempting to play the audio:', error);
+        });
+      } catch (error) {
+        console.error('Error while setting up the audio:', error);
+      }
+    } else {
+      // console.error('somMar is null or undefined');
+    }
   }
 
   fnSomLoadingJogar() {
-    this.somLoadingJogar.volume = this.sliderValueSound/100;
+    this.somLoadingJogar.volume = this.sliderValueSound / 100;
     this.somLoadingJogar.play().catch((error) => {
       // console.log('Error attempting to play the video:', error);
     });
@@ -434,8 +377,6 @@ export class TelaPreComponent implements OnInit, OnDestroy {
       }
     }
   }
-
-
 
   myDown(e: MouseEvent) {
     const rect = this.myCanvas.nativeElement.getBoundingClientRect();
@@ -517,7 +458,6 @@ export class TelaPreComponent implements OnInit, OnDestroy {
 
     return false;
   }
-
 
   fnCanvasClick(e: any) {
     const rect = this.myCanvas.nativeElement.getBoundingClientRect();
@@ -663,7 +603,6 @@ export class TelaPreComponent implements OnInit, OnDestroy {
 
   }
 
-
   isPosicaoOutroNavio(navio: Navio, i: any, j: any) {
 
     for (let outroNavio of this.navios) {
@@ -803,11 +742,11 @@ export class TelaPreComponent implements OnInit, OnDestroy {
 
   }
 
-  fnGeraPosicaoAleatoria(){
+  fnGeraPosicaoAleatoria() {
     this.fnSomBtn();
     for (let navio of this.navios) {
       let ok = false;
-      while (!ok){
+      while (!ok) {
         let i = Math.floor(Math.random() * (21 - 10) + 10)
         let j = Math.floor(Math.random() * 11)
         let h = Math.floor(Math.random() * 2)
@@ -839,24 +778,23 @@ export class TelaPreComponent implements OnInit, OnDestroy {
           }
         }
 
-        if(ok){
+        if (ok) {
           for (let t = 0; t < tilesAux.length; t++) {
             navio.tiles[t].i = tilesAux[t].i
             navio.tiles[t].j = tilesAux[t].j
           }
-          if(h == 1){
+          if (h == 1) {
             navio.angulo = Math.random() > 0.5 ? 0 : 180
             navio.horizontal = true
           }
-          else{
+          else {
             navio.angulo = Math.random() > 0.5 ? 90 : 270
             navio.horizontal = false
           }
-          console.log(i, j, navio)
         }
 
       }
-      
+
     }
   }
 
@@ -912,11 +850,9 @@ export class TelaPreComponent implements OnInit, OnDestroy {
 
       this.pauseAudio();
       this.fnSomLoadingJogar();
-      this.pauseCrono();
       console.log(this.tabuleiro);
       this.fnJogar();
-      // console.log(this.navios);
-      // console.log(this.navios);
+
       sessionStorage.setItem('meusNavios', JSON.stringify(this.navios));
       sessionStorage.setItem('tabuleiro', JSON.stringify(this.tabuleiro));
       sessionStorage.setItem('imgsNavios', JSON.stringify(this.oImgNavios))
@@ -925,23 +861,14 @@ export class TelaPreComponent implements OnInit, OnDestroy {
         this.somLoadingJogar.pause();
         this.fnSomLoadingPre()
         this.router.navigate(['/partida']);
-      }, 5000);
+      }, 2000);
 
-      // let messageObject = {
-      //   usuarioId: usuarioLogadoId,
-      //   tabuleiro: this.tabuleiro,
-      //   navios: this.navios
-      // };
-      // this.webSocket.send(JSON.stringify(messageObject))
     }
 
-
-    // this.fnAlert();
-    // console.log(this.navios)
   }
 
   fnSomBtn() {
-    this.somBtn.volume = this.sliderValueSound/100;;
+    this.somBtn.volume = this.sliderValueSound / 100;;
     this.somBtn.load();
     this.somBtn.play().catch((error) => {
       // console.log('Error attempting to play the video:', error);

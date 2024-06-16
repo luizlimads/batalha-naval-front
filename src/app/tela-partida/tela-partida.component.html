@@ -1,6 +1,6 @@
-<div class="popup-info amarelo">
+<div class="popup-info">
     <div>
-        <p id="msgVez">Esperando outro joagador</p>
+        <p id="msgVez"></p>
         <!-- <div class="snippet"> -->
             <!-- <div class="stage">
                 <div class="dot-typing"></div>
@@ -81,20 +81,21 @@
             <div class="container-info-jogador oponente">
                 <div class="jogador1">
                     <div class="jogador-avatar">
-                        <p>Nome</p>
+                        <p>{{opData?.nome}}</p>
+                        <!-- pedir avatar -->
                         <img src="../../assets/images/img-home-page/pirata1.png" alt="">
                     </div>
                     <div class="item-level">
                         <div class="item-level-icon">
                             <div class="chapeu">
                                 <img src="../../assets/images/img-home-page/hatPirate.png" alt="Chapéu">
-                                <p>1</p>
+                                <p>{{nivelOp}}</p>
                             </div>
                         </div>
 
                         <div class="item-level-status">
-                            <div></div>
-                            <p>50/100</p>
+                            <div class="status-xpOp"></div>
+                            <p>{{relacaoXpOp}}</p>
                         </div>
                     </div>
                 </div>
@@ -216,6 +217,15 @@
 
 </div>
 
+<div class="fundo-loading">
+    <div class="bg-loading">
+        <div class="loading-container">
+            <div class="loading"></div>
+            <!-- {{ hasOponente ? 'Carregando tabuleiro' : 'Esperando o oponente' }} -->
+            <div id="loading-text">Encontrando um oponente</div>
+        </div>
+    </div>
+</div>
 
 <!-- 
 <div id="modal-container">

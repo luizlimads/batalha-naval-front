@@ -109,8 +109,8 @@ export class HomePageComponent implements OnInit, OnDestroy {
   private cancelClick!: Function;
   @ViewChild('audioPlayer', { static: false }) audioPlayerRef!: ElementRef;
   FirstClick() {
-    this.fnRemoveAudioEmbed();
     this.cancelClick(); //tira o evento click do document
+    this.fnRemoveAudioEmbed();
   }
 
   //função que remove a musica do fundo que ta no embed, criei separado pois vou chamar novamente quando user sair dessa tela
@@ -131,49 +131,63 @@ export class HomePageComponent implements OnInit, OnDestroy {
 
 
   fnSomBtn() {
-    this.somBtn.volume = this.sliderValueSound / 100;
     this.somBtn.load();
+    this.somBtn.volume = this.sliderValueSound / 100;
     this.somBtn.play().catch((error) => {
       // console.log('Error attempting to play the video:', error);
     });
   }
 
   fnSomCoin() {
-    this.somCoin.volume = this.sliderValueSound / 100;
     this.somCoin.load();
+    this.somCoin.volume = this.sliderValueSound / 100;
     this.somCoin.play().catch((error) => {
       // console.log('Error attempting to play the video:', error);
     });
   }
 
   fnSomMenu() {
-    this.somMenu.volume = this.sliderValueSound / 100;
     this.somMenu.load();
+    this.somMenu.volume = this.sliderValueSound / 100;
     this.somMenu.play().catch((error) => {
       // console.log('Error attempting to play the video:', error);
     }); // Inicia a reprodução do novo arquivo
   }
 
   fnSomHomePopup() {
-    this.somHomePopup.volume = this.sliderValueSound / 100;
     this.somHomePopup.load();
+    this.somHomePopup.volume = this.sliderValueSound / 100;
     this.somHomePopup.play().catch((error) => {
       // console.log('Error attempting to play the video:', error);
     });
   }
 
   fnMusicHomePage() {
-    this.somHomePage.volume = this.sliderValueMusic / 100;
-    this.somHomePage.load();
-    this.somHomePage.play().catch((error) => {
-      console.log('Error attempting to play the video:', error);
-    });
+    // this.somHomePage.load();
+    // this.somHomePage.volume = this.sliderValueMusic / 100;
+    // this.somHomePage.play().catch((error) => {
+    //   console.log('Error attempting to play the video:', error);
+    // });
+
+    if (this.somHomePage) {
+      try {
+        this.somHomePage.load();
+        this.somHomePage.volume = this.sliderValueMusic / 100;
+        this.somHomePage.play().catch((error) => {
+          // console.error('Error attempting to play the audio:', error);
+        });
+      } catch (error) {
+        console.error('Error while setting up the audio:', error);
+      }
+    } else {
+      // console.error('somHomePage is null or undefined');
+    }
 
   }
 
   fnSomLoadingPre() {
-    this.somEntraLoadingPre.volume = this.sliderValueSound / 100;
     this.somEntraLoadingPre.load();
+    this.somEntraLoadingPre.volume = this.sliderValueSound / 100;
     this.somEntraLoadingPre.play().catch((error) => {
       // console.log('Error attempting to play the video:', error);
     });
@@ -472,7 +486,6 @@ export class HomePageComponent implements OnInit, OnDestroy {
       })
     ).subscribe();
   }
-
 
 
   fnCarregar() {
@@ -800,7 +813,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.service.getAllUsers().pipe(
       tap((res: any) => {
         this.listUsers = res;
-        // console.log(res);
+        console.log(res);
       })
     ).subscribe();
   }

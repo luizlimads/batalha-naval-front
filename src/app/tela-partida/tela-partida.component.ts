@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { Observable, Subscription, tap } from 'rxjs';
 import { BatalhaNavalService } from '../batalha-naval.service';
 import { Router } from '@angular/router';
@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   templateUrl: './tela-partida.component.html',
   styleUrl: './tela-partida.component.css'
 })
-export class TelaPartidaComponent implements OnInit {
+export class TelaPartidaComponent implements OnInit, OnDestroy {
   @ViewChild('myCanvas', { static: true }) myCanvas!: ElementRef;
   @ViewChild('canvasOponente', { static: true }) canvasOponente!: ElementRef;
 
@@ -51,13 +51,12 @@ export class TelaPartidaComponent implements OnInit {
   tabuleiroOp: any[] = [];
   myTabuleiro: any[] = [];
   naviosOp!: any[];
-  navios: any[];
 
-  podeJogar: any = true;
+  podeJogar: any = false;
   // meAutoAcertei: boolean;
 
-
   constructor(private renderer: Renderer2, private service: BatalhaNavalService, private router: Router) {
+    
     this.somEmoji = new Audio();
     this.somPopupWin = new Audio();
     this.somPopupLoser = new Audio();
@@ -71,425 +70,16 @@ export class TelaPartidaComponent implements OnInit {
     // Crio um webSocket
 
 
-    this.webSocket = new WebSocket('ws://localhost:8080/game');
-    this.webSocket.onopen = () => {
-      console.log('WebSocket connection opened');
-
-      this.myTabuleiro = JSON.parse(sessionStorage.getItem('tabuleiro')!);
-
-      // console.log("meuuu", this.myTabuleiro)
-
-      this.fnSendWebSocketsMeuTabuleiro();
-      this.fnDraw();
-      this.fnDrawOponente();
-
-    };
-
-
     // Adiciono o evento que vai ficar ouvindo esse webSocket
-    this.webSocket.onmessage = (event) => {
-      let msg = JSON.parse(event.data);
-
-      if (msg.win === true) {
-        this.myTabuleiro = msg.tabuleiro1
-        this.fnFim("loser");
-      } else if (msg.tabuleiro) {
-        //tabuleiro do oponente
-        this.tabuleiroOp = msg.tabuleiro;
-       
-        console.log("tabu op", this.tabuleiroOp);
-      } else if (msg.emoji) {
-        this.fnRecebeReacao(msg.emoji);
-      } else {
-
-        
-        for(let i = 0; i < this.myTabuleiro.length; i++){
-          for(let j = 0; j < this.myTabuleiro.length; j++){
-            if(this.myTabuleiro[j][i] !== msg.tabuleiro1[j][i]){
-              if(msg.tabuleiro1[j][i] === 3){
-                (document.querySelector(".myCanvas") as HTMLElement).classList.add("treme")
-                setTimeout(() => {
-                  (document.querySelector(".myCanvas") as HTMLElement).classList.remove("treme")
-                }, 200);
-              }
-            }
-          }
-        }
-        //meu tabuleiro
-        this.myTabuleiro = msg.tabuleiro1
-        this.podeJogar = msg.podeJogar;
-        // this.naviosOp = msg.naviosOp;
-
-
-        // console.log(this.myTabuleiro)
-        // console.log(this.tabuleiroOp)
-        // }
-        if (this.podeJogar) {
-          this.fnPopVez("verde", "Sua vez")
-
-          console.log("Sua vez")
-          // this.showNotification("Jogo", "Sua vez", "error");
-        } else {
-          console.log("Esperando o outro jogador")
-          // this.showNotification("Jogo", "Esperando o outro jogador", "error");
-
-        }
-      }
-
-    };
+    // this.webSocket.onmessage = (event) => {
+    //   let msg = JSON.parse(event.data);
 
 
 
-    this.navios = [
-      {
-        "tiles": [
-          {
-            "i": 10,
-            "j": 2
-          },
-          {
-            "i": 11,
-            "j": 2
-          },
-          {
-            "i": 12,
-            "j": 2
-          },
-          {
-            "i": 13,
-            "j": 2
-          }
-        ],
-        "tamanho": 4,
-        "cabeca": {
-          "i": 10,
-          "j": 2
-        },
-        "meio": {
-          "i": 12,
-          "j": 2
-        },
-        "cauda": {
-          "i": 13,
-          "j": 2
-        },
-        "selecionado": false,
-        "horizontal": true,
-        "angulo": 0,
-        "tipo": 0
-      },
-      {
-        "tiles": [
-          {
-            "i": 12,
-            "j": 0
-          },
-          {
-            "i": 13,
-            "j": 0
-          },
-          {
-            "i": 14,
-            "j": 0
-          }
-        ],
-        "tamanho": 3,
-        "cabeca": {
-          "i": 12,
-          "j": 0
-        },
-        "meio": {
-          "i": 13,
-          "j": 0
-        },
-        "cauda": {
-          "i": 14,
-          "j": 0
-        },
-        "selecionado": false,
-        "horizontal": true,
-        "angulo": 0,
-        "tipo": 0
-      },
-      {
-        "tiles": [
-          {
-            "i": 13,
-            "j": 8
-          },
-          {
-            "i": 14,
-            "j": 8
-          },
-          {
-            "i": 15,
-            "j": 8
-          }
-        ],
-        "tamanho": 3,
-        "cabeca": {
-          "i": 13,
-          "j": 8
-        },
-        "meio": {
-          "i": 14,
-          "j": 8
-        },
-        "cauda": {
-          "i": 15,
-          "j": 8
-        },
-        "selecionado": false,
-        "horizontal": true,
-        "angulo": 0,
-        "tipo": 0
-      },
-      {
-        "tiles": [
-          {
-            "i": 17,
-            "j": 1
-          },
-          {
-            "i": 18,
-            "j": 1
-          },
-          {
-            "i": 19,
-            "j": 1
-          }
-        ],
-        "tamanho": 3,
-        "cabeca": {
-          "i": 17,
-          "j": 1
-        },
-        "meio": {
-          "i": 18,
-          "j": 1
-        },
-        "cauda": {
-          "i": 19,
-          "j": 1
-        },
-        "selecionado": false,
-        "horizontal": true,
-        "angulo": 0,
-        "tipo": 0
-      },
-      {
-        "tiles": [
-          {
-            "i": 18,
-            "j": 4
-          },
-          {
-            "i": 19,
-            "j": 4
-          }
-        ],
-        "tamanho": 2,
-        "cabeca": {
-          "i": 18,
-          "j": 4
-        },
-        "meio": {
-          "i": 19,
-          "j": 4
-        },
-        "cauda": {
-          "i": 19,
-          "j": 4
-        },
-        "selecionado": false,
-        "horizontal": true,
-        "angulo": 0,
-        "tipo": 0
-      },
-      {
-        "tiles": [
-          {
-            "i": 15,
-            "j": 5
-          },
-          {
-            "i": 16,
-            "j": 5
-          }
-        ],
-        "tamanho": 2,
-        "cabeca": {
-          "i": 15,
-          "j": 5
-        },
-        "meio": {
-          "i": 16,
-          "j": 5
-        },
-        "cauda": {
-          "i": 16,
-          "j": 5
-        },
-        "selecionado": false,
-        "horizontal": true,
-        "angulo": 0,
-        "tipo": 0
-      },
-      {
-        "tiles": [
-          {
-            "i": 15,
-            "j": 3
-          },
-          {
-            "i": 16,
-            "j": 3
-          }
-        ],
-        "tamanho": 2,
-        "cabeca": {
-          "i": 15,
-          "j": 3
-        },
-        "meio": {
-          "i": 16,
-          "j": 3
-        },
-        "cauda": {
-          "i": 16,
-          "j": 3
-        },
-        "selecionado": false,
-        "horizontal": true,
-        "angulo": 0,
-        "tipo": 0
-      },
-      {
-        "tiles": [
-          {
-            "i": 18,
-            "j": 9
-          }
-        ],
-        "tamanho": 1,
-        "cabeca": {
-          "i": 18,
-          "j": 9
-        },
-        "meio": {
-          "i": 18,
-          "j": 9
-        },
-        "cauda": {
-          "i": 18,
-          "j": 9
-        },
-        "selecionado": false,
-        "horizontal": true,
-        "angulo": 0,
-        "tipo": 0
-      },
-      {
-        "tiles": [
-          {
-            "i": 19,
-            "j": 7
-          }
-        ],
-        "tamanho": 1,
-        "cabeca": {
-          "i": 19,
-          "j": 7
-        },
-        "meio": {
-          "i": 19,
-          "j": 7
-        },
-        "cauda": {
-          "i": 19,
-          "j": 7
-        },
-        "selecionado": false,
-        "horizontal": true,
-        "angulo": 0,
-        "tipo": 0
-      },
-      {
-        "tiles": [
-          {
-            "i": 10,
-            "j": 7
-          }
-        ],
-        "tamanho": 1,
-        "cabeca": {
-          "i": 10,
-          "j": 7
-        },
-        "meio": {
-          "i": 10,
-          "j": 7
-        },
-        "cauda": {
-          "i": 10,
-          "j": 7
-        },
-        "selecionado": false,
-        "horizontal": true,
-        "angulo": 0,
-        "tipo": 1
-      },
-      {
-        "tiles": [
-          {
-            "i": 10,
-            "j": 0
-          }
-        ],
-        "tamanho": 1,
-        "cabeca": {
-          "i": 10,
-          "j": 0
-        },
-        "meio": {
-          "i": 10,
-          "j": 0
-        },
-        "cauda": {
-          "i": 10,
-          "j": 0
-        },
-        "selecionado": false,
-        "horizontal": true,
-        "angulo": 0,
-        "tipo": 1
-      },
-      {
-        "tiles": [
-          {
-            "i": 10,
-            "j": 5
-          }
-        ],
-        "tamanho": 1,
-        "cabeca": {
-          "i": 10,
-          "j": 5
-        },
-        "meio": {
-          "i": 10,
-          "j": 5
-        },
-        "cauda": {
-          "i": 10,
-          "j": 5
-        },
-        "selecionado": false,
-        "horizontal": true,
-        "angulo": 0,
-        "tipo": 1
-      }
-    ]
+    // };
+
+    // (document.querySelector(".fundo-loading") as HTMLElement).style.display = "none";
+    //
 
 
 
@@ -543,19 +133,161 @@ export class TelaPartidaComponent implements OnInit {
 
 
   ngOnDestroy(): void {
-    if(this.somFundo) {
+    console.log("destruido")
+    this.webSocket.close();
+    if (this.somFundo) {
       this.somFundo.pause();
       this.somFundo = null!;
     }
   }
 
 
+  // idOponente: any;
   ngOnInit(): void {
     this.hasUserSessionId();
     this.meusNavios = sessionStorage.getItem('meusNavios');
     this.meusNavios = JSON.parse(this.meusNavios);
 
     this.fnCarregaImages();
+    this.myTabuleiro = JSON.parse(sessionStorage.getItem('tabuleiro')!);
+
+
+    this.connectWebSocket();
+
+    this.webSocket.onopen = () => {
+      console.log('WebSocket connection opened');
+      this.sendMessage();
+    };
+
+    this.webSocket.onmessage = (e) => {
+      const message = JSON.parse(e.data);
+      //console.log(message.message)
+
+      if (message.evento == "find") {
+        this.players = JSON.parse(message.message);
+
+        console.log(this.players)
+
+        if (this.players.p1.userId == this.usuarioLogadoId || this.players.p2.userId == this.usuarioLogadoId) {
+          this.hasOponente = true;
+          this.tabuleiroOp = this.players.p1.userId == this.usuarioLogadoId ? JSON.parse(this.players.p2.tabuleiro) : JSON.parse(this.players.p1.tabuleiro)
+          this.podeJogar = this.players.p1.userId == this.usuarioLogadoId ? this.players.p1.podeJogar : this.players.p2.podeJogar;
+          this.podeJogar = this.podeJogar == "true" ? true : false;
+          console.log(this.players.p1.podeJogar);
+          console.log(this.players.p2.podeJogar);
+          
+          let idOponente = this.players.p1.userId == this.usuarioLogadoId ? this.players.p2.userId : this.players.p1.userId;
+          
+          this.fnGetDadosOp(idOponente);
+
+          console.log(this.podeJogar)
+
+          if (this.podeJogar) {
+            this.fnPopVez("verde", "Sua vez")
+
+            console.log("Sua vez")
+            // this.showNotification("Jogo", "Sua vez", "error");
+          } else {
+            console.log("Esperando o outro jogador")
+            this.fnPopVez("amarelo", "Esperando o outro jogador")
+
+            // this.showNotification("Jogo", "Esperando o outro jogador", "error");
+
+          }
+
+          console.log("enntreiii");
+          (document.querySelector(".fundo-loading") as HTMLElement).style.display = "none";
+          this.fnSomFundo();
+
+          this.fnDraw();
+          this.fnDrawOponente();
+        }
+
+      }
+
+      if (message.evento == "closed") {
+        this.showNotification("Ops...", "Seu oponente foi desconectado, você será redirecionado", "error");
+        setTimeout(() => {
+          this.router.navigate(['/']);
+        }, 2000);
+      }
+
+      if (message.evento == "final") {
+
+        console.log(message)
+        let msg = JSON.parse(message.message)
+
+        console.log(msg)
+        this.myTabuleiro = msg.players.p1.userId == this.usuarioLogadoId ? msg.players.p1.tabuleiro : msg.players.p2.tabuleiro
+
+        if (msg.win) {
+          this.fnFim("loser");
+        }
+        else {
+          this.fnFim("win");
+        }
+
+      }
+
+      console.log(message);
+      if (message.evento == "emoji") {
+        this.fnRecebeReacao(message.message);
+      }
+
+      if (message.evento == "jogando") {
+
+        let msg = JSON.parse(message.message)
+
+        // for (let i = 0; i < this.myTabuleiro.length; i++) {
+        //   for (let j = 0; j < this.myTabuleiro.length; j++) {
+        //     if (this.myTabuleiro[j][i] !== message.tabuleiro1[j][i]) {
+        //       if (message.tabuleiro1[j][i] === 3) {
+        //         (document.querySelector(".myCanvas") as HTMLElement).classList.add("treme")
+        //         setTimeout(() => {
+        //           (document.querySelector(".myCanvas") as HTMLElement).classList.remove("treme")
+        //         }, 200);
+        //       }
+        //     }
+        //   }
+        // }
+        //meu tabuleiro
+        console.log(msg)
+        this.myTabuleiro = msg.players.p1.userId == this.usuarioLogadoId ? msg.players.p1.tabuleiro : msg.players.p2.tabuleiro
+        this.tabuleiroOp = msg.players.p1.userId == this.usuarioLogadoId ? msg.players.p2.tabuleiro : msg.players.p1.tabuleiro
+        this.podeJogar = msg.players.p1.userId == this.usuarioLogadoId ? msg.players.p1.podeJogar : msg.players.p2.podeJogar
+        this.podeJogar = this.podeJogar == 'true' ? true : false;
+        // this.naviosOp = msg.naviosOp;
+
+        if (!this.checkForOnes(this.myTabuleiro)) { //checando se no meu tabuleiro ainda tem navio não destruido
+          // alert("você venceu!")
+
+          this.fnSendWebSocketsResultadoFinal("loser");
+          this.fnFim("loser");
+
+        }
+
+
+        console.log(this.myTabuleiro)
+        // console.log(this.tabuleiroOp)
+        // }
+        if (this.podeJogar) {
+          this.fnPopVez("verde", "Sua vez")
+
+          console.log("Sua vez")
+          // this.showNotification("Jogo", "Sua vez", "error");
+        } else {
+          console.log("Esperando o outro jogador")
+          // this.showNotification("Jogo", "Esperando o outro jogador", "error");
+
+        }
+      }
+
+    };
+
+
+
+
+
 
     this.sizeWTabuleiro = this.myCanvas.nativeElement.width;
 
@@ -676,8 +408,56 @@ export class TelaPartidaComponent implements OnInit {
       // this.fnDrawOponente(ctxOponente);
 
     }
+
+
+    // let interval = setInterval(() => {
+
+    //   console.log("aquiii",this.hasOponente)
+    //   if (this.hasOponente) {
+    //     //posso tirar o onloading
+    //     this.load.style.display = "none";
+    //     clearInterval(interval)
+    //     this.fnSomFundo();
+
+    //     this.fnDraw();
+    //     this.fnDrawOponente();
+    //   }
+
+    // }, 1000);
   }
 
+  players: any[any] = [];
+  private connectWebSocket(): void {
+    this.webSocket = new WebSocket('ws://localhost:8080/game');
+
+    // this.webSocket.onmessage = (event) => {
+    //   const message = JSON.parse(event.data);
+    //   this.players = message.message;
+    // };
+
+    this.webSocket.onclose = () => {
+      console.log('WebSocket connection closed');
+      this.showNotification("Conexão", "Conexão perdida", "error");
+      this.router.navigate(['/']);
+
+      
+    };
+
+    this.webSocket.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+  }
+
+  public sendMessage(): void {
+    if (this.webSocket.readyState === WebSocket.OPEN) {
+      this.webSocket.send(JSON.stringify({ 'evento': 'find', 'userId': this.usuarioLogadoId, 'tabuleiro': JSON.stringify(this.myTabuleiro) }));
+
+    } else {
+      console.error('WebSocket connection is not open');
+    }
+  }
+
+  hasOponente: boolean = false;
   usuarioLogadoId: any;
 
   hasUserSessionId() {
@@ -692,7 +472,7 @@ export class TelaPartidaComponent implements OnInit {
   }
 
   userData!: any;
-
+  opData!: any;
   getUser(usuarioLogadoId: any) {
     this.service.getUser(usuarioLogadoId).pipe(
       tap((res: any) => {
@@ -700,7 +480,17 @@ export class TelaPartidaComponent implements OnInit {
         // console.log(res)
         this.fnGetUserPacotes();
         this.fnXP();
-        this.fnSomFundo();
+        // this.fnSomFundo();
+      })
+    ).subscribe();
+  }
+
+  fnGetDadosOp(opId: any){
+    this.service.getUser(opId).pipe(
+      tap((res: any) => {
+        this.opData = res
+        this.fnXPOp();
+        console.log(this.opData)
       })
     ).subscribe();
   }
@@ -750,6 +540,34 @@ export class TelaPartidaComponent implements OnInit {
     (document.querySelector(".status-xp") as HTMLElement).style.width = `${relacao}%`;
     this.relacaoXp = `${xp - soma_anterior}/${xp_prox}`;
     this.nivel = `${nivel}`;
+  }
+
+  nivelOp: any;
+  relacaoXpOp: any;
+  fnXPOp() {
+    let nVitorias = this.opData.vitorias;
+    let nDerrotas = this.opData.derrotas;
+
+    let xp = 100 * nVitorias + 5 * nDerrotas;
+
+    let soma = 0
+    let soma_anterior = 0
+    let xp_prox = 0
+    let nivel = 1
+
+    for (nivel; soma <= xp; ++nivel) {
+      xp_prox = nivel * 100
+      soma += xp_prox
+      soma_anterior = soma - xp_prox
+    }
+    nivel--
+
+    let relacao = (xp - soma_anterior) / (xp_prox) * 100;
+
+    // console.log(relacao);
+    (document.querySelector(".status-xpOp") as HTMLElement).style.width = `${relacao}%`;
+    this.relacaoXpOp = `${xp - soma_anterior}/${xp_prox}`;
+    this.nivelOp = `${nivel}`;
   }
 
   fnCarregaImages() {
@@ -969,7 +787,7 @@ export class TelaPartidaComponent implements OnInit {
     // console.log(this.tabuleiroOp);
 
     // this.openShadow = true;
-    if (this.podeJogar === true) {
+    if (this.podeJogar) {
       const rect = this.canvasOponente.nativeElement.getBoundingClientRect();
 
       // Calcula a posição do clique em relação ao canvas
@@ -1001,7 +819,10 @@ export class TelaPartidaComponent implements OnInit {
 
         if (!this.checkForOnes(this.tabuleiroOp)) { //checando se no tabuleiro do oponente ainda tem navio não destruido
           // alert("você venceu!")
+
+          this.fnSendWebSocketsResultadoFinal("win");
           this.fnFim("win");
+
         }
 
       } else if (this.tabuleiroOp[j][i] == 5) { //se for é pq é uma mina, se for uma mina, tenho verificar se quando eu cliquei eu perdi vida e perdi, ou eu perdi vidae ele ganhou
@@ -1047,7 +868,7 @@ export class TelaPartidaComponent implements OnInit {
    
       */
 
-      console.log(this.myTabuleiro[j][i])
+    console.log(this.myTabuleiro[j][i])
     if (this.myTabuleiro[j][i] === 0) {
       this.myTabuleiro[j][i] = 2;
     } else if (this.myTabuleiro[j][i] === 1) {
@@ -1061,8 +882,10 @@ export class TelaPartidaComponent implements OnInit {
 
   fnSendWebSocketsResultadoFinal(result: any) {
     let messageObject = {
+      evento: "final",
       usuarioId: this.usuarioLogadoId,
       tabuleiro1: this.tabuleiroOp,
+      players: this.players,
       win: result === "win" ? true : false
     };
 
@@ -1073,6 +896,7 @@ export class TelaPartidaComponent implements OnInit {
     // console.log("enviando o meu tabuleriooo", this.myTabuleiro)
 
     let messageObject = {
+      evento: "tabuleiro",
       usuarioId: this.usuarioLogadoId,
       tabuleiro: this.myTabuleiro
     };
@@ -1081,7 +905,27 @@ export class TelaPartidaComponent implements OnInit {
   }
 
   fnSendWebSocketsMsg(podeJogar = true, coord: any = false) {
+
+    console.log(this.usuarioLogadoId);
+    console.log(this.players.p1.userId);
+    console.log(this.players.p2.userId);
+    if (this.players.p1.userId == this.usuarioLogadoId) {
+      this.players.p1.podeJogar = (!podeJogar).toString()
+      this.players.p2.podeJogar = podeJogar.toString()
+      this.players.p1.tabuleiro = this.myTabuleiro
+      this.players.p2.tabuleiro = this.tabuleiroOp
+    }
+    else {
+      this.players.p1.podeJogar = podeJogar.toString()
+      this.players.p2.podeJogar = (!podeJogar).toString()
+      this.players.p1.tabuleiro = this.tabuleiroOp
+      this.players.p2.tabuleiro = this.myTabuleiro
+    }
+    this.podeJogar = !podeJogar;
+
     let messageObject = {
+      evento: "jogando",
+      players: this.players,
       usuarioId: this.usuarioLogadoId,
       tabuleiro1: this.tabuleiroOp,
       tabuleiro2: this.myTabuleiro,
@@ -1092,21 +936,20 @@ export class TelaPartidaComponent implements OnInit {
     };
 
     this.webSocket.send(JSON.stringify(messageObject));
-    this.podeJogar = !podeJogar;
+    //this.podeJogar = !podeJogar;
 
-    if (this.podeJogar === false) {
+    if (!this.podeJogar) {
       this.fnPopVez("amarelo", "Esperando o outro jogador")
     }
   }
 
   fnFim(result: any) {
 
-    this.fnSendWebSocketsResultadoFinal(result);
     setTimeout(() => {
       this.fnAtualizaValores();
       this.fnPopUp(result);
       this.fnPopVez("", "", true);
-    }, 1500)
+    }, 500)
 
   }
 
@@ -1131,7 +974,7 @@ export class TelaPartidaComponent implements OnInit {
   fnAtualizaValores() {
 
     // 
-    
+
     //faz a inserção de moedas na tabela usuario
     //faz a inserção de trofeu na tabela usuario
     //faz a inserção de xp na tabela usuario
@@ -1143,7 +986,7 @@ export class TelaPartidaComponent implements OnInit {
     let messageObject = {
       usuarioId: "1",//usuarioLogadoId,
       tabuleiro: this.tabuleiroOp,
-      navios: this.navios
+      // navios: this.navios
     };
 
 
@@ -1380,7 +1223,9 @@ export class TelaPartidaComponent implements OnInit {
 
   fnSendWebSocketsEmoji(emoji: any) {
     let messageObject = {
-      emoji: emoji
+      evento: "emoji",
+      emoji: emoji,
+      players: this.players
     };
 
     this.webSocket.send(JSON.stringify(messageObject));

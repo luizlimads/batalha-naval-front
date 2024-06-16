@@ -87,14 +87,14 @@
 
                 <div class="rank-classifications">
 
-                    <div class="rank-item" *ngFor="let user of listUsers">
+                    <div class="rank-item" *ngFor="let user of listUsers; let i = index">
                        <div class="all-itens">
                         <div class="item-position">
-                            <p>1</p>
+                            <p>{{i+1}}</p>
                         </div>
                         <div class="item-avatar">
                             <!-- <div class="user-avatar"> -->
-                            <img [src]="fnFindImgAvatar(user.idTema)" alt="">
+                            <img [src]="user.avatarBase64" alt="">
                             <!-- </div> -->
                         </div>
                         <div class="item-name">
@@ -448,7 +448,7 @@
 
                         <div class="invent-item" (click)="fnSelectUseItem(0, 0, pacote.temaId)" [class.selected]="userData?.idEmbarcacao === pacote.temaId">
                             <!-- <h3>100 diamantes</h3> (click)="fnSelectedClothe(item)" [class.selected]="oAvatar[guias.seletor] === item.titulo"-->
-                            <p>{{pacote.nomeEmbarcacoes}} jdjas saidhas dsj jdsjdha</p>  
+                            <p>{{pacote.nomeEmbarcacoes}}</p>  
                             
                             <div class="item-img" >
                                 <div>
