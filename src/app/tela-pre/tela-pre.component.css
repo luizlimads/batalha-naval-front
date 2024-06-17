@@ -880,3 +880,70 @@
     background: transparent;
     border: 0;
 }
+
+
+/* aquiii é partida */
+
+.info-navios-op{
+    background-color: #ffffff34;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+}
+
+
+.info-navios-op > div{
+    display: flex;
+    margin-top: 2px;
+}
+
+
+.info-navios-op .n1 > div,
+.info-navios-op .n2 > div,
+.info-navios-op .n3 > div{
+    display: flex;
+    margin-right: 1px;
+}
+
+
+.info-navios-op .preto .u,
+.info-navios-op .preto .t,
+.info-navios-op .preto .p,
+.info-navios-op .preto .n{
+    width: 9px;
+    height: 10px;
+    background-color: #141414;
+    margin: 0.4px;
+}
+
+.info-navios-op .preto .u{
+    width: 13px;
+}
+
+/* explodidos */
+.info-navios-op .red .u,
+.info-navios-op .red .t,
+.info-navios-op .red .p,
+.info-navios-op .red .n{
+    width: 9px;
+    height: 9px;
+    background-color: #d60c0c;
+    margin: 0.4px;
+}
+
+.info-navios-op .red .u{
+    width: 13px;
+}
+
+.info-navios-op .u,
+.info-navios-op .p{
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+.info-navios-op .u,
+.info-navios-op .t{
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+}

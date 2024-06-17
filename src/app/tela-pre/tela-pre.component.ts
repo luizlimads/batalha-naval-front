@@ -260,7 +260,7 @@ export class TelaPreComponent implements OnInit, OnDestroy {
         this.userData = res
         this.sliderValueMusic = this.userData.volumeMusica;
         this.sliderValueSound = this.userData.volumeSom;
-        console.log(res)
+        // console.log(res)
         await this.fnGetUserPacotes();
         // this.fnXP();
       })
@@ -328,7 +328,7 @@ export class TelaPreComponent implements OnInit, OnDestroy {
     if (!this.somMar.paused) {
       this.somMar.pause();
     } else {
-      console.log('O áudio já está pausado');
+      // console.log('O áudio já está pausado');
     }
   }
 
@@ -473,7 +473,6 @@ export class TelaPreComponent implements OnInit, OnDestroy {
     // Verifica se é possível adicionar o navio na posição clicada
     if (this.isPosicaoLivre({ i, j }, this.shipSize) && this.navios.length < 9) {
       let tiles = [];
-      console.log(i)
 
 
       for (let k = 0; k < this.shipSize; k++) {
@@ -850,7 +849,7 @@ export class TelaPreComponent implements OnInit, OnDestroy {
 
       this.pauseAudio();
       this.fnSomLoadingJogar();
-      console.log(this.tabuleiro);
+      // console.log(this.tabuleiro);
       this.fnJogar();
 
       sessionStorage.setItem('meusNavios', JSON.stringify(this.navios));
@@ -891,7 +890,7 @@ export class TelaPreComponent implements OnInit, OnDestroy {
 
   showNotification(title: string, msg: string, type: string) {
     // Remove any existing notification
-    console.log(this.navios);
+    // console.log(this.navios);
     this.removeNotification();
 
     this.container = this.renderer.createElement('div');

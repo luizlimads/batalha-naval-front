@@ -1,8 +1,7 @@
-import { Component, ElementRef, HostListener, OnDestroy, OnInit, Renderer2, ViewChild, ViewRef } from '@angular/core';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit, Renderer2, ViewChild, ViewEncapsulation, ViewRef } from '@angular/core';
 import { BatalhaNavalService } from '../batalha-naval.service';
 import { finalize, pipe, tap } from 'rxjs';
 import { Router } from '@angular/router';
-import { style } from '@angular/animations';
 import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 
 
@@ -452,8 +451,6 @@ export class HomePageComponent implements OnInit, OnDestroy {
     ).subscribe()
   }
 
-
-
   imgTemaSelecionado: any = {};
   imgAvatarSelecionado: any = {};
   imgEmbarcacoesSelecionado: any = [];
@@ -511,7 +508,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
         this.userData = res
         this.sliderValueMusic = this.userData.volumeMusica;
         this.sliderValueSound = this.userData.volumeSom;
-        console.log(res)
+        // console.log(res)
         this.fnXP();
         this.fnGetUserPacotes();
       })
@@ -575,11 +572,14 @@ export class HomePageComponent implements OnInit, OnDestroy {
           this.getUser(this.usuarioLogadoId);
           this.fnGetUserPacotes();
           this.fnMsg("Item selecionado com sucesso", "success")
+          this.getAllUsers()
           this.open = false;
         }
       })
     ).subscribe();
   }
+
+  
 
   fnOpenAlterSenha() {
     scroll(0, 0);
@@ -791,7 +791,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.service.getPacotes().pipe(
       tap((res: any) => {
         this.itensPacotes = res
-        console.log(res)
+        // console.log(res)
       })
     ).subscribe();
   }
@@ -813,7 +813,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.service.getAllUsers().pipe(
       tap((res: any) => {
         this.listUsers = res;
-        console.log(res);
+        // console.log(res);
       })
     ).subscribe();
   }

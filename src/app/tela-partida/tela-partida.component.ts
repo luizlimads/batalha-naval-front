@@ -56,7 +56,7 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
   // meAutoAcertei: boolean;
 
   constructor(private renderer: Renderer2, private service: BatalhaNavalService, private router: Router) {
-    
+
     this.somEmoji = new Audio();
     this.somPopupWin = new Audio();
     this.somPopupLoser = new Audio();
@@ -67,23 +67,10 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
     this.somPopupLoser.src = "../../assets/audios/somLoser.mp3";
 
 
-    // Crio um webSocket
-
-
-    // Adiciono o evento que vai ficar ouvindo esse webSocket
-    // this.webSocket.onmessage = (event) => {
-    //   let msg = JSON.parse(event.data);
-
-
-
-    // };
-
-    // (document.querySelector(".fundo-loading") as HTMLElement).style.display = "none";
-    //
-
-
 
   }
+
+
 
   updateValueSound(value = -1) {
     let volumeS = document.getElementById("soundVolumeInput") as HTMLInputElement;
@@ -115,17 +102,16 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
 
     if (removePop) {
       popup.style.display = "none";
-    }
-    if (className === "amarelo") {
-      popup.classList.remove("verde");
     } else {
-      popup.classList.remove("amarelo");
+      if (className === "amarelo") {
+        popup.classList.remove("verde");
+      } else {
+        popup.classList.remove("amarelo");
+      }
+
+      popup.classList.add(className);
+      (document.getElementById("msgVez") as HTMLElement).innerHTML = msg;
     }
-
-    popup.classList.add(className);
-    (document.getElementById("msgVez") as HTMLElement).innerHTML = msg;
-
-
   }
 
   meusNavios: any = ''
@@ -133,7 +119,7 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy(): void {
-    console.log("destruido")
+    console.log("destruido");
     this.webSocket.close();
     if (this.somFundo) {
       this.somFundo.pause();
@@ -152,6 +138,8 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
     this.myTabuleiro = JSON.parse(sessionStorage.getItem('tabuleiro')!);
 
 
+    this.fnCriaArrNaviosExpClass();
+
     this.connectWebSocket();
 
     this.webSocket.onopen = () => {
@@ -166,36 +154,37 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
       if (message.evento == "find") {
         this.players = JSON.parse(message.message);
 
-        console.log(this.players)
+        // console.log(this.players)
 
         if (this.players.p1.userId == this.usuarioLogadoId || this.players.p2.userId == this.usuarioLogadoId) {
           this.hasOponente = true;
           this.tabuleiroOp = this.players.p1.userId == this.usuarioLogadoId ? JSON.parse(this.players.p2.tabuleiro) : JSON.parse(this.players.p1.tabuleiro)
+          this.naviosOp = this.players.p1.userId == this.usuarioLogadoId ? JSON.parse(this.players.p2.navios) : JSON.parse(this.players.p1.navios)
           this.podeJogar = this.players.p1.userId == this.usuarioLogadoId ? this.players.p1.podeJogar : this.players.p2.podeJogar;
           this.podeJogar = this.podeJogar == "true" ? true : false;
-          console.log(this.players.p1.podeJogar);
-          console.log(this.players.p2.podeJogar);
-          
+          // console.log(this.players.p1.podeJogar);
+          // console.log(this.players.p2.podeJogar);
+
           let idOponente = this.players.p1.userId == this.usuarioLogadoId ? this.players.p2.userId : this.players.p1.userId;
-          
+
           this.fnGetDadosOp(idOponente);
 
-          console.log(this.podeJogar)
+          // console.log(this.podeJogar)
 
           if (this.podeJogar) {
             this.fnPopVez("verde", "Sua vez")
 
-            console.log("Sua vez")
+            // console.log("Sua vez")
             // this.showNotification("Jogo", "Sua vez", "error");
           } else {
-            console.log("Esperando o outro jogador")
+            // console.log("Esperando o outro jogador")
             this.fnPopVez("amarelo", "Esperando o outro jogador")
 
             // this.showNotification("Jogo", "Esperando o outro jogador", "error");
 
           }
 
-          console.log("enntreiii");
+          // console.log("enntreiii");
           (document.querySelector(".fundo-loading") as HTMLElement).style.display = "none";
           this.fnSomFundo();
 
@@ -205,19 +194,20 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
 
       }
 
-      if (message.evento == "closed") {
+      if (message.evento == "closed" && this.fimDeJogo === false) {
         this.showNotification("Ops...", "Seu oponente foi desconectado, você será redirecionado", "error");
-        setTimeout(() => {
+        setTimeout(() => { //1134 fnFim()
+          this.removeNotification(true);
           this.router.navigate(['/']);
         }, 2000);
       }
 
       if (message.evento == "final") {
 
-        console.log(message)
+        // console.log(message)
         let msg = JSON.parse(message.message)
 
-        console.log(msg)
+        // console.log(msg)
         this.myTabuleiro = msg.players.p1.userId == this.usuarioLogadoId ? msg.players.p1.tabuleiro : msg.players.p2.tabuleiro
 
         if (msg.win) {
@@ -229,7 +219,7 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
 
       }
 
-      console.log(message);
+      // console.log(message);
       if (message.evento == "emoji") {
         this.fnRecebeReacao(message.message);
       }
@@ -238,45 +228,48 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
 
         let msg = JSON.parse(message.message)
 
-        // for (let i = 0; i < this.myTabuleiro.length; i++) {
-        //   for (let j = 0; j < this.myTabuleiro.length; j++) {
-        //     if (this.myTabuleiro[j][i] !== message.tabuleiro1[j][i]) {
-        //       if (message.tabuleiro1[j][i] === 3) {
-        //         (document.querySelector(".myCanvas") as HTMLElement).classList.add("treme")
-        //         setTimeout(() => {
-        //           (document.querySelector(".myCanvas") as HTMLElement).classList.remove("treme")
-        //         }, 200);
-        //       }
-        //     }
-        //   }
-        // }
+        let myOldTabuleiro = JSON.parse(JSON.stringify(this.myTabuleiro));
         //meu tabuleiro
-        console.log(msg)
+        // console.log(msg)
         this.myTabuleiro = msg.players.p1.userId == this.usuarioLogadoId ? msg.players.p1.tabuleiro : msg.players.p2.tabuleiro
         this.tabuleiroOp = msg.players.p1.userId == this.usuarioLogadoId ? msg.players.p2.tabuleiro : msg.players.p1.tabuleiro
         this.podeJogar = msg.players.p1.userId == this.usuarioLogadoId ? msg.players.p1.podeJogar : msg.players.p2.podeJogar
         this.podeJogar = this.podeJogar == 'true' ? true : false;
         // this.naviosOp = msg.naviosOp;
 
-        if (!this.checkForOnes(this.myTabuleiro)) { //checando se no meu tabuleiro ainda tem navio não destruido
-          // alert("você venceu!")
 
-          this.fnSendWebSocketsResultadoFinal("loser");
-          this.fnFim("loser");
-
+        for (let i = 0; i < myOldTabuleiro.length; i++) {
+          for (let j = 0; j < myOldTabuleiro.length; j++) {
+            if (myOldTabuleiro[j][i] !== this.myTabuleiro[j][i]) {
+              if (this.myTabuleiro[j][i] === 3) {
+                (document.querySelector(".myCanvas") as HTMLElement).classList.add("treme")
+                setTimeout(() => {
+                  (document.querySelector(".myCanvas") as HTMLElement).classList.remove("treme")
+                }, 200);
+              }
+            }
+          }
         }
 
+        // if (!this.checkForOnes(this.myTabuleiro)) { //checando se no meu tabuleiro ainda tem navio não destruido
+        //   // alert("você venceu!")
 
-        console.log(this.myTabuleiro)
+        //   this.fnSendWebSocketsResultadoFinal("loser");
+        //   this.fnFim("loser");
+
+        // }
+
+
+        // console.log(this.myTabuleiro)
         // console.log(this.tabuleiroOp)
         // }
         if (this.podeJogar) {
           this.fnPopVez("verde", "Sua vez")
 
-          console.log("Sua vez")
+          // console.log("Sua vez")
           // this.showNotification("Jogo", "Sua vez", "error");
         } else {
-          console.log("Esperando o outro jogador")
+          // console.log("Esperando o outro jogador")
           // this.showNotification("Jogo", "Esperando o outro jogador", "error");
 
         }
@@ -426,6 +419,124 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
     // }, 1000);
   }
 
+  arrNaviosExpClass: any[] = [];
+  fnCriaArrNaviosExpClass() {
+    for (let i = 0; i < 4; i++) {
+      this.arrNaviosExpClass.push([])
+      if (i == 0) {
+        this.arrNaviosExpClass[i].push("preto")
+        this.arrNaviosExpClass[i].push("preto")
+      }
+      if (i == 1) {
+        this.arrNaviosExpClass[i].push("preto")
+        this.arrNaviosExpClass[i].push("preto")
+        this.arrNaviosExpClass[i].push("preto")
+      }
+      if (i == 2) {
+        this.arrNaviosExpClass[i].push("preto")
+        this.arrNaviosExpClass[i].push("preto")
+        this.arrNaviosExpClass[i].push("preto")
+      }
+      if (i == 3) {
+        this.arrNaviosExpClass[i].push("preto")
+      }
+
+    }
+  }
+
+  fnVerificaNaviosExplodidos() {
+    for (let i = 0; i < this.arrNaviosExpClass.length; i++) {
+      for (let j = 0; j < this.arrNaviosExpClass[i].length; j++) {
+
+        this.arrNaviosExpClass[i][j] = "preto";
+      }
+    }
+
+    for (let tam of this.arrtst) {
+      for (let i = 0; i < this.arrNaviosExpClass.length; i++) {
+        let index = this.arrNaviosExpClass[i].indexOf("preto");
+
+        if (i === (tam - 1) && index !== -1) {
+          this.arrNaviosExpClass[i][index] = "red";
+        }
+      }
+    }
+
+
+  }
+
+  cont = 0;
+  antes = 0;
+  arrtst: any = []
+  fnContornaNavio(tabuleiro: any[], navios: any, j: any, i: any) {
+
+    if (j + 1 <= 9 && i + 1 <= 9)
+      tabuleiro[j + 1][i + 1] = 2;
+
+    if (j + 1 <= 9 && i - 1 >= 0)
+      tabuleiro[j + 1][i - 1] = 2;
+
+    if (j - 1 >= 0 && i - 1 >= 0)
+      tabuleiro[j - 1][i - 1] = 2;
+
+    if (j - 1 >= 0 && i + 1 <= 9)
+      tabuleiro[j - 1][i + 1] = 2;
+
+    for (let navio of navios) {
+      let nTilesEstourados = 0;
+      for (let tile of navio.tiles) {
+        if (tabuleiro[tile.j][tile.i - 10] == 3) {
+          nTilesEstourados += 1
+        }
+      }
+      // console.log("tiles estorados: ",(nTilesEstourados));
+      if (nTilesEstourados == navio.tamanho) {
+        this.arrtst.push(navio.tamanho);
+        this.cont++;
+        
+        for (let tile of navio.tiles) {
+
+          if (tile.j + 1 <= 9) {
+            if (tabuleiro[tile.j + 1][tile.i - 10] == 0)
+              tabuleiro[tile.j + 1][tile.i - 10] = 2;
+          }
+
+          if (tile.j - 1 >= 0) {
+            if (tabuleiro[tile.j - 1][tile.i - 10] == 0)
+              tabuleiro[tile.j - 1][tile.i - 10] = 2;
+          }
+
+          if (tile.i + 1 - 10 <= 9) {
+            if (tabuleiro[tile.j][tile.i + 1 - 10] == 0)
+              tabuleiro[tile.j][tile.i + 1 - 10] = 2;
+          }
+
+          if (tile.i - 1 - 10 >= 0) {
+            if (tabuleiro[tile.j][tile.i - 1 - 10] == 0)
+              tabuleiro[tile.j][tile.i - 1 - 10] = 2;
+          }
+
+        }
+      }
+
+    }
+
+    if (this.cont !== this.antes) {
+      // console.log("contadoooor", this.cont)
+      this.antes = this.cont
+
+      // console.log("arr navios", JSON.stringify(this.arrtst))
+      this.arrtst = this.arrtst.slice(-this.cont)
+      // console.log("arr navios slice", JSON.stringify(this.arrtst))
+
+      this.fnVerificaNaviosExplodidos();
+      // this.arrtst.pop()
+      // console.log("arr navios dps pop", JSON.stringify(this.arrtst))
+    }
+
+    this.cont = 0;
+  }
+
   players: any[any] = [];
   private connectWebSocket(): void {
     this.webSocket = new WebSocket('ws://ec2-54-94-110-74.sa-east-1.compute.amazonaws.com:8080/game');
@@ -440,7 +551,7 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
       this.showNotification("Conexão", "Conexão perdida", "error");
       this.router.navigate(['/']);
 
-      
+
     };
 
     this.webSocket.onerror = (error) => {
@@ -450,7 +561,7 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
 
   public sendMessage(): void {
     if (this.webSocket.readyState === WebSocket.OPEN) {
-      this.webSocket.send(JSON.stringify({ 'evento': 'find', 'userId': this.usuarioLogadoId, 'tabuleiro': JSON.stringify(this.myTabuleiro) }));
+      this.webSocket.send(JSON.stringify({ 'evento': 'find', 'userId': this.usuarioLogadoId, 'tabuleiro': JSON.stringify(this.myTabuleiro), 'navios': JSON.stringify(this.meusNavios) }));
 
     } else {
       console.error('WebSocket connection is not open');
@@ -485,12 +596,12 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
     ).subscribe();
   }
 
-  fnGetDadosOp(opId: any){
-    this.service.getUser(opId).pipe(
+  fnGetDadosOp(opId: any) {
+    this.service.getUserOp(opId).pipe(
       tap((res: any) => {
         this.opData = res
         this.fnXPOp();
-        console.log(this.opData)
+        // console.log(this.opData)
       })
     ).subscribe();
   }
@@ -628,10 +739,12 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
             ctx.fillStyle = "#00000080";
 
 
-          } else if (this.myTabuleiro[j][i] == 2) {
-            ctx.fillStyle = "#ff000080";
+          }
+          // else if (this.myTabuleiro[j][i] == 2) {
+          //   // ctx.fillStyle = "#ff000080";
 
-          } else {
+          // } 
+          else {
             ctx.fillStyle = "#03a5fc50";
 
 
@@ -688,7 +801,12 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
           // console.log(i, j)
           if (this.myTabuleiro[j][i] == 3) {
             ctx.drawImage(this.imagemXNavio, x, y, this.sizeTiles + 1, this.sizeTiles + 1); // Desenha a imagem do tile no canvas
-          } else if (this.myTabuleiro[j][i] == 6) {
+          } else if (this.myTabuleiro[j][i] == 2) {
+            ctx.fillStyle = "#03a5fc00";
+            ctx.fillRect(x, y, this.sizeTiles + 1, this.sizeTiles + 1);
+            ctx.drawImage(this.imagemExplodeAgua, x, y, this.sizeTiles + 1, this.sizeTiles + 1); // Desenha a imagem do tile no canvas
+          }
+          else if (this.myTabuleiro[j][i] == 6) {
             ctx.drawImage(this.imagemMinaExplodida, x, y, this.sizeTiles + 1, this.sizeTiles + 1); // Desenha a imagem do tile no canvas
           }
 
@@ -809,12 +927,19 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
    
       */
 
-      console.log(this.tabuleiroOp[j][i])
-      console.log(this.tabuleiroOp)
+      // console.log(this.tabuleiroOp[j][i])
+      // console.log(this.tabuleiroOp)
+      //fazer em uma função separada
       if (this.tabuleiroOp[j][i] == 1) {
         this.fnSomExplosao("barco");
 
+        // console.log(this.tabuleiroOp);
+        // console.log(this.naviosOp);
+
         this.tabuleiroOp[j][i] = 3;
+
+        this.fnContornaNavio(this.tabuleiroOp, this.naviosOp, j, i);
+
         this.fnSendWebSocketsMsg(false);
 
         if (!this.checkForOnes(this.tabuleiroOp)) { //checando se no tabuleiro do oponente ainda tem navio não destruido
@@ -832,11 +957,20 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
 
         this.fnVerifica(j, i);
 
-        if (!this.checkForOnes(this.tabuleiroOp)) { //checando se no tabuleiro do oponente ainda tem navio não destruido
+        // if (!this.checkForOnes(this.tabuleiroOp)) { //checando se no tabuleiro do oponente ainda tem navio não destruido
+        //   // alert("você venceu!")
+        //   this.fnFim("win");
+        // } else
+
+        this.fnSendWebSocketsMsg(true, true);
+
+        if (!this.checkForOnes(this.myTabuleiro)) { //checando se no meu tabuleiro ainda tem navio não destruido
           // alert("você venceu!")
-          this.fnFim("win");
-        } else
-          this.fnSendWebSocketsMsg(true, true);
+
+          this.fnSendWebSocketsResultadoFinal("loser");
+          this.fnFim("loser");
+
+        }
 
 
       } else if (this.tabuleiroOp[j][i] == 0) {
@@ -868,11 +1002,59 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
    
       */
 
-    console.log(this.myTabuleiro[j][i])
+    // console.log(this.myTabuleiro[j][i])
     if (this.myTabuleiro[j][i] === 0) {
       this.myTabuleiro[j][i] = 2;
     } else if (this.myTabuleiro[j][i] === 1) {
       this.myTabuleiro[j][i] = 3;
+
+      this.fnContornaNavio(this.myTabuleiro, this.meusNavios, j, i);
+      // if (j+1 <= 9 && i+1 <= 9)
+      //   this.myTabuleiro[j+1][i+1] = 2;
+
+      // if (j+1 <= 9 && i-1 >= 0)
+      //   this.myTabuleiro[j+1][i-1] = 2;
+
+      // if (j-1 >= 0 && i-1 >= 0)
+      //   this.myTabuleiro[j-1][i-1] = 2;
+
+      // if (j-1 >= 0 && i+1 <= 9)
+      //   this.myTabuleiro[j-1][i+1] = 2;
+
+      // for(let navio of this.meusNavios){
+      //   let nTilesEstourados = 0;
+      //   for(let tile of navio.tiles){
+      //     if (this.myTabuleiro[tile.j][tile.i - 10] == 3){
+      //       nTilesEstourados+=1
+      //     }
+      //   }
+
+      //   if(nTilesEstourados == navio.tamanho){
+      //     for(let tile of navio.tiles){
+
+      //       if (tile.j+1 <= 9){
+      //         if (this.myTabuleiro[tile.j+1][tile.i-10] == 0)
+      //         this.myTabuleiro[tile.j+1][tile.i-10] = 2;
+      //       }
+
+      //       if (tile.j-1 >= 0){
+      //         if (this.myTabuleiro[tile.j-1][tile.i-10] == 0)
+      //         this.myTabuleiro[tile.j-1][tile.i-10] = 2;
+      //       }
+
+      //       if (tile.i+1-10 <= 9){
+      //         if (this.myTabuleiro[tile.j][tile.i+1-10] == 0)
+      //         this.myTabuleiro[tile.j][tile.i+1-10] = 2;
+      //       }
+
+      //       if (tile.i-1-10 >= 0){
+      //         if (this.myTabuleiro[tile.j][tile.i-1-10] == 0)
+      //         this.myTabuleiro[tile.j][tile.i-1-10] = 2;
+      //       }
+
+      //     }
+      //   }
+      // }
     } else if (this.myTabuleiro[j][i] === 5) {
       this.myTabuleiro[j][i] = 6;
     }
@@ -906,9 +1088,9 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
 
   fnSendWebSocketsMsg(podeJogar = true, coord: any = false) {
 
-    console.log(this.usuarioLogadoId);
-    console.log(this.players.p1.userId);
-    console.log(this.players.p2.userId);
+    // console.log(this.usuarioLogadoId);
+    // console.log(this.players.p1.userId);
+    // console.log(this.players.p2.userId);
     if (this.players.p1.userId == this.usuarioLogadoId) {
       this.players.p1.podeJogar = (!podeJogar).toString()
       this.players.p2.podeJogar = podeJogar.toString()
@@ -929,7 +1111,7 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
       usuarioId: this.usuarioLogadoId,
       tabuleiro1: this.tabuleiroOp,
       tabuleiro2: this.myTabuleiro,
-      naviosOp: this.meusNavios,
+      //naviosOp: this.meusNavios,
       podeJogar: podeJogar,
       coord: coord
       // navios: this.navios
@@ -943,12 +1125,15 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
     }
   }
 
+  fimDeJogo: boolean = false;
+
   fnFim(result: any) {
+    this.fimDeJogo = true;
+    this.fnAtualizaValores(result);
+    this.fnPopVez("", "", true);
 
     setTimeout(() => {
-      this.fnAtualizaValores();
       this.fnPopUp(result);
-      this.fnPopVez("", "", true);
     }, 500)
 
   }
@@ -971,8 +1156,18 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
     }
   }
 
-  fnAtualizaValores() {
+  fnAtualizaValores(resultado: any) {
+    const formData = new FormData();
+    let result = (resultado === "win" ? true : false);
 
+    formData.append("win", result.toString());
+
+    this.service.resultJogo(this.usuarioLogadoId, formData).pipe(
+      tap(async (res: any) => {
+        console.log("atualizado")
+        // console.log(res);
+      })
+    ).subscribe();
     // 
 
     //faz a inserção de moedas na tabela usuario
@@ -1032,13 +1227,13 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
     this.subscription = this.simulateWebSocket().subscribe({
       next: (message) => {
         // Imprime a mensagem recebida no console
-        console.log(message);
+        // console.log(message);
         this.randomlyPlaceTwo();
       },
       complete: () => {
         // Define o estado como "não executando" para habilitar os botões novamente
         this.isRunning = false;
-        console.log("sua vez", this.isRunning)
+        // console.log("sua vez", this.isRunning)
 
       }
     });
@@ -1137,16 +1332,20 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
     }, 4000);
   }
 
-  removeNotification() {
+  removeNotification(rapido = false) {
     if (this.ctnMsg) {
-      this.renderer.removeClass(this.ctnMsg, 'f-show-my');
-      this.renderer.addClass(this.ctnMsg, 'f-hide-my');
-      setTimeout(() => {
-        if (this.ctnMsg && this.ctnMsg.parentNode) {
-          this.renderer.removeChild(document.body, this.ctnMsg);
-          this.ctnMsg = null;
-        }
-      }, 500);
+      if(rapido){
+        this.renderer.removeChild(document.body, this.ctnMsg);
+      }else{
+        this.renderer.removeClass(this.ctnMsg, 'f-show-my');
+        this.renderer.addClass(this.ctnMsg, 'f-hide-my');
+        setTimeout(() => {
+          if (this.ctnMsg && this.ctnMsg.parentNode) {
+            this.renderer.removeChild(document.body, this.ctnMsg);
+            this.ctnMsg = null;
+          }
+        }, 500);
+      }
     }
   }
 
@@ -1270,4 +1469,8 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
     }
   }
 
+  fnFinsh() {
+    this.router.navigate(['/']);
+
+  }
 }

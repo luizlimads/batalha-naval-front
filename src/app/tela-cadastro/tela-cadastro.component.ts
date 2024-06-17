@@ -37,10 +37,6 @@ export class TelaCadastroComponent {
     this.hasUserSessionId();
   }  
 
-  onKeydown(event: any) {
-    console.log(event);
-  }
-
   hasUserSessionId() {
     var usuarioLogadoId = sessionStorage.getItem('userId');
 

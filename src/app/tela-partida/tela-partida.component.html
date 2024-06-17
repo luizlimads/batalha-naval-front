@@ -83,7 +83,8 @@
                     <div class="jogador-avatar">
                         <p>{{opData?.nome}}</p>
                         <!-- pedir avatar -->
-                        <img src="../../assets/images/img-home-page/pirata1.png" alt="">
+                        <img [src]="opData?.avatarBase64" alt="">
+                        <!-- <img src="../../assets/images/img-home-page/pirata1.png" alt=""> -->
                     </div>
                     <div class="item-level">
                         <div class="item-level-icon">
@@ -131,7 +132,35 @@
             </div>
         </div>
 
-        <div class="ilhaR"></div>
+        <div class="ilhaR">
+            <div class="info-navios-op">
+                <div class="n4" [class]="arrNaviosExpClass[3][0]">
+                    <div class="t"></div>
+                    <div class="n"></div>
+                    <div class="n"></div>
+                    <div class="p"></div>
+                </div>
+                <div class="n3">
+                    <div *ngFor="let cls of arrNaviosExpClass[2]" [class]="cls">
+                        <div class="t"></div>
+                        <div class="n"></div>
+                        <div class="p"></div>
+                    </div>
+                </div>
+                <div class="n2">
+                    <div *ngFor="let cls of arrNaviosExpClass[1]" [class]="cls">
+                        <div class="t"></div>
+                        <div class="p"></div>
+                    </div>
+                </div>
+                <div class="n1">
+                    <div *ngFor="let cls of arrNaviosExpClass[0]" [class]="cls">
+                        <div class="u"></div>
+                    </div>
+                </div>
+    
+            </div>
+        </div>
 
 
     </div>
@@ -169,7 +198,7 @@
                     </div>
                 </div>
                 <div class="btn">
-                    <button>
+                    <button (click)="fnFinsh()">
                         <div>Ok</div>
                     </button>
 
@@ -199,12 +228,12 @@
                             <img src="../../assets/images/img-home-page/hatPiratePartida.png" alt="">
                         </div>
                         <div>
-                            <p>+20 xp</p>
+                            <p>+5 xp</p>
                         </div>
                     </div>
                 </div>
                 <div class="btn">
-                    <button>
+                    <button (click)="fnFinsh()">
                         <div>Ok</div>
                     </button>
 
