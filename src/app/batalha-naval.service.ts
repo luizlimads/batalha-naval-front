@@ -23,6 +23,10 @@ export class BatalhaNavalService {
     return this.http.get(`${this.urlBase}/usuarios/${userId}`);
   }
 
+  getUserOp(userId: any) {
+    return this.http.get(`${this.urlBase}/usuarios/${userId}/op`);
+  }
+
   getAllUsers(){ //quero que retorne o base64 do user
     return this.http.get(`${this.urlBase}/usuarios`);
   }
@@ -83,4 +87,7 @@ export class BatalhaNavalService {
     return this.http.put(`${this.urlBase}/usuarios/${userId}/update-diamante`, formData);
   }
 
+  resultJogo(userId: number, formData: any){
+    return this.http.put(`${this.urlBase}/usuarios/${userId}/resultado-jogo`, formData);
+  }
 }
