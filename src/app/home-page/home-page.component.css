@@ -5,12 +5,6 @@
     font-style: normal;
 }
 
-::ng-deep * {
-    /* font: 0 !important; */
-    /* font: bold clamp(0.5em, 0.01em + 2vw, .9em) / 1.5 "clash", Arial, Helvetica, sans-serif !important; */
-
-}
-
 .bg-image {
     /* background-image: url('./img/bgMadeira.png'); */
     background-color: #fff;
@@ -27,6 +21,7 @@ p {
     /* font-size: 13px; */
     font-family: 'clash', Arial, Helvetica, sans-serif;
 }
+
 
 .container-buttons,
 .container {
@@ -259,9 +254,13 @@ p {
 }
 
 /* .trofeu-status esta na linha 93*/
-.trofeu-status {
+/* .trofeu-status {
     justify-content: center;
     padding-right: 0px;
+} */
+
+.trofeu-status p{
+    font: bold clamp(0.5em, 0.01em + 2vw, .9em) / 1.5 "clash", Arial, Helvetica, sans-serif !important;
 }
 
 .navigations-buttons {
@@ -425,6 +424,10 @@ p {
     align-items: center;
 }
 
+.popup-ranking p{
+    font: bold clamp(0.5em, 0.01em + 2vw, .9em) / 1.5 "clash",Arial,Helvetica,sans-serif !important;
+}
+
 .rank-title {
     text-align: center;
     width: 100%;
@@ -438,7 +441,8 @@ p {
     /* background-color: #dd991c; */
     width: 100%;
     overflow: hidden;
-    overflow-y: scroll;
+    /* overflow-y: scroll; */
+    overflow-y: auto;
     padding: 10px;
 }
 
@@ -482,8 +486,8 @@ p {
 .item-trofeus {
     display: flex;
     align-items: center;
-    -webkit-text-stroke-width: .8px;
-    -webkit-text-stroke-color: #262626;
+    -webkit-text-stroke-width: .7px;
+    -webkit-text-stroke-color: #262626d8;
     color: white;
 }
 
@@ -546,6 +550,10 @@ p {
     font-size: 11px;
 }
 
+/* .item-trofeu-status p{
+    font: bold clamp(0.5em, 0.01em + 2vw, .9em) / 1.5 "clash", Arial, Helvetica, sans-serif !important;
+} */
+
 .item-trofeus .item-trofeu-icon {
     display: flex;
     align-items: center;
@@ -555,7 +563,7 @@ p {
 .item-trofeu-icon img {
     max-width: 50%;
     width: 30px;
-    margin-top: -21px;
+    margin-top: -15px;
 
 }
 
@@ -597,26 +605,29 @@ p {
 }
 
 .popup-content {
-    /* min-width: 60%; */
-    /* width: 900px; */
-    /* max-width: 90%; */
-    /* background: #BFB28F; */
     background: linear-gradient(to right, #BC8228, #ab6c0f);
     padding: 3px;
     border-radius: 3px;
     animation: hide-popup .3s forwards;
-    /* Defina uma altura fixa para o popup */
-    /* height: 500px; */
-    /* ou qualquer valor desejado */
-    /* Use flexbox para fazer as divs internas preencherem o espaço */
     display: flex;
     flex-direction: column;
     overflow: hidden;
     overflow-y: auto;
 
-    /* Adicionar uma barra de rolagem vertical se o conteúdo exceder a altura da tela */
-
 }
+
+.itens-player p,
+.popup-content span,
+.popup-content p {
+    font: bold clamp(0.5em, 1em + 1vw, .9em) / 1.5 "clash", Arial, Helvetica, sans-serif !important;
+}
+
+/* .popup-conf p,
+.popup-inventory p,
+.popup-shop p{
+    font: bold clamp(0.5em, 0.01em + 2vw, .9em) / 1.5 "clash", Arial, Helvetica, sans-serif !important;
+    font-weight: 400 !important;
+} */
 
 .popup--visible .popup-content {
     /* visibility: visible; */
@@ -966,12 +977,12 @@ p {
     margin-top: 20px;
 } 
 
-.popup-conf .content-infos div p,
+/* .popup-conf .content-infos div p,
 .popup-conf .content-infos div span{
     font-size: clamp(0.7em, 0.5em + 2vw, .9em) !important;
     font-family: 'clash', Arial, Helvetica, sans-serif !important;
 
-}
+} */
 
 .data-name, .data-email, .data-form-pass, .data-logout{
     padding: 15px;
@@ -1235,9 +1246,6 @@ p {
 }
 
 
-
-
-
 /* *********************** */
 
 .popup-inventory,
@@ -1251,6 +1259,10 @@ p {
     color: rgb(219, 219, 219);
     display: none;
     flex-direction: column;
+}
+
+.popup-inventory p {
+    font: bold clamp(0.5em, 1vw, .8em) / 1.5 "clash", Arial, Helvetica, sans-serif !important;
 }
 
 
@@ -1557,7 +1569,7 @@ p {
 
 .invent-item h3,
 .shop-item h3 {
-    font: bold clamp(0.5em, 0.01em + 2vw, .9em) / 1.5 "clash", Arial, Helvetica, sans-serif !important;
+    /* font: bold clamp(0.5em, 0.01em + 2vw, .9em) / 1.5 "clash", Arial, Helvetica, sans-serif !important; */
     padding: 10px !important;
     /* font-size: clamp(0.5em, 0.01em + 2vw, .9em);
     font-family: "clash", Arial, Helvetica, sans-serif; */
