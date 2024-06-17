@@ -65,7 +65,7 @@ export class TelaPreComponent implements OnInit, OnDestroy {
   somLoadingJogar = new Audio();
   somEntraLoadingPre = new Audio();
   sliderValueSound: any = 50;
-  sliderValueMusic: any = 50;
+  sliderValueMusic: any = 20;
 
   hour: number = 0;
   minute: number = 0;
@@ -165,8 +165,8 @@ export class TelaPreComponent implements OnInit, OnDestroy {
 
   intervalo: any;
   fnSomLoadingPre() {
-    this.somEntraLoadingPre.volume = this.sliderValueMusic / 100;;
     this.somEntraLoadingPre.load();
+    this.somEntraLoadingPre.volume = this.sliderValueMusic / 100;
     this.somEntraLoadingPre.play().catch((error) => {
       // console.log('Error attempting to play the video:', error);
     });
@@ -317,8 +317,12 @@ export class TelaPreComponent implements OnInit, OnDestroy {
     }
   }
 
+  fnVoltar(){
+    this.router.navigate(['/']);
+  }
+
   fnSomLoadingJogar() {
-    this.somLoadingJogar.volume = this.sliderValueSound / 100;
+    this.somLoadingJogar.volume = this.sliderValueMusic / 100;
     this.somLoadingJogar.play().catch((error) => {
       // console.log('Error attempting to play the video:', error);
     });

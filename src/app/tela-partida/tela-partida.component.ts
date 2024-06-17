@@ -588,7 +588,8 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
     this.service.getUser(usuarioLogadoId).pipe(
       tap((res: any) => {
         this.userData = res
-        // console.log(res)
+        this.sliderValueMusic = this.userData.volumeMusica;
+        this.sliderValueSound = this.userData.volumeSom;
         this.fnGetUserPacotes();
         this.fnXP();
         // this.fnSomFundo();
