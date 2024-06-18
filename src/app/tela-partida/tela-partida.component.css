@@ -484,7 +484,7 @@
 
 .f-notification {
     position: fixed;
-    z-index: 100;
+    z-index: 100000;
     top: 20px;
     right: 20px;
     text-align: left;
@@ -929,6 +929,30 @@
     font-weight: 600;
 }
 
+.cronometro {
+    padding: 5px;
+    align-items: center;
+    display: none;
+}
+
+.cronometro svg{
+    fill: #03ddff;
+    width: 20px;
+    margin-right: 6px;
+    margin-top: -3px;
+    filter: drop-shadow(5px 1px 5px rgb(28, 27, 27));
+
+}
+
+.cronometro,
+.cronometro span{
+    font-family: 'clash', Arial, Helvetica, sans-serif;
+    font-size: clamp(0.7em, 1em + 1.5vw, 1em);
+    color: #e3e3e3;
+    text-shadow: 2px 1px 2px rgba(0, 0, 0, 0.892);
+
+}
+
 .popup-info.verde,
 .popup-info.amarelo {
     opacity: 1;
@@ -942,8 +966,8 @@
     border-top-left-radius: 0px;
     border-top-right-radius: 0px;
     background-color: #1BACD3;
-    /* display: flex; */
-    justify-content: center;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
 }
 
@@ -957,6 +981,9 @@
     z-index: 30000;
 }
 
+.popup-info.verde .cronometro{
+    display: flex;
+}
 
 .popup-info.amarelo>div {
     border: 1px solid rgba(241, 241, 6, 0.81);
@@ -1425,4 +1452,39 @@
 .info-navios-op .t{
     border-top-left-radius: 20px;
     border-bottom-left-radius: 20px;
+}
+
+
+
+.container-btn-voltar{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 12000;
+    padding: 20px;
+}
+
+#btnVoltar{
+    padding: 6px;
+    padding-left: 10px;
+    border: 0;
+    border-radius: 10px;
+    border-bottom: 5px solid #b46436;
+    background-color: #FFB11D;
+    color: #f0f0f0;
+    cursor: pointer;
+    line-height: 1;
+    text-decoration: none;
+    margin: 5px;
+    filter: drop-shadow(5px 1px 5px rgb(28, 27, 27));
+
+    font-family: 'clash', Arial, Helvetica, sans-serif;
+    font-size: clamp(0.7em, 1.5vw, .9em);
+}
+
+
+#btnVoltar svg {
+    width: 20px;
+    height: 20px;
+    fill: rgb(233, 233, 233);
 }

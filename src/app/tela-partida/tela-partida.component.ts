@@ -66,11 +66,48 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
     this.somPopupWin.src = "../../assets/audios/somWin.mp3";
     this.somPopupLoser.src = "../../assets/audios/somLoser.mp3";
 
-
-
   }
 
+  hour: number = 0;
+  minute: number = 0;
+  second: number = 15;
+  millisecond: number = 0;
+  cron!: any;
 
+  startCrono() {
+    this.cron = setInterval(() => { this.timer(); }, 10);
+  }
+
+  pauseCrono() {
+    clearInterval(this.cron);
+    this.second = 15;
+    (document.getElementById('second') as HTMLElement).style.color = "white"
+  }
+
+  timer() {
+    if ((this.millisecond += 10) == 1000) {
+      this.millisecond = 0;
+      this.second--;
+    }
+    if (this.second == 5) {
+      (document.getElementById('second') as HTMLElement).style.color = "red"
+    }
+
+    if (this.second == 0) {
+      this.pauseCrono();
+      this.fnSendWebSocketsMsg();
+      this.showNotification("Perdeu a vez", "O seu tempo acabou", "error");
+      this.fnPopVez("amarelo", "Esperando o outro jogador")
+
+    }
+
+    (document.getElementById('second') as HTMLElement).innerText = this.returnData(this.second);
+    // (document.getElementById('millisecond') as HTMLElement).innerText = this.returnData(this.millisecond);
+  }
+
+  returnData(input: any) {
+    return input >= 10 ? input : `0${input}`
+  }
 
   updateValueSound(value = -1) {
     let volumeS = document.getElementById("soundVolumeInput") as HTMLInputElement;
@@ -119,6 +156,7 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy(): void {
+    clearInterval(this.cron);
     console.log("destruido");
     this.webSocket.close();
     if (this.somFundo) {
@@ -127,6 +165,9 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
     }
   }
 
+  fnVoltar(){
+    this.router.navigate(['/']);
+  }
 
   // idOponente: any;
   ngOnInit(): void {
@@ -173,15 +214,9 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
 
           if (this.podeJogar) {
             this.fnPopVez("verde", "Sua vez")
-
-            // console.log("Sua vez")
-            // this.showNotification("Jogo", "Sua vez", "error");
+            this.startCrono();
           } else {
-            // console.log("Esperando o outro jogador")
             this.fnPopVez("amarelo", "Esperando o outro jogador")
-
-            // this.showNotification("Jogo", "Esperando o outro jogador", "error");
-
           }
 
           // console.log("enntreiii");
@@ -196,6 +231,7 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
 
       if (message.evento == "closed" && this.fimDeJogo === false) {
         this.showNotification("Ops...", "Seu oponente foi desconectado, você será redirecionado", "error");
+        this.pauseCrono();
         setTimeout(() => { //1134 fnFim()
           this.removeNotification(true);
           this.router.navigate(['/']);
@@ -203,7 +239,7 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
       }
 
       if (message.evento == "final") {
-
+        this.pauseCrono();
         // console.log(message)
         let msg = JSON.parse(message.message)
 
@@ -251,35 +287,15 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
           }
         }
 
-        // if (!this.checkForOnes(this.myTabuleiro)) { //checando se no meu tabuleiro ainda tem navio não destruido
-        //   // alert("você venceu!")
 
-        //   this.fnSendWebSocketsResultadoFinal("loser");
-        //   this.fnFim("loser");
-
-        // }
-
-
-        // console.log(this.myTabuleiro)
-        // console.log(this.tabuleiroOp)
-        // }
         if (this.podeJogar) {
           this.fnPopVez("verde", "Sua vez")
-
-          // console.log("Sua vez")
-          // this.showNotification("Jogo", "Sua vez", "error");
-        } else {
-          // console.log("Esperando o outro jogador")
-          // this.showNotification("Jogo", "Esperando o outro jogador", "error");
-
+          if(this.fimDeJogo === false)
+            this.startCrono();
         }
       }
 
     };
-
-
-
-
 
 
     this.sizeWTabuleiro = this.myCanvas.nativeElement.width;
@@ -493,7 +509,7 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
       if (nTilesEstourados == navio.tamanho) {
         this.arrtst.push(navio.tamanho);
         this.cont++;
-        
+
         for (let tile of navio.tiles) {
 
           if (tile.j + 1 <= 9) {
@@ -588,7 +604,8 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
     this.service.getUser(usuarioLogadoId).pipe(
       tap((res: any) => {
         this.userData = res
-        // console.log(res)
+        this.sliderValueMusic = this.userData.volumeMusica;
+        this.sliderValueSound = this.userData.volumeSom;
         this.fnGetUserPacotes();
         this.fnXP();
         // this.fnSomFundo();
@@ -931,8 +948,8 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
       // console.log(this.tabuleiroOp)
       //fazer em uma função separada
       if (this.tabuleiroOp[j][i] == 1) {
+        this.second = 15;
         this.fnSomExplosao("barco");
-
         // console.log(this.tabuleiroOp);
         // console.log(this.naviosOp);
 
@@ -1063,6 +1080,7 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
   }
 
   fnSendWebSocketsResultadoFinal(result: any) {
+    this.pauseCrono();
     let messageObject = {
       evento: "final",
       usuarioId: this.usuarioLogadoId,
@@ -1087,10 +1105,7 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
   }
 
   fnSendWebSocketsMsg(podeJogar = true, coord: any = false) {
-
-    // console.log(this.usuarioLogadoId);
-    // console.log(this.players.p1.userId);
-    // console.log(this.players.p2.userId);
+    this.pauseCrono();
     if (this.players.p1.userId == this.usuarioLogadoId) {
       this.players.p1.podeJogar = (!podeJogar).toString()
       this.players.p2.podeJogar = podeJogar.toString()
@@ -1122,6 +1137,7 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
 
     if (!this.podeJogar) {
       this.fnPopVez("amarelo", "Esperando o outro jogador")
+      // this.pauseCrono()
     }
   }
 
@@ -1334,9 +1350,9 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
 
   removeNotification(rapido = false) {
     if (this.ctnMsg) {
-      if(rapido){
+      if (rapido) {
         this.renderer.removeChild(document.body, this.ctnMsg);
-      }else{
+      } else {
         this.renderer.removeClass(this.ctnMsg, 'f-show-my');
         this.renderer.addClass(this.ctnMsg, 'f-hide-my');
         setTimeout(() => {
