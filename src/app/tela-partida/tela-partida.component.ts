@@ -555,7 +555,7 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
 
   players: any[any] = [];
   private connectWebSocket(): void {
-    this.webSocket = new WebSocket('ws://localhost:8080/game');
+    this.webSocket = new WebSocket('ws://ec2-54-94-110-74.sa-east-1.compute.amazonaws.com:8080/game');
 
     // this.webSocket.onmessage = (event) => {
     //   const message = JSON.parse(event.data);
