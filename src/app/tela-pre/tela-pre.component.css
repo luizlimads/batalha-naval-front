@@ -59,10 +59,6 @@
     fill: rgb(233, 233, 233);
 }
 
-.buttons svg path{
-    /* stroke-width: 5; */
-
-}
 
 .buttons button {
     padding: 6px;
@@ -82,12 +78,17 @@
     font-size: clamp(0.7em, 1.5vw, .9em);
 }
 
-.buttons.right{
-    text-align: end;
-    padding: 10px;
+.buttons.principal{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.buttons.right button{
+#btnVoltar{
+    padding-left: 10px;
+}
+
+#btnOk{
     padding: 15px;
     max-width: 250px;
     width: 100%;

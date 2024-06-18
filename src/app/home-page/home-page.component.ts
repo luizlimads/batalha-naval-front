@@ -22,7 +22,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   // selectGuia: boolean = 
 
   sliderValueSound: number = 50; // Valor inicial dos sons
-  sliderValueMusic: number = 0; // Valor inicial da musica
+  sliderValueMusic: number = 50; // Valor inicial da musica
 
   compraAtual: any; //vai dizer se estou comprando moeda ou diamantes, é um objeto que tem valor e o preco
 
@@ -85,7 +85,8 @@ export class HomePageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.fnMusicHomePage();
+    this.renderer.setStyle(document.body, 'overflow', 'hidden');
+    // this.fnMusicHomePage();
     this.activeTab = 'moedas';
     this.activeTabInvent = 'todos';
 
@@ -186,7 +187,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
 
   fnSomLoadingPre() {
     this.somEntraLoadingPre.load();
-    this.somEntraLoadingPre.volume = this.sliderValueSound / 100;
+    this.somEntraLoadingPre.volume = this.sliderValueMusic / 100;
     this.somEntraLoadingPre.play().catch((error) => {
       // console.log('Error attempting to play the video:', error);
     });
@@ -508,6 +509,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
         this.userData = res
         this.sliderValueMusic = this.userData.volumeMusica;
         this.sliderValueSound = this.userData.volumeSom;
+
         // console.log(res)
         this.fnXP();
         this.fnGetUserPacotes();
@@ -615,6 +617,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
             this.fnMsg("Nome alterado com sucesso", "success")
             this.userData.nome = txtNome.value;
             this.fnFechaAlterNome();
+            this.getAllUsers();
           }
         })
       ).subscribe();
@@ -784,6 +787,8 @@ export class HomePageComponent implements OnInit, OnDestroy {
 
   fnLogout() {
     sessionStorage.removeItem("userId");
+    sessionStorage.removeItem("nivelAcesso");
+    
     this.router.navigate(['/login']);
   }
 

@@ -35,6 +35,8 @@ export class TelaLoginComponent {
           if (res.sucessoLogin) {
             this.fnMsg(res.mensagem);
             sessionStorage.setItem('userId', res.usuarioId);
+            sessionStorage.setItem('nivelAcesso', res.nivelAcesso);
+
             this.router.navigate(['/'])
           } else {
             this.fnMsg(res.mensagem);
