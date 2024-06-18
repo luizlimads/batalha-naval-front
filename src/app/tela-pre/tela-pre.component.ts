@@ -245,7 +245,7 @@ export class TelaPreComponent implements OnInit, OnDestroy {
     this.usuarioLogadoId = sessionStorage.getItem('userId');
 
     if (this.usuarioLogadoId === null || this.usuarioLogadoId === undefined) {
-      this.router.navigate(['login'])
+      this.router.navigate(['/login'])
     } else {
       this.getUser(this.usuarioLogadoId);
     }

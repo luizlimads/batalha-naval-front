@@ -66,6 +66,7 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
     this.somPopupWin.src = "../../assets/audios/somWin.mp3";
     this.somPopupLoser.src = "../../assets/audios/somLoser.mp3";
 
+    this.hasUserSessionId();
   }
 
   hour: number = 0;
@@ -158,20 +159,20 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     clearInterval(this.cron);
     console.log("destruido");
-    this.webSocket.close();
+    if (this.webSocket)
+      this.webSocket.close();
     if (this.somFundo) {
       this.somFundo.pause();
       this.somFundo = null!;
     }
   }
 
-  fnVoltar(){
+  fnVoltar() {
     this.router.navigate(['/']);
   }
 
   // idOponente: any;
   ngOnInit(): void {
-    this.hasUserSessionId();
     this.meusNavios = sessionStorage.getItem('meusNavios');
     this.meusNavios = JSON.parse(this.meusNavios);
 
@@ -271,26 +272,53 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
         this.tabuleiroOp = msg.players.p1.userId == this.usuarioLogadoId ? msg.players.p2.tabuleiro : msg.players.p1.tabuleiro
         this.podeJogar = msg.players.p1.userId == this.usuarioLogadoId ? msg.players.p1.podeJogar : msg.players.p2.podeJogar
         this.podeJogar = this.podeJogar == 'true' ? true : false;
-        // this.naviosOp = msg.naviosOp;
+        // this.naviosOp = msg.naviosOp; 
 
-
+        let barco = false;
         for (let i = 0; i < myOldTabuleiro.length; i++) {
           for (let j = 0; j < myOldTabuleiro.length; j++) {
             if (myOldTabuleiro[j][i] !== this.myTabuleiro[j][i]) {
               if (this.myTabuleiro[j][i] === 3) {
-                (document.querySelector(".myCanvas") as HTMLElement).classList.add("treme")
+                barco = true;
+                this.fnSomExplosao("barco");
+                (document.querySelector(".myCanvas") as HTMLElement).classList.add("treme");
                 setTimeout(() => {
-                  (document.querySelector(".myCanvas") as HTMLElement).classList.remove("treme")
+                  (document.querySelector(".myCanvas") as HTMLElement).classList.remove("treme");
                 }, 200);
+              } else if (this.myTabuleiro[j][i] === 6) {
+
+                this.fnSomExplosao("mina");
+                setTimeout(() => {
+                  (document.querySelector(".myCanvas") as HTMLElement).classList.add("treme");
+
+                  setTimeout(() => {
+                    (document.querySelector(".myCanvas") as HTMLElement).classList.remove("treme");
+                  }, 200);
+
+                }, 200);
+              }
+
+            }
+          }
+        }
+
+        if (!barco) {
+          for (let i = 0; i < myOldTabuleiro.length; i++) {
+            for (let j = 0; j < myOldTabuleiro.length; j++) {
+              if (myOldTabuleiro[j][i] !== this.myTabuleiro[j][i]) {
+                if (this.myTabuleiro[j][i] === 2) {
+                  this.fnSomExplosao("agua");
+                }
               }
             }
           }
         }
 
 
+
         if (this.podeJogar) {
           this.fnPopVez("verde", "Sua vez")
-          if(this.fimDeJogo === false)
+          if (this.fimDeJogo === false)
             this.startCrono();
         }
       }
@@ -555,6 +583,7 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
 
   players: any[any] = [];
   private connectWebSocket(): void {
+    //ec2-54-94-110-74.sa-east-1.compute.amazonaws.com
     this.webSocket = new WebSocket('ws://ec2-54-94-110-74.sa-east-1.compute.amazonaws.com:8080/game');
 
     // this.webSocket.onmessage = (event) => {
@@ -591,7 +620,7 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
     this.usuarioLogadoId = sessionStorage.getItem('userId');
 
     if (this.usuarioLogadoId === null || this.usuarioLogadoId === undefined) {
-      this.router.navigate(['login'])
+      this.router.navigate(['/login'])
     } else {
       this.getUser(this.usuarioLogadoId);
     }
@@ -753,7 +782,7 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
 
           // console.log(i, j)
           if (this.myTabuleiro[j][i] == 3 || this.myTabuleiro[j][i] == 6) {
-            ctx.fillStyle = "#00000080";
+            ctx.fillStyle = "#00000050";
 
 
           }
@@ -889,7 +918,7 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
   }
 
   fnSomExplosao(tipo: any) {
-    this.somExplosao.volume = 0.3;
+    this.somExplosao.volume = this.sliderValueSound / 100;
     if (tipo === "agua") {
       this.somExplosao.src = "../../assets/audios/somExplosaoAgua.mp3"
       this.somExplosao.play().catch((error) => {
@@ -1001,7 +1030,7 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
         //this.fnSendMessageWS(); //coloquei aqui pois só passa a vez para o outro jogador, quando eu errar
 
       } else {
-        this.showNotification("Ops...", "escolha outra posição, essa ja foi escolhida", "error");
+        this.showNotification("Ops...", "escolha outra posição, essa ja foi escolhida", "alert");
       }
 
     }
@@ -1021,8 +1050,10 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
 
     // console.log(this.myTabuleiro[j][i])
     if (this.myTabuleiro[j][i] === 0) {
+      this.showNotification("Ufa...", "A mina acertou o seu lado do oceano", "alert")
       this.myTabuleiro[j][i] = 2;
     } else if (this.myTabuleiro[j][i] === 1) {
+      this.showNotification("Xii...", "A mina acertou um dos seus navios!", "alert")
       this.myTabuleiro[j][i] = 3;
 
       this.fnContornaNavio(this.myTabuleiro, this.meusNavios, j, i);
@@ -1073,7 +1104,11 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
       //   }
       // }
     } else if (this.myTabuleiro[j][i] === 5) {
+      this.showNotification("Hmm...", "A mina acertou a sua propria mina", "alert")
       this.myTabuleiro[j][i] = 6;
+    } else {
+      this.showNotification("Ufa...", "A mina acertou o seu lado do oceano", "alert")
+
     }
 
 
@@ -1412,7 +1447,7 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
 
     //pegando apenas o nome do emoji para chamar a musica
     let lastPart = nomeEmoji.substring(nomeEmoji.lastIndexOf('/') + 1).replace(".png", "");
-
+    this.somEmoji.volume = this.sliderValueSound / 100;
     this.somEmoji.src = `../../assets/audios/som${lastPart}.mp3`
     this.somEmoji.play().catch((error) => {
       // console.log('Error attempting to play the video:', error);
