@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { BatalhaNavalService } from '../batalha-naval.service';
 import { finalize, tap } from 'rxjs';
 import { FormBuilder, FormGroup } from '@angular/forms';
-
+import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tela-admini',
@@ -16,11 +17,30 @@ export class TelaAdminiComponent implements OnInit {
   dataItens: any[] = [];
   res: any = '';
   updateData: any;
+  nivelAcesso:any;
+  horizontalPosition: MatSnackBarHorizontalPosition = 'center';
+  verticalPosition: MatSnackBarVerticalPosition = 'top';
 
-  constructor(private fb: FormBuilder, private service: BatalhaNavalService) { }
+  constructor(private fb: FormBuilder, private service: BatalhaNavalService, private _snackBar: MatSnackBar, private router: Router) { }
 
   ngOnInit(): void {
+
+    this.nivelAcesso = sessionStorage.getItem('nivelAcesso');
+console.log(this.nivelAcesso)
+    if (this.nivelAcesso === 'USER') {
+      this.openSnackBar("Você não possuí permissão para acessar esta tela");
+      this.router.navigate(['']);
+    }
+
     this.getPacotes();
+  }
+
+  openSnackBar(message: string) {
+    this._snackBar.open(message, '', {
+      horizontalPosition: this.horizontalPosition,
+      verticalPosition: this.verticalPosition,
+      duration: 5000
+    });
   }
 
   getPacotes() {

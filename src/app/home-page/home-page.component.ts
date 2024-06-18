@@ -617,6 +617,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
             this.fnMsg("Nome alterado com sucesso", "success")
             this.userData.nome = txtNome.value;
             this.fnFechaAlterNome();
+            this.getAllUsers();
           }
         })
       ).subscribe();
@@ -786,6 +787,8 @@ export class HomePageComponent implements OnInit, OnDestroy {
 
   fnLogout() {
     sessionStorage.removeItem("userId");
+    sessionStorage.removeItem("nivelAcesso");
+    
     this.router.navigate(['/login']);
   }
 
