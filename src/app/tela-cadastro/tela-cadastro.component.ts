@@ -74,6 +74,12 @@ export class TelaCadastroComponent {
      this.service.postUser(this.form.value).pipe(
       tap((res: any)=>{
         //colocar popup de cadastrado
+
+        if (res.id === null) {
+          this.fnMsg("Já existe usuário cadastrado com esse email");
+          return;
+        }
+
         this.fnMsg("Usuario cadastrado com sucesso!", "success");
         sessionStorage.setItem('userId', res.id);
         this.router.navigate(['/']);
