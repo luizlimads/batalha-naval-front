@@ -251,7 +251,7 @@
 
 
 
-/* __________________  NOTIFICAÇÃO */
+/* __________________  EMOJI */
 
 .f-emoji-oponente {
     position: fixed;
@@ -551,8 +551,13 @@
     background-color: #ff3838C0;
 }
 
+.f-notification-alert .f-notification-title{
+    color: #796000;
+}
 .f-notification-alert {
-    background: #f1c40f;
+    border: 2px solid #f1c40f;
+    
+    background: #f1c40fcd;
 }
 
 .f-show {
@@ -1409,33 +1414,40 @@
 .info-navios-op .n2 > div,
 .info-navios-op .n3 > div{
     display: flex;
-    margin-right: 1px;
+    margin-right: 4px;
 }
 
 
-.info-navios-op .preto .u,
-.info-navios-op .preto .t,
-.info-navios-op .preto .p,
-.info-navios-op .preto .n{
-    width: 9px;
+.info-navios-op .u,
+.info-navios-op .t,
+.info-navios-op .p,
+.info-navios-op .n{
+    width: 10px;
     height: 10px;
-    background-color: #141414;
-    margin: 0.4px;
+    margin-right: 1px;
+    margin-top: 1px;
+    margin-bottom: 1px;
+
+
 }
 
 .info-navios-op .preto .u{
     width: 13px;
 }
 
+.info-navios-op .preto .u,
+.info-navios-op .preto .t,
+.info-navios-op .preto .p,
+.info-navios-op .preto .n{
+    background-color: #141414;
+
+}
 /* explodidos */
 .info-navios-op .red .u,
 .info-navios-op .red .t,
 .info-navios-op .red .p,
 .info-navios-op .red .n{
-    width: 9px;
-    height: 9px;
     background-color: #d60c0c;
-    margin: 0.4px;
 }
 
 .info-navios-op .red .u{
@@ -1455,7 +1467,7 @@
 }
 
 
-
+/* btn voltar */
 .container-btn-voltar{
     position: absolute;
     bottom: 0;
