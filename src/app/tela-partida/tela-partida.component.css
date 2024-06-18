@@ -1453,3 +1453,38 @@
     border-top-left-radius: 20px;
     border-bottom-left-radius: 20px;
 }
+
+
+
+.container-btn-voltar{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 12000;
+    padding: 20px;
+}
+
+#btnVoltar{
+    padding: 6px;
+    padding-left: 10px;
+    border: 0;
+    border-radius: 10px;
+    border-bottom: 5px solid #b46436;
+    background-color: #FFB11D;
+    color: #f0f0f0;
+    cursor: pointer;
+    line-height: 1;
+    text-decoration: none;
+    margin: 5px;
+    filter: drop-shadow(5px 1px 5px rgb(28, 27, 27));
+
+    font-family: 'clash', Arial, Helvetica, sans-serif;
+    font-size: clamp(0.7em, 1.5vw, .9em);
+}
+
+
+#btnVoltar svg {
+    width: 20px;
+    height: 20px;
+    fill: rgb(233, 233, 233);
+}

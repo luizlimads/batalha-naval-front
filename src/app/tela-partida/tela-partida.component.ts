@@ -166,6 +166,9 @@ export class TelaPartidaComponent implements OnInit, OnDestroy {
     }
   }
 
+  fnVoltar(){
+    this.router.navigate(['/']);
+  }
 
   // idOponente: any;
   ngOnInit(): void {

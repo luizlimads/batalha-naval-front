@@ -85,6 +85,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.renderer.setStyle(document.body, 'overflow', 'hidden');
     // this.fnMusicHomePage();
     this.activeTab = 'moedas';
     this.activeTabInvent = 'todos';
