@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/060b2f06-8b62-44c1-b37d-e7d4257a322d/resourceGroups/batalha-naval-fatecsp2024-1_group/providers/Microsoft.Web/sites/batalha-naval-fatecsp2024-1",
+    "appService.deploySubpath": "dist"
+}
